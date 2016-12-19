@@ -1,0 +1,26 @@
+{
+  "require": {
+    "predis/predis": "*",
+    "filp/whoops": "2.1.4",
+    "noahbuscher/macaw": "dev-master",
+    "monolog/monolog": "1.21.0",
+    "illuminate/database": "*",
+    "smarty/smarty":"*"
+  },
+  "autoload": {
+    "psr-4": {
+      "store\\": "store/",
+      "helpers\\": "helpers/",
+      "app\\" : "app/"
+    },
+    "classmap": [
+      "bootstrap"
+    ]
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  }
+}
