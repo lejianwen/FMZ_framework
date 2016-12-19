@@ -55,6 +55,11 @@ class bootstrap
         Route::dispatch();
     }
 
+    public static function view()
+    {
+
+    }
+
     public static function redis()
     {
         $config = require BASE_PATH . '/config/redis.php';

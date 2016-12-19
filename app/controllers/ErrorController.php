@@ -12,6 +12,6 @@ class ErrorController
     public static function NotFound_404()
     {
         header($_SERVER['SERVER_PROTOCOL']." 404 Not Found");
-        echo '未匹配到路由<br>';
+        echo '未匹配到路由<br>1';
     }
 }

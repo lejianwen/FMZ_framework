@@ -11,7 +11,6 @@ return [
     'get'  => [
         ''        => 'app\controllers\IndexController@index',
         '(:str)/(:str)' => function ($controller, $method) {
-            //匹配pathinfo模式
             $class = CONTROLLER . ucwords($controller) . 'Controller';
             if(!is_object($class))
             {

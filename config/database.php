@@ -7,12 +7,12 @@
  * QQ: 84855512
  */
 return [
-    'driver'    => '',
-    'host'      => '',
-    'database'  => '',
-    'username'  => '',
-    'password'  => '',
-    'charset'   => '',
-    'collation' => '',
-    'prefix'    => '',
+    'driver'    => 'mysql',
+    'host'      => '192.168.0.88',
+    'database'  => 'menya',
+    'username'  => 'menya_manager',
+    'password'  => 'menya!@#12378e',
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => ''
 ];
