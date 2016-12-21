@@ -9,5 +9,5 @@
 return [
     'host' => '127.0.0.1',
     'port' => 6379,
-    'password' => 'pwd_v1.0',
+    'password' => 'pwd_v1.0_master',
 ];
