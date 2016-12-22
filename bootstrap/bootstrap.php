@@ -25,6 +25,7 @@ class bootstrap
      */
     public static function init()
     {
+        define('BASE_PATH', __DIR__.'/../');
         define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
         define('IS_AJAX', ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false);
     }
