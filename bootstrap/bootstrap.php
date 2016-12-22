@@ -39,12 +39,8 @@ class bootstrap
     //路由
     public static function route()
     {
-        Route::$patterns = array(
-            ':any' => '[^/]+',
-            ':num' => '[0-9]+',
-            ':all' => '.*',
-            ':str' => '[a-zA-Z0-9_-]+' //字符串
-        );
+        //添加正则匹配字符串
+        Route::$patterns[':str'] = '[a-zA-Z0-9_]+';
         $routes = require BASE_PATH . '/config/routes.php';
         foreach ($routes as $method => $route)
             foreach ($route as $uri => $callback)
