@@ -13,9 +13,20 @@ class bootstrap
 {
     public static function start()
     {
+        self::init();
         self::database();
         self::exception();
-        self::route();
+        //cli模式不载入路由
+        IS_CLI OR self::route();
+    }
+
+    /**定义一些配置
+     *
+     */
+    public static function init()
+    {
+        define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
+        define('IS_AJAX', ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false);
     }
 
     public static function exception()
