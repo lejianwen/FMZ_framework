@@ -12,15 +12,12 @@ return [
         ''        => 'app\controllers\IndexController@index',
         '(:str)/(:str)' => function ($controller, $method) {
             $class = CONTROLLERS . ucwords($controller) . 'Controller';
-            $object = new $class;
-            if(is_object($object))
-                if (method_exists($object, $method) && is_callable([$object, $method]))
-                    $object->$method();
-                else
-                    app\controllers\ErrorController::NotFound_404();
-            else
+            if (method_exists($class, $method) && is_callable([$class, $method]))
+            {
+                $object = new $class;
+                $object->$method();
+            } else
                 app\controllers\ErrorController::NotFound_404();
-
         }
     ],
     'post' => [
