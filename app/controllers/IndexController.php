@@ -15,5 +15,6 @@ class IndexController extends BaseController
     public function index()
     {
         echo 'simple laravel is ok!';
+        View::make('index.tpl')->with('a','a');
     }
 }
