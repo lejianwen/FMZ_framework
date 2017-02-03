@@ -1,26 +1,28 @@
 {
+  "name": "ljw/framework",
+  "description": "my framework",
+  "keywords": ["framework", "ljw"],
+  "type": "project",
   "require": {
     "predis/predis": "*",
     "filp/whoops": "2.1.4",
     "noahbuscher/macaw": "dev-master",
     "monolog/monolog": "1.21.0",
     "illuminate/database": "*",
-    "smarty/smarty":"*"
+    "smarty/smarty":"*",
+    "ljw/restful": "dev-master",
+    "ljw/excel": "dev-master"
   },
   "autoload": {
     "psr-4": {
       "store\\": "store/",
       "helpers\\": "helpers/",
-      "app\\" : "app/"
+      "app\\" : "app/",
+      "lib\\" : "lib/"
     },
     "classmap": [
-      "bootstrap"
+      "bootstrap",
+      "common"
     ]
-  },
-  "repositories": {
-    "packagist": {
-      "type": "composer",
-      "url": "https://packagist.phpcomposer.com"
-    }
   }
 }
