@@ -6,24 +6,17 @@
  * Time: 10:54
  * QQ: 84855512
  */
-const CONTROLLER = 'app\\controllers\\';
 return [
     'get'  => [
         ''        => 'app\controllers\IndexController@index',
         '(:str)/(:str)' => function ($controller, $method) {
-            //匹配pathinfo模式
-            $class = CONTROLLER . ucwords($controller) . 'Controller';
-            if(!is_object($class))
+            $class = 'app\\controllers\\' . ucwords($controller) . 'Controller';
+            if (method_exists($class, $method) && is_callable([$class, $method]))
             {
                 $object = new $class;
-                if(method_exists($object,$method) && is_callable([$object,$method]))
-                    $object->$method();
-                else
-                    app\controllers\ErrorController::NotFound_404();
-            }else
-            {
+                $object->$method();
+            } else
                 app\controllers\ErrorController::NotFound_404();
-            }
         }
     ],
     'post' => [

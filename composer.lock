@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "de31a1a663fff9490605bf74a22d1088",
+    "content-hash": "2f0f32d6eb3dd254ea944296557fa14b",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -16,7 +16,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/doctrine/inflector/90b2128806bfde671b6952ab8bea493942c1fdae.zip",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
                 "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
                 "shasum": ""
             },
@@ -83,7 +83,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/filp/whoops/3f5cbd0e6a2fc17bc40b0238025ef1ff4c8c3efa.zip",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/3f5cbd0e6a2fc17bc40b0238025ef1ff4c8c3efa",
                 "reference": "3f5cbd0e6a2fc17bc40b0238025ef1ff4c8c3efa",
                 "shasum": ""
             },
@@ -143,7 +143,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/illuminate/container/8047b47e1f731c975d9aa0fe0b269064d3f1346d.zip",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/8047b47e1f731c975d9aa0fe0b269064d3f1346d",
                 "reference": "8047b47e1f731c975d9aa0fe0b269064d3f1346d",
                 "shasum": ""
             },
@@ -186,7 +186,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/illuminate/contracts/ce5d73c6015b2054d32f3f8530767847b358ae4e.zip",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/ce5d73c6015b2054d32f3f8530767847b358ae4e",
                 "reference": "ce5d73c6015b2054d32f3f8530767847b358ae4e",
                 "shasum": ""
             },
@@ -228,7 +228,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/illuminate/database/8db1197b3d3e8a7393153643774d2924cdc6d906.zip",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/8db1197b3d3e8a7393153643774d2924cdc6d906",
                 "reference": "8db1197b3d3e8a7393153643774d2924cdc6d906",
                 "shasum": ""
             },
@@ -288,7 +288,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/illuminate/support/050d0ed3e1c0e1d129d73b2eaa14044e46a66f77.zip",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/050d0ed3e1c0e1d129d73b2eaa14044e46a66f77",
                 "reference": "050d0ed3e1c0e1d129d73b2eaa14044e46a66f77",
                 "shasum": ""
             },
@@ -336,6 +336,90 @@
             "time": "2016-11-03T15:25:28+00:00"
         },
         {
+            "name": "ljw/excel",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lejianwen/excel.git",
+                "reference": "a0ce9d4cf1bdffb87cab304946df172fe3423733"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lejianwen/excel/zipball/a0ce9d4cf1bdffb87cab304946df172fe3423733",
+                "reference": "a0ce9d4cf1bdffb87cab304946df172fe3423733",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "phpoffice/phpexcel": "1.8.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ljw\\Excel\\": "src/Excel"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "JianWen Le",
+                    "email": "84855512@qq.com"
+                }
+            ],
+            "description": "my excel data",
+            "homepage": "http://github.com/lejianwen/excel",
+            "keywords": [
+                "excel",
+                "ljw"
+            ],
+            "time": "2017-02-03 07:17:52"
+        },
+        {
+            "name": "ljw/restful",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lejianwen/restful.git",
+                "reference": "2d674dbbd7f27a42d1c2aabc351969666a8223dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lejianwen/restful/zipball/2d674dbbd7f27a42d1c2aabc351969666a8223dd",
+                "reference": "2d674dbbd7f27a42d1c2aabc351969666a8223dd",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ljw\\Restful\\": "src/Restful"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "JianWen Le",
+                    "email": "84855512@qq.com"
+                }
+            ],
+            "description": "my restful",
+            "homepage": "http://github.com/lejianwen/restful",
+            "keywords": [
+                "ljw",
+                "restful"
+            ],
+            "time": "2017-01-03 09:43:03"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.21.0",
             "source": {
@@ -345,7 +429,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/Seldaek/monolog/f42fbdfd53e306bda545845e4dbfd3e72edb4952.zip",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/f42fbdfd53e306bda545845e4dbfd3e72edb4952",
                 "reference": "f42fbdfd53e306bda545845e4dbfd3e72edb4952",
                 "shasum": ""
             },
@@ -423,7 +507,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/briannesbitt/Carbon/7b08ec6f75791e130012f206e3f7b0e76e18e3d7.zip",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/7b08ec6f75791e130012f206e3f7b0e76e18e3d7",
                 "reference": "7b08ec6f75791e130012f206e3f7b0e76e18e3d7",
                 "shasum": ""
             },
@@ -470,7 +554,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/noahbuscher/Macaw/a4d5e3e1871143416f95d7ced189545fb5147148.zip",
+                "url": "https://api.github.com/repos/noahbuscher/Macaw/zipball/a4d5e3e1871143416f95d7ced189545fb5147148",
                 "reference": "a4d5e3e1871143416f95d7ced189545fb5147148",
                 "shasum": ""
             },
@@ -500,7 +584,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/paragonie/random_compat/a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e.zip",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
                 "reference": "a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
                 "shasum": ""
             },
@@ -539,6 +623,63 @@
             "time": "2016-11-07T23:38:38+00:00"
         },
         {
+            "name": "phpoffice/phpexcel",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PHPExcel.git",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPExcel": "Classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "http://blog.maartenballiauw.be"
+                },
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                }
+            ],
+            "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+            "homepage": "http://phpexcel.codeplex.com",
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
+            "time": "2015-05-01T07:00:55+00:00"
+        },
+        {
             "name": "predis/predis",
             "version": "v1.1.1",
             "source": {
@@ -548,7 +689,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/nrk/predis/f0210e38881631afeafb56ab43405a92cafd9fd1.zip",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
                 "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
                 "shasum": ""
             },
@@ -598,7 +739,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/php-fig/log/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d.zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
                 "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
                 "shasum": ""
             },
@@ -637,16 +778,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.30",
+            "version": "v3.1.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "ed2b7f1146cfda13df1eea8a5f707a1b771b6e7e"
+                "reference": "c7d42e4a327c402897dd587871434888fde1e7a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/smarty-php/smarty/ed2b7f1146cfda13df1eea8a5f707a1b771b6e7e.zip",
-                "reference": "ed2b7f1146cfda13df1eea8a5f707a1b771b6e7e",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/c7d42e4a327c402897dd587871434888fde1e7a9",
+                "reference": "c7d42e4a327c402897dd587871434888fde1e7a9",
                 "shasum": ""
             },
             "require": {
@@ -659,10 +800,8 @@
                 }
             },
             "autoload": {
-                "classmap": [
-                    "libs/Smarty.class.php",
-                    "libs/SmartyBC.class.php",
-                    "libs/sysplugins/"
+                "files": [
+                    "libs/bootstrap.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -688,7 +827,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-08-07T18:46:49+00:00"
+            "time": "2016-12-14T21:57:25+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -700,7 +839,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/symfony/polyfill-mbstring/e79d363049d1c2128f133a2667e4f4190904f7f4.zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
                 "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
                 "shasum": ""
             },
@@ -751,16 +890,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v3.2.0",
+            "version": "v3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "64ab6fc0b42e5386631f408e6adcaaff8eee5ba1"
+                "reference": "5fd18eca88f4d187807a1eba083bc99feaa8635b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/symfony/translation/64ab6fc0b42e5386631f408e6adcaaff8eee5ba1.zip",
-                "reference": "64ab6fc0b42e5386631f408e6adcaaff8eee5ba1",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/5fd18eca88f4d187807a1eba083bc99feaa8635b",
+                "reference": "5fd18eca88f4d187807a1eba083bc99feaa8635b",
                 "shasum": ""
             },
             "require": {
@@ -811,14 +950,16 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-11-18T21:17:59+00:00"
+            "time": "2016-11-30T14:40:17+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "noahbuscher/macaw": 20
+        "noahbuscher/macaw": 20,
+        "ljw/restful": 20,
+        "ljw/excel": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

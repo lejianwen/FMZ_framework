@@ -7,11 +7,12 @@
  * QQ: 84855512
  */
 namespace app\controllers;
+use common\response;
 class ErrorController
 {
     public static function NotFound_404()
     {
-        header($_SERVER['SERVER_PROTOCOL']." 404 Not Found");
+        response::sendHttpStatus('404');
         echo '未匹配到路由<br>';
     }
 }

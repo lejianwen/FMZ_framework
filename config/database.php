@@ -7,12 +7,12 @@
  * QQ: 84855512
  */
 return [
-    'driver'    => '',
-    'host'      => '',
-    'database'  => '',
-    'username'  => '',
+    'driver'    => 'mysql',
+    'host'      => '127.0.0.1',
+    'database'  => 'myself',
+    'username'  => 'root',
     'password'  => '',
-    'charset'   => '',
-    'collation' => '',
-    'prefix'    => '',
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => ''
 ];
