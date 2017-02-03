@@ -44,10 +44,6 @@ class smarty
 
     public function setTpl($tpl)
     {
-        if (!is_file(self::VIEW_PATH . $tpl))
-        {
-            throw new \Exception($tpl . ' file is not exists!');
-        }
         $this->tpl = self::VIEW_PATH . $tpl;
     }
 
