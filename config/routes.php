@@ -6,12 +6,11 @@
  * Time: 10:54
  * QQ: 84855512
  */
-const CONTROLLERS = 'app\\controllers\\';
 return [
     'get'  => [
         ''        => 'app\controllers\IndexController@index',
         '(:str)/(:str)' => function ($controller, $method) {
-            $class = CONTROLLERS . ucwords($controller) . 'Controller';
+            $class = 'app\\controllers\\' . ucwords($controller) . 'Controller';
             if (method_exists($class, $method) && is_callable([$class, $method]))
             {
                 $object = new $class;

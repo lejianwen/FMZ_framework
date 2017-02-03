@@ -6,22 +6,22 @@
  * Time: 14:46
  * QQ: 84855512
  */
-namespace app;
-class View
+namespace lib\view;
+class smarty
 {
-    const VIEW_PATH = __DIR__ . '/views/';
+    const VIEW_PATH = BASE_PATH . 'app/views/';
     protected $smarty;
     protected $tpl;
 
-    public function __construct($tpl)
+    public function __construct()
     {
         if (!$this->smarty)
         {
             $smarty = new \Smarty;
             $smarty->setTemplateDir(self::VIEW_PATH);
-            $smarty->setCompileDir(BASE_PATH . '/smarty/templates_c/');
-            $smarty->setConfigDir(BASE_PATH . '/smarty/configs/');
-            $smarty->setCacheDir(BASE_PATH . '/smarty/cache/');
+            $smarty->setCompileDir(BASE_PATH . '/data/smarty/templates_c/');
+            $smarty->setConfigDir(BASE_PATH . '/data/smarty/configs/');
+            $smarty->setCacheDir(BASE_PATH . '/data/smarty/cache/');
             $smarty->setLeftDelimiter("<{");
             $smarty->setRightDelimiter("}>");
             //$smarty->force_compile = true;
@@ -30,20 +30,25 @@ class View
             $smarty->cache_lifetime = 120;
 
             $this->smarty = $smarty;
-            $this->tpl = $tpl;
         }
         return $this;
     }
 
-    public static function make($tpl)
+    public static function _instance()
+    {
+        static $self;
+        if (!$self)
+            $self = new self();
+        return $self;
+    }
+
+    public function setTpl($tpl)
     {
         if (!is_file(self::VIEW_PATH . $tpl))
         {
-            throw new \UnexpectedValueException('视图文件不存在');
-        } else
-        {
-            return new View($tpl);
+            throw new \Exception($tpl . ' file is not exists!');
         }
+        $this->tpl = self::VIEW_PATH . $tpl;
     }
 
     public function with($key, $value)
@@ -52,16 +57,18 @@ class View
         return $this;
     }
 
-    public function display()
+    public function display($tpl = null)
     {
+        if(!empty($tpl))
+            $this->tpl = self::VIEW_PATH . $tpl;
         $this->smarty->display($this->tpl);
         unset($this->tpl);
         return $this;
     }
 
-    protected function __destruct()
+    /*public function __destruct()
     {
         if ($this->tpl)
             $this->smarty->display($this->tpl);
-    }
+    }*/
 }

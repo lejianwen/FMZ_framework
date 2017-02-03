@@ -8,10 +8,10 @@
  */
 return [
     'driver'    => 'mysql',
-    'host'      => '192.168.0.88',
-    'database'  => 'menya',
-    'username'  => 'menya_manager',
-    'password'  => 'menya!@#12378e',
+    'host'      => '127.0.0.1',
+    'database'  => 'myself',
+    'username'  => 'root',
+    'password'  => '',
     'charset'   => 'utf8',
     'collation' => 'utf8_unicode_ci',
     'prefix'    => ''
