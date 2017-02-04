@@ -4,6 +4,7 @@
   "keywords": ["framework", "ljw"],
   "type": "project",
   "homepage": "http://github.com/lejianwen/FMZ_framework",
+  "license": "MIT",
   "require": {
     "predis/predis": "*",
     "filp/whoops": "2.1.4",
