@@ -3,6 +3,7 @@
   "description": "my framework",
   "keywords": ["framework", "ljw"],
   "type": "project",
+  "homepage": "http://github.com/lejianwen/FMZ_framework",
   "require": {
     "predis/predis": "*",
     "filp/whoops": "2.1.4",
@@ -10,7 +11,6 @@
     "monolog/monolog": "1.21.0",
     "illuminate/database": "*",
     "smarty/smarty":"*",
-    "ljw/restful": "dev-master",
     "ljw/excel": "dev-master"
   },
   "autoload": {
