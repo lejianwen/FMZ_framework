@@ -7,6 +7,6 @@
  * QQ: 84855512
  */
 return [
-    'session' => 'file', //session存放 file || mysql || redis
+    'session' => 'mysql_pdo', //session存放 file || mysql || redis
     'view'    => 'smarty' //模板
 ];
