@@ -11,23 +11,26 @@
  *      id varchar(255) NOT NULL,
  *      expire TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
  *      data blob,
- *      UNIQUE KEY `session_id` (`session_id`)
+ *      UNIQUE KEY `id` (`id`) USING BTREE,
+ *      KEY `expire` (`expire`) USING BTREE
  *    )ENGINE=myisam default charset=utf8;
  */
 namespace lib\session;
 class mysql_pdo
 {
-    const DNS = "mysql:host=127.0.0.1;dbname=test;charset=utf8";
-    const USER = 'root';
-    const PASS = '';
     const LEFT_TIME = 600;
     static $dbh = null;
-    private $table = 'session';
+    private $table;
     public function __construct()
     {
         if (self::$dbh === null)
         {
-            self::$dbh = new \PDO(self::DNS, self::USER, self::PASS, array(
+            $this->table = config('app.session_table');
+            $dns = config('database.driver')
+                . ':host=' . config('database.host')
+                . ';dbname=' . config('database.database')
+                . ';charset=' .config('database.charset');
+            self::$dbh = new \PDO($dns, config('database.username'), config('database.password'), array(
                // \PDO::ATTR_PERSISTENT       => TRUE,
                 \PDO::ATTR_ERRMODE          => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_EMULATE_PREPARES => FALSE

@@ -6,7 +6,7 @@
  * Time: 16:42
  * QQ: 84855512
  */
-namespace common;
+namespace lib\http;
 class response
 {
     public static function sendHttpStatus($code)

@@ -10,12 +10,13 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use NoahBuscher\Macaw\Macaw as Route;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use common\request;
+use lib\http\request;
 class bootstrap
 {
 
     public static function start()
     {
+        define('APP_START', microtime(true));
         //系统初始化
         self::init();
         //日志
@@ -28,6 +29,7 @@ class bootstrap
         self::exception();
         //cli模式不载入路由
         IS_CLI OR self::route();
+        define('APP_EXIT', microtime(true));
     }
 
     /**定义一些配置
@@ -48,7 +50,6 @@ class bootstrap
         //是否是Ajax请求
         defined('IS_AJAX') or define('IS_AJAX', ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false);
 
-
     }
 
     public static function log()
@@ -63,22 +64,13 @@ class bootstrap
         ]);
     }
 
-    /**获取app配置
-     * @param $key
-     * @return mixed
-     */
-    public static function appConf($key)
-    {
-        $conf_arr = require BASE_PATH . '/config/app.php';
-        return $conf_arr[$key];
-    }
 
     /** session扩展
      *  如果要把session存到数据库或别的地方再来完成改方法
      */
     public static function session()
     {
-        $session_driver = self::appConf('session');
+        $session_driver = config('app.session');
         $class = 'lib\session\\' . $session_driver;
         $handler = new $class;
         session_set_save_handler(
@@ -88,8 +80,8 @@ class bootstrap
             array(&$handler,"write"),
             array(&$handler,"destroy"),
             array(&$handler,"gc"));
-        //register_shutdown_function('session_write_close');
-       // session_write_close();
+        register_shutdown_function('session_write_close');
+        session_write_close();
         session_start();
     }
 

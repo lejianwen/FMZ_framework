@@ -22,8 +22,8 @@
       "lib\\" : "lib/"
     },
     "classmap": [
-      "bootstrap",
-      "common"
-    ]
+      "bootstrap"
+    ],
+    "files": ["common/functions.php"]
   }
 }

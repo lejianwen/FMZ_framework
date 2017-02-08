@@ -6,7 +6,7 @@
  * Time: 14:03
  * QQ: 84855512
  */
-namespace common;
+namespace lib\http;
 class request
 {
     public $ip;
@@ -30,8 +30,8 @@ class request
     {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $arr_uri = explode('/', $uri);
-        $this->setController($arr_uri[1]);
-        $this->setAction($arr_uri[2]);
+        $this->setController($arr_uri[1] ?: 'index');
+        $this->setAction($arr_uri[2] ?: 'index');
         $this->setMethod($_SERVER['REQUEST_METHOD']);
         $this->setUrl($_SERVER['REDIRECT_URL']);
         $this->setClientIp();

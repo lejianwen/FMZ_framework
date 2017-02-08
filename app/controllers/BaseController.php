@@ -7,15 +7,17 @@
  * QQ: 84855512
  */
 namespace app\controllers;
+use lib\session;
 use lib\view\smarty;
-use common\request;
+use lib\http\request;
 class BaseController
 {
     protected $view;
     protected $request;
-
+    protected $session;
     public function __construct()
     {
+        $this->session = new session();
         $this->initView();
     }
 
