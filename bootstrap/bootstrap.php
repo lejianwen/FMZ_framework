@@ -60,7 +60,7 @@ class bootstrap
         $info_log->debug('request_info:', [
             'ip' => $request->getClientIp(),
             'method' => $request->getMethod(),
-            'url' => $request->getUrl()
+            'uri' => $request->getUri()
         ]);
     }
 

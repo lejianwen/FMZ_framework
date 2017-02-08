@@ -13,7 +13,7 @@ class request
     public $controller;
     public $action;
     public $method;
-    public $url;
+    public $uri;
 
     public static function _instance()
     {
@@ -33,18 +33,18 @@ class request
         $this->setController($arr_uri[1] ?: 'index');
         $this->setAction($arr_uri[2] ?: 'index');
         $this->setMethod($_SERVER['REQUEST_METHOD']);
-        $this->setUrl($_SERVER['REDIRECT_URL']);
+        $this->setUri($_SERVER['REQUEST_URI']);
         $this->setClientIp();
     }
 
-    protected function setUrl($url = '')
+    protected function setUri($uri = '')
     {
-        $this->url = $url;
+        $this->uri = $uri;
     }
 
-    public function getUrl()
+    public function getUri()
     {
-        return $this->url;
+        return $this->uri;
     }
 
     protected function setMethod($method = '')
