@@ -5,6 +5,7 @@ A simple framework
 运行composer create-project ljw/framework ljw dev-master
 
 #简介
+* 自己开发的一个简单框架，功能比较简单，以后有时间会慢慢扩展
 * 依赖的类库请查看composer.json
 * ORM使用的是[eloquent](https://laravel.com/docs/5.4/eloquent)，即laravel使用的ORM
 * 视图使用的是[smarty](http://www.smarty.net/)
