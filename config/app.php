@@ -8,5 +8,6 @@
  */
 return [
     'session' => 'mysql_pdo', //session存放 file || mysql || redis
+    'session_table' => 'session', //session 存放在mysql中的表名
     'view'    => 'smarty' //模板
 ];
