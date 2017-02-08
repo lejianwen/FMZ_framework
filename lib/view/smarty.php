@@ -19,16 +19,15 @@ class smarty
         {
             $smarty = new \Smarty;
             $smarty->setTemplateDir(self::VIEW_PATH);
-            $smarty->setCompileDir(BASE_PATH . '/data/smarty/templates_c/');
-            $smarty->setConfigDir(BASE_PATH . '/data/smarty/configs/');
-            $smarty->setCacheDir(BASE_PATH . '/data/smarty/cache/');
-            $smarty->setLeftDelimiter("<{");
-            $smarty->setRightDelimiter("}>");
-            //$smarty->force_compile = true;
-            $smarty->debugging = false;
-            $smarty->caching = true;
-            $smarty->cache_lifetime = 120;
-
+            $smarty->setCompileDir(config('app.smarty.compile_dir'));
+//            $smarty->setConfigDir(BASE_PATH . '/data/smarty/configs/');
+            $smarty->setCacheDir(config('app.smarty.cache_dir'));
+            $smarty->setLeftDelimiter(config('app.smarty.left_delimiter'));
+            $smarty->setRightDelimiter(config('app.smarty.right_delimiter'));
+            $smarty->force_compile = config('app.smarty.force_compile');
+            $smarty->debugging = config('app.smarty.debug');
+            $smarty->caching = config('app.smarty.cache');
+            $smarty->cache_lifetime = config('app.smarty.cache_lefttime');
             $this->smarty = $smarty;
         }
         return $this;
@@ -45,6 +44,7 @@ class smarty
     public function setTpl($tpl)
     {
         $this->tpl = self::VIEW_PATH . $tpl;
+        return $this;
     }
 
     public function with($key, $value)
