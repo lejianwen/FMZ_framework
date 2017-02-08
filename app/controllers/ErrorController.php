@@ -7,7 +7,7 @@
  * QQ: 84855512
  */
 namespace app\controllers;
-use common\response;
+use lib\http\response;
 class ErrorController
 {
     public static function NotFound_404()
