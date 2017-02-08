@@ -8,7 +8,7 @@
  */
 namespace app\controllers;
 use lib\session;
-use lib\view\smarty;
+use lib\view;
 use lib\http\request;
 class BaseController
 {
@@ -27,7 +27,7 @@ class BaseController
     protected function initView()
     {
         $this->request = request::_instance();
-        $this->view = smarty::_instance();
+        $this->view = view::_instance();
         $this->view->setTpl(strtolower($this->request->getController()) . '/' . strtolower($this->request->getAction() . '.tpl'));
     }
 

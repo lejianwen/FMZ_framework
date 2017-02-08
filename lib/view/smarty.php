@@ -33,14 +33,6 @@ class smarty
         return $this;
     }
 
-    public static function _instance()
-    {
-        static $self;
-        if (!$self)
-            $self = new self();
-        return $self;
-    }
-
     public function setTpl($tpl)
     {
         $this->tpl = self::VIEW_PATH . $tpl;
