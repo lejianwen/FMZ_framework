@@ -9,6 +9,6 @@
 return [
     'host' => '192.168.0.88',
     'port' => 6379,
-    'db' => null,
+    'db' => 0,
     'password' => null
 ];
