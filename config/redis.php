@@ -5,9 +5,10 @@
  * Date: 2016/11/18
  * Time: 10:43
  */
-//predis的配置
+//redis的配置
 return [
-    'host' => '127.0.0.1',
+    'host' => '192.168.0.88',
     'port' => 6379,
-    'password' => 'pwd_v1.0_master',
+    'db' => null,
+    'password' => null
 ];

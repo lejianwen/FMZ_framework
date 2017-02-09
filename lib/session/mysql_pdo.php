@@ -16,9 +16,8 @@
  *    )ENGINE=myisam default charset=utf8;
  */
 namespace lib\session;
-class mysql_pdo
+class mysql_pdo implements session
 {
-    const LEFT_TIME = 600;
     static $dbh = null;
     private $table;
     public function __construct()
@@ -45,16 +44,8 @@ class mysql_pdo
 
     public function close()
     {
-        $this->gc(self::LEFT_TIME);
+        $this->gc(config('app.session_lefttime'));
         return true;
-    }
-
-    public function write($session_id, $data)
-    {
-        $expire = date('Y-m-d H:i:s', time() + self::LEFT_TIME);
-        $sql = "INSERT INTO {$this->table} (`id`, `data`, `expire`) values (?, ?, ?) ON DUPLICATE KEY UPDATE data = ?, expire = ?";
-        $stmt = self::$dbh->prepare($sql);
-        $stmt->execute(array($session_id, $data, $expire, $data, $expire));
     }
 
     public function read($session_id)
@@ -64,6 +55,14 @@ class mysql_pdo
         $stmt->execute(array($session_id, date('Y-m-d H:i:s')));
         $data = $stmt->fetch(\PDO::FETCH_ASSOC)['data'];
         return $data;
+    }
+
+    public function write($session_id, $data)
+    {
+        $expire = date('Y-m-d H:i:s', time() + self::LEFT_TIME);
+        $sql = "INSERT INTO {$this->table} (`id`, `data`, `expire`) values (?, ?, ?) ON DUPLICATE KEY UPDATE data = ?, expire = ?";
+        $stmt = self::$dbh->prepare($sql);
+        $stmt->execute(array($session_id, $data, $expire, $data, $expire));
     }
 
     public function destroy($session_id)
