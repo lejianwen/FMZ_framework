@@ -33,6 +33,7 @@ ljw                     WEB部署目录（或者子目录）
 │  └─ ...               更多系统模块
 │
 ├─public                WEB目录（对外访问目录）
+│  ├─static             静态文件目录，比如js，image
 │  ├─index.php          入口文件
 │  └─.htaccess          用于apache的重写
 ├─vendor                第三方类库目录（Composer依赖库）
