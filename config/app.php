@@ -8,7 +8,7 @@
  */
 return [
     //session存放 为空表示用自带的, mysql_pdo || redis, 具体看lib/session中的文件
-    'session'          => 'mysql_pdo',
+    'session'          => '',
     'session_table'    => 'session',    //session 存放在mysql中的表名
     'session_lefttime' => 1000,
     'session_redis_db' => 0,            //session 存放在redis中的某个db
