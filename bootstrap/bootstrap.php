@@ -11,6 +11,7 @@ use NoahBuscher\Macaw\Macaw as Route;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use lib\http\request;
+
 class bootstrap
 {
 
@@ -56,9 +57,9 @@ class bootstrap
         $info_log->pushHandler(new StreamHandler(BASE_PATH . 'data/log/system/' . date('Y-m-d') . '.log', Logger::DEBUG));
         $request = request::_instance();
         $info_log->debug('request_info:', [
-            'ip' => $request->getClientIp(),
+            'ip'     => $request->getClientIp(),
             'method' => $request->getMethod(),
-            'uri' => $request->getUri()
+            'uri'    => $request->getUri()
         ]);
     }
 
@@ -69,17 +70,17 @@ class bootstrap
     public static function session()
     {
         $session_driver = config('app.session');
-        if($session_driver)
+        if ($session_driver)
         {
             $class = 'lib\session\\' . $session_driver;
             $handler = new $class;
             session_set_save_handler(
-                array(&$handler,"open"),
-                array(&$handler,"close"),
-                array(&$handler,"read"),
-                array(&$handler,"write"),
-                array(&$handler,"destroy"),
-                array(&$handler,"gc"));
+                array(&$handler, "open"),
+                array(&$handler, "close"),
+                array(&$handler, "read"),
+                array(&$handler, "write"),
+                array(&$handler, "destroy"),
+                array(&$handler, "gc"));
         }
         register_shutdown_function('session_write_close');
         session_write_close();
