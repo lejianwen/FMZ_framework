@@ -43,8 +43,6 @@ class bootstrap
         setlocale(LC_ALL, "zh_CN.utf-8");
         //设置根路径
         defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
-        //调试模式
-        defined('DEBUG') or define('DEBUG', true);
         //是否是命令行模式
         defined('IS_CLI') or define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
         //是否是Ajax请求
@@ -96,7 +94,7 @@ class bootstrap
 
         $whoops = new \Whoops\Run;
         //错误信息,调试模式打开则显示,否则只记录到日志
-        if (DEBUG)
+        if (config('app.debug'))
         {
             $handler = new \Whoops\Handler\PrettyPageHandler;
             $whoops->pushHandler($handler);
