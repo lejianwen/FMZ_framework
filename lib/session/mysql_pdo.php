@@ -16,7 +16,7 @@
  *    )ENGINE=myisam default charset=utf8;
  */
 namespace lib\session;
-class mysql_pdo implements session
+class mysql_pdo extends session
 {
     static $dbh = null;
     private $table;
@@ -25,6 +25,7 @@ class mysql_pdo implements session
         if (self::$dbh === null)
         {
             $this->table = config('app.session_table');
+            $this->left_time = config('app.session_lefttime');
             $dns = config('database.driver')
                 . ':host=' . config('database.host')
                 . ';dbname=' . config('database.database')
@@ -35,17 +36,6 @@ class mysql_pdo implements session
                 \PDO::ATTR_EMULATE_PREPARES => FALSE
             ));
         }
-    }
-
-    public function open($savePath, $sessionName)
-    {
-        return true;
-    }
-
-    public function close()
-    {
-        $this->gc(config('app.session_lefttime'));
-        return true;
     }
 
     public function read($session_id)
@@ -59,7 +49,7 @@ class mysql_pdo implements session
 
     public function write($session_id, $data)
     {
-        $expire = date('Y-m-d H:i:s', time() + self::LEFT_TIME);
+        $expire = date('Y-m-d H:i:s', time() + $this->left_time);
         $sql = "INSERT INTO {$this->table} (`id`, `data`, `expire`) values (?, ?, ?) ON DUPLICATE KEY UPDATE data = ?, expire = ?";
         $stmt = self::$dbh->prepare($sql);
         $stmt->execute(array($session_id, $data, $expire, $data, $expire));

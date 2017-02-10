@@ -7,7 +7,7 @@
  * QQ: 84855512
  */
 namespace lib\session;
-class redis implements session
+class redis extends session
 {
     static $client;
 
@@ -15,6 +15,7 @@ class redis implements session
     {
         if (!self::$client)
         {
+            $this->left_time = config('app.session_lefttime');
             self::$client = new \Redis();
             self::$client->connect(config('redis.host'), config('redis.port'));
             if ($password = config('redis.password'))
@@ -25,16 +26,6 @@ class redis implements session
 
     }
 
-    public function open($save_path, $session_name)
-    {
-        return true;
-    }
-
-    public function close()
-    {
-        return true;
-    }
-
     public function read($session_id)
     {
         return self::$client->get($session_id) ?: '';
@@ -42,7 +33,7 @@ class redis implements session
 
     public function write($session_id, $data)
     {
-        self::$client->setex($session_id, config('app.session_lefttime'), $data);
+        self::$client->setex($session_id, $this->left_time, $data);
     }
 
     public function destroy($session_id)

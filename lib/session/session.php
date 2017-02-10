@@ -7,17 +7,26 @@
  * QQ: 84855512
  */
 namespace lib\session;
-interface  session
+abstract class session
 {
-    public function open($save_path, $session_name);
+    protected $left_time;
 
-    public function close();
+    public function open($save_path, $session_name)
+    {
+        return true;
+    }
 
-    public function read($session_id);
+    public function close()
+    {
+        $this->gc($this->left_time);
+        return true;
+    }
 
-    public function write($session_id, $data);
+    public function read($session_id) { }
 
-    public function destroy($session_id);
+    public function write($session_id, $data) { }
 
-    public function gc($left_time);
+    public function destroy($session_id) { }
+
+    public function gc($left_time) { }
 }

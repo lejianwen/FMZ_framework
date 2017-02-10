@@ -7,7 +7,7 @@
  * QQ: 84855512
  */
 namespace lib\session;
-class predis implements session
+class predis extends session
 {
     static $client;
 
@@ -15,21 +15,12 @@ class predis implements session
     {
         if (!self::$client)
         {
+            $this->left_time = config('app.session_lefttime');
             self::$client = new \Predis\Client(config('redis'));
             if ($db = config('app.session_redis_db'))
                 self::$client->select($db);
         }
 
-    }
-
-    public function open($save_path, $session_name)
-    {
-        return true;
-    }
-
-    public function close()
-    {
-        return true;
     }
 
     public function read($session_id)
@@ -39,7 +30,7 @@ class predis implements session
 
     public function write($session_id, $data)
     {
-        self::$client->setex($session_id, config('app.session_lefttime'), $data);
+        self::$client->setex($session_id, $this->left_time, $data);
     }
 
     public function destroy($session_id)
