@@ -1,3 +1,4 @@
-THIS IS A SIMPLE FRAME!
+THIS IS A <{$framework}>!
+
 
 

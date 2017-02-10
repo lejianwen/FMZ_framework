@@ -7,11 +7,12 @@
  * QQ: 84855512
  */
 namespace app\controllers;
+use lib\session\session;
+
 class IndexController extends BaseController
 {
     public function index()
     {
-        echo 'simple laravel is ok!';
-        $this->view->display();
+        $this->view->with('framework', 'FMZ_framework')->display();
     }
 }
