@@ -19,9 +19,15 @@ return [
         'force_compile'   => false,     //检查模板是否改动,开发时打开,正式 关闭
         'cache'           => false,     //是否缓存
         'cache_lifetime'  => 120,       //缓存时间
-        'cache_dir'       => BASE_PATH . '/data/smarty/cache/',
-        'compile_dir'     => BASE_PATH . '/data/smarty/templates_c/',
+        'cache_dir'       => BASE_PATH . 'data/smarty/cache/',
+        'compile_dir'     => BASE_PATH . 'data/smarty/templates_c/', //编译目录
         'left_delimiter'  => '<{',
         'right_delimiter' => '}>'
     ],
+    'cache'            => 'redis',       //缓存类型，file||redis
+    'cache_expire'     => 120,          //缓存时间
+    'cache_file_dir'   => BASE_PATH . 'data/cache/',
+    'cache_redis_db'   => 1
+
+
 ];
