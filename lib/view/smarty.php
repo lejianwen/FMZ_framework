@@ -26,7 +26,7 @@ class smarty
             $smarty->setRightDelimiter(config('app.smarty.right_delimiter'));
             $smarty->force_compile = config('app.smarty.force_compile');
             $smarty->debugging = config('app.smarty.debug');
-            $smarty->caching = config('app.smarty.cache');
+            $smarty->caching = &config('app.smarty.cache');
             $smarty->cache_lifetime = config('app.smarty.cache_lefttime');
             $this->smarty = $smarty;
         }
@@ -50,6 +50,7 @@ class smarty
         if(!empty($tpl))
             $this->tpl = self::VIEW_PATH . $tpl;
         $this->smarty->display($this->tpl);
+        var_dump($this->smarty->caching);
         unset($this->tpl);
         return $this;
     }

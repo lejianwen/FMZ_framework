@@ -147,18 +147,34 @@ function doByFork($num = 10, $callback)
  * @param string $key 比如app.session
  * @return string
  */
-function config($key)
+function &config($key, $value = null)
 {
-    $key_arr = explode('.', $key);
-    if (file_exists(BASE_PATH . 'config/' . $key_arr[0] . '.php'))
-    {
-        $config = require BASE_PATH . 'config/' . $key_arr[0] . '.php';
-        unset($key_arr[0]);
-        foreach ($key_arr as $key)
-        {
-            $config = $config[$key];
-        }
+    static $config;
+    if ($key == '')
         return $config;
+    $key_arr = explode('.', $key);
+    if (!$config[$key_arr[0]])
+    {
+        if (file_exists(BASE_PATH . 'config/' . $key_arr[0] . '.php'))
+            $config[$key_arr[0]] = require BASE_PATH . 'config/' . $key_arr[0] . '.php';
+        else
+            throw new Exception("{$key_arr[0]}.php not found!");
     }
-    return '';
+    if ($value !== null)
+    {
+        if (count($key_arr) == 3)
+            $config[$key_arr[0]][$key_arr[1]][$key_arr[2]] = $value;
+        elseif (count($key_arr) == 2)
+            $config[$key_arr[0]][$key_arr[1]] = $value;
+        elseif (count($key_arr) == 1)
+            $config[$key_arr[0]] = $value;
+    }
+    if (count($key_arr) == 3)
+        return $config[$key_arr[0]][$key_arr[1]][$key_arr[2]];
+    elseif (count($key_arr) == 2)
+        return $config[$key_arr[0]][$key_arr[1]];
+    elseif (count($key_arr) == 1)
+        return $config[$key_arr[0]];
+    else
+        return null;
 }
