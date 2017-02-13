@@ -50,7 +50,6 @@ class smarty
         if(!empty($tpl))
             $this->tpl = self::VIEW_PATH . $tpl;
         $this->smarty->display($this->tpl);
-        var_dump($this->smarty->caching);
         unset($this->tpl);
         return $this;
     }
