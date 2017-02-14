@@ -7,11 +7,12 @@
  * QQ: 84855512
  */
 namespace lib\view;
-class smarty
+
+use lib\view;
+
+class smarty extends view
 {
-    const VIEW_PATH = BASE_PATH . 'app/views/';
     protected $smarty;
-    protected $tpl;
 
     public function __construct()
     {
@@ -33,12 +34,6 @@ class smarty
         return $this;
     }
 
-    public function setTpl($tpl)
-    {
-        $this->tpl = self::VIEW_PATH . $tpl;
-        return $this;
-    }
-
     public function with($key, $value)
     {
         $this->smarty->assign($key, $value);
@@ -47,16 +42,11 @@ class smarty
 
     public function display($tpl = null)
     {
-        if(!empty($tpl))
+        if (!empty($tpl))
             $this->tpl = self::VIEW_PATH . $tpl;
         $this->smarty->display($this->tpl);
         unset($this->tpl);
         return $this;
     }
 
-    /*public function __destruct()
-    {
-        if ($this->tpl)
-            $this->smarty->display($this->tpl);
-    }*/
 }

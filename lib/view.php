@@ -7,8 +7,12 @@
  * QQ: 84855512
  */
 namespace lib;
-class view
+abstract class view
 {
+    const VIEW_PATH = BASE_PATH . 'app/views/';
+    protected $tpl;
+    protected $data;
+
     public static function _instance()
     {
         static $view;
@@ -19,4 +23,19 @@ class view
         }
         return $view;
     }
+
+    public function setTpl($tpl)
+    {
+        if (is_file(self::VIEW_PATH . $tpl))
+            $this->tpl = self::VIEW_PATH . $tpl;
+        return $this;
+    }
+
+    public function with($key, $value)
+    {
+        $this->data[$key] = $value;
+        return $this;
+    }
+
+    public function display($tpl = null) { }
 }
