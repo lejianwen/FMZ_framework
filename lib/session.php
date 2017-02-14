@@ -11,14 +11,19 @@ class session
 {
     public function get($key = null)
     {
-        if($key === null)
+        if ($key === null)
             return $_SESSION;
         return $_SESSION[$key];
     }
 
     public function set($key, $value)
     {
-        if($key !== null)
+        if ($key !== null)
             $_SESSION[$key] = $value;
+    }
+
+    public function del($key)
+    {
+        unset($_SESSION[$key]);
     }
 }
