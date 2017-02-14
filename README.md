@@ -76,7 +76,9 @@ return [
 
 ];
 ~~~
-#### session SESSION的相关配置
+##### debug   是否打开DEBUG模式
+
+####1) SESSION的相关配置
 ##### session session存储方式
 * ''             使用PHP默认的session存储方式,此时session_lefttime配置失效,请查看**php.ini**;
 * 'mysql_pdo'    使用mysql存储session,**暂时只支持pdo，请安装好pdo扩展**
@@ -100,14 +102,15 @@ return [
 ##### session_redis_db 用redis存储session时的db
 ##### session_lefttime session的过期时间,单位秒
 
-#### view 视图
+####2) 视图配置
 **视图模板都用.tpl作为文件后缀**
+##### view 视图
 * 'smarty'  使用smarty作为视图
     * 使用此配置时，请填写smarty详细配置
 * 'native'  使用原生PHP作为视图,在视图模板使用原生php
-#### debug   是否打开DEBUG模式
-#### cache   缓存配置
-#### cache  缓存使用方式
+
+####3) cache   缓存配置
+##### cache  缓存使用方式
 * 'file'    使用文件缓存
 * 'redis'   使用redis缓存,**必须安装php_redis扩展**
 
@@ -115,6 +118,7 @@ return [
 ##### cache_file_dir 缓存文件目录
 ##### cache_redis_db 缓存使用的redis db
 ###2. routes.php 
+#### 路由配置
 ~~~
 return [
     'get'  => [
@@ -149,7 +153,7 @@ return [
         }
 ~~~
 
-###3    redis.php
+###3.    redis.php
 ####    redis相关配置
 ~~~
 return [
@@ -159,7 +163,7 @@ return [
     'password' => null
 ];
 ~~~
-###4    database.php
+###4.    database.php
 ####    数据库相关配置
 
 ~~~
