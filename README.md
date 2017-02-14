@@ -43,10 +43,10 @@ ljw                     WEB部署目录（或者子目录）
 ~~~
 ## 配置简介
 
-* app.php            项目配置文件
-* routes.php         路由配置文件
-* redis.php          redis配置文件
-* database.php       数据库配置文件
+* [app.php](#app.php)           项目配置文件
+* [routes.php](#routes.php)       路由配置文件
+* [redis.php](#redis.php)          redis配置文件
+* [database.php](#database.php)       数据库配置文件
 
 ###1. app.php 
 ~~~
