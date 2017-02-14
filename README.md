@@ -2,7 +2,8 @@
 
 #安装
 
-运行composer create-project ljw/framework ljw --prefer-dist
+* 运行composer create-project ljw/framework ljw --prefer-dist
+* 直接下载,然后运行composer install
 
 #简介
 * 自己开发的一个简单框架，功能比较简单，以后有时间会慢慢扩展
