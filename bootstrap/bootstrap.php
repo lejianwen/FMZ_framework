@@ -31,6 +31,7 @@ class bootstrap
         //cli模式不载入路由
         IS_CLI OR self::route();
         define('APP_EXIT', microtime(true));
+//        var_dump(APP_EXIT-APP_START);
     }
 
     /**定义一些配置
@@ -92,20 +93,21 @@ class bootstrap
      */
     public static function exception()
     {
-
         $whoops = new \Whoops\Run;
+
         //错误信息,调试模式打开则显示,否则只记录到日志
         if (config('app.debug'))
         {
-            $handler = new \Whoops\Handler\PrettyPageHandler;
-            $whoops->pushHandler($handler);
+            $whoops_handler = new \Whoops\Handler\PrettyPageHandler;
+            $whoops->pushHandler($whoops_handler);
         }
+
         $error_log = new Logger('SYS_ERROR');
         $error_log->pushHandler(new StreamHandler(BASE_PATH . 'data/log/system/error.log', Logger::ERROR));
 
-        $handler_log = new \Whoops\Handler\PlainTextHandler($error_log);
-        $handler_log->loggerOnly(true);
-        $whoops->pushHandler($handler_log);
+        $whoops_log_handler = new \Whoops\Handler\PlainTextHandler($error_log);
+        $whoops_log_handler->loggerOnly(true);
+        $whoops->pushHandler($whoops_log_handler);
         $whoops->register();
     }
 
