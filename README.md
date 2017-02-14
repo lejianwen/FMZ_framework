@@ -99,6 +99,7 @@ return [
 ##### session_table 用mysql存储session时的表名
 ##### session_redis_db 用redis存储session时的db
 ##### session_lefttime session的过期时间,单位秒
+
 #### view 视图
 **视图模板都用.tpl作为文件后缀**
 * 'smarty'  使用smarty作为视图
@@ -113,4 +114,64 @@ return [
 ##### cache_file_dir 缓存文件目录
 ##### cache_redis_db 缓存使用的redis db
 ###2. routes.php 
+~~~
+return [
+    'get'  => [
+        ''        => 'app\controllers\IndexController@index',
+        'demo/(:num)' => 'app\controllers\DemoController@num'
+    ],
+    'post' => [
+
+    ],
+    'error' => [
+        function () {
+            app\controllers\ErrorController::NotFound_404();
+        }
+    ]
+
+];
+~~~
+#### get    get请求
+#### post   post请求
+#### error  错误
+
+* 如果要自动匹配,加入以下代码
+~~~
+'(:str)/(:str)' => function ($controller, $method) {
+            $class = 'app\\controllers\\' . ucwords($controller) . 'Controller';
+            if (method_exists($class, $method) && is_callable([$class, $method]))
+            {
+                $object = new $class;
+                $object->$method();
+            } else
+                app\controllers\ErrorController::NotFound_404();
+        }
+~~~
+
+###3    redis.php
+####    redis相关配置
+~~~
+return [
+    'host' => '127.0.0.1',
+    'port' => 6379,
+    'db' => 0,
+    'password' => null
+];
+~~~
+###4    database.php
+####    数据库相关配置
+
+~~~
+return [
+    'driver'    => 'mysql',
+    'host'      => '127.0.0.1',
+    'database'  => 'ljw',
+    'username'  => 'root',
+    'password'  => '',
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => ''
+];
+~~~
+
 
