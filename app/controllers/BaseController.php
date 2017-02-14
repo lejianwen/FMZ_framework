@@ -7,28 +7,10 @@
  * QQ: 84855512
  */
 namespace app\controllers;
-use lib\session;
-use lib\view;
-use lib\http\request;
-class BaseController
-{
-    protected $view;
-    protected $request;
-    protected $session;
-    public function __construct()
-    {
-        $this->session = new session();
-        $this->initView();
-    }
 
-    /**初始化smarty模板
-     *
-     */
-    protected function initView()
-    {
-        $this->request = request::_instance();
-        $this->view = view::_instance();
-        $this->view->setTpl(strtolower($this->request->getController()) . '/' . strtolower($this->request->getAction() . '.tpl'));
-    }
+use lib\controller;
+
+class BaseController extends controller
+{
 
 }
