@@ -110,6 +110,7 @@ return [
 #### cache  缓存使用方式
 * 'file'    使用文件缓存
 * 'redis'   使用redis缓存,**必须安装php_redis扩展**
+
 ##### cache_expire   缓存有效时间
 ##### cache_file_dir 缓存文件目录
 ##### cache_redis_db 缓存使用的redis db
