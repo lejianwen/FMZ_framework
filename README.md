@@ -49,7 +49,7 @@ ljw                     WEB部署目录（或者子目录）
 * [redis.php](#3-redisphp)          redis配置文件
 * [database.php](#4-databasephp)       数据库配置文件
 
-###1. app.php 
+###1. <i id="1-appphp">app.php</i> 
 ~~~
 return [
     //session存放 为空表示用自带的, mysql_pdo || redis, 具体看lib/session中的文件
@@ -118,7 +118,7 @@ return [
 ##### cache_expire   缓存有效时间
 ##### cache_file_dir 缓存文件目录
 ##### cache_redis_db 缓存使用的redis db
-###2. routes.php 
+###2. <i id="2-routesphp">routes.php</i> 
 #### 路由配置
 ~~~
 return [
@@ -154,7 +154,7 @@ return [
         }
 ~~~
 
-###3.    redis.php
+###3.    <i id="3-redisphp">redis.php</i>
 ####    redis相关配置
 ~~~
 return [
@@ -164,7 +164,7 @@ return [
     'password' => null
 ];
 ~~~
-###4.    database.php
+###4.    <i id="4-databasephp">database.php</i>
 ####    数据库相关配置
 
 ~~~
