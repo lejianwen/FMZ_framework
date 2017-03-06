@@ -73,7 +73,7 @@ class bootstrap
         $session_driver = config('app.session');
         if ($session_driver)
         {
-            $class = 'lib\session\\' . $session_driver;
+            $class = 'lib\\session\\' . $session_driver;
             $handler = new $class;
             session_set_save_handler(
                 array(&$handler, "open"),
