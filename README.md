@@ -79,10 +79,10 @@ return [
 
 ];
 ~~~
-##### debug   是否打开DEBUG模式
+##### *debug*   是否打开DEBUG模式
 
 ####1) SESSION的相关配置
-##### session session存储方式
+##### *session* session存储方式
 * ''             使用PHP默认的session存储方式,此时session_lefttime配置失效,请查看**php.ini**;
 * 'mysql_pdo'    使用mysql存储session,**暂时只支持pdo，请安装好pdo扩展**
     * 使用此配置时,请填写session_table,表示session存储的表名
@@ -101,25 +101,25 @@ return [
 * 'predis'       使用redis存储session, **不用php_redis扩展**
     * 使用此配置时,请填写session_redis_db,表示session存储的db
     
-##### session_table 用mysql存储session时的表名
-##### session_redis_db 用redis存储session时的db
-##### session_lefttime session的过期时间,单位秒
+##### *session_table* 用mysql存储session时的表名
+##### *session_redis_db* 用redis存储session时的db
+##### *session_lefttime* session的过期时间,单位秒
 
 ####2) 视图配置
 **视图模板都用.tpl作为文件后缀**
-##### view 视图
+##### *view* 视图
 * 'smarty'  使用smarty作为视图
     * 使用此配置时，请填写smarty详细配置
 * 'native'  使用原生PHP作为视图,在视图模板使用原生php
 
-####3) cache   缓存配置
-##### cache  缓存使用方式
+####3) 缓存配置
+##### *cache*  缓存使用方式
 * 'file'    使用文件缓存
 * 'redis'   使用redis缓存,**必须安装php_redis扩展**
 
-##### cache_expire   缓存有效时间
-##### cache_file_dir 缓存文件目录
-##### cache_redis_db 缓存使用的redis db
+##### *cache_expire*   缓存有效时间
+##### *cache_file_dir* 缓存文件目录
+##### *cache_redis_db* 缓存使用的redis db
 ###2. <i id="2-routesphp">routes.php</i> 
 #### 路由配置
 ~~~
@@ -139,11 +139,11 @@ return [
 
 ];
 ~~~
-#### get    get请求
-#### post   post请求
-#### error  错误
+#### *get*  get请求
+#### *post*  post请求
+#### *error*  错误
 
-* 如果要自动匹配,加入以下代码
+* **如果要自动匹配,加入以下代码**
 ~~~
 '(:str)/(:str)' => function ($controller, $method) {
             $class = 'app\\controllers\\' . ucwords($controller) . 'Controller';
