@@ -43,7 +43,7 @@ class smarty extends view
     public function display($tpl = null)
     {
         if (!empty($tpl))
-            $this->tpl = self::VIEW_PATH . $tpl;
+            $this->setTpl($tpl);
         $this->smarty->display($this->tpl);
         unset($this->tpl);
         return $this;

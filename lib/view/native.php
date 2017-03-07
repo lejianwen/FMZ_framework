@@ -16,7 +16,7 @@ class native extends view
     public function display($tpl = null)
     {
         if (!empty($tpl))
-            $this->tpl = self::VIEW_PATH . $tpl;
+            $this->setTpl($tpl);
         extract($this->data);
         require realpath($this->tpl);
         return $this;
