@@ -6,10 +6,22 @@
  * Time: 16:42
  * QQ: 84855512
  */
-namespace lib\http;
+namespace lib;
+
 class response
 {
-    public static function sendHttpStatus($code)
+
+    public static function _instance()
+    {
+        static $self;
+        if(!$self)
+        {
+            $self = new self();
+        }
+        return $self;
+    }
+
+    public static function status($code)
     {
         static $_status = array(
             // Informational 1xx
@@ -60,10 +72,34 @@ class response
             505 => 'HTTP Version Not Supported',
             509 => 'Bandwidth Limit Exceeded'
         );
-        if(isset($_status[$code])) {
-            header('HTTP/1.1 '.$code.' '.$_status[$code]);
+        if (isset($_status[$code]))
+        {
+            header('HTTP/1.1 ' . $code . ' ' . $_status[$code]);
             // 确保FastCGI模式下正常
-            header('Status:'.$code.' '.$_status[$code]);
+            header('Status:' . $code . ' ' . $_status[$code]);
         }
+    }
+
+    public static function json($data, $status = 200)
+    {
+        self::status($status);
+        header('Content-Type:application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public static function jsonp($data, $callback = 'callback', $status = 200)
+    {
+        self::status($status);
+        header('Content-Type:application/json; charset=utf-8');
+        echo($callback . '(' . json_encode($data) . ');');
+    }
+
+    public static function view($content, $tpl, $status = 200)
+    {
+        if(!$tpl)
+            throw new \Exception('need template');
+        self::status($status);
+        header('Content-Type:html/text; charset=utf-8');
+        view::_instance()->setTpl($tpl)->with('content', $content)->display();
     }
 }

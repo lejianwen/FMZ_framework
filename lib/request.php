@@ -6,7 +6,7 @@
  * Time: 14:03
  * QQ: 84855512
  */
-namespace lib\http;
+namespace lib;
 class request
 {
     public $ip;
