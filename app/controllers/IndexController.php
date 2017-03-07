@@ -7,12 +7,12 @@
  * QQ: 84855512
  */
 namespace app\controllers;
-use lib\session\session;
-
 class IndexController extends BaseController
 {
     public function index()
     {
-        $this->view->with('framework', 'FMZ_framework')->display();
+        $this->response
+            ->with(['framework' => 'FMZ_framework'])
+            ->view('index/index');
     }
 }
