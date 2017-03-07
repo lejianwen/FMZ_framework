@@ -11,7 +11,6 @@ namespace lib;
 class response
 {
     protected $status = 200;
-    protected $content = null;
     protected $header = [];
     protected $options = [];
 
@@ -25,9 +24,8 @@ class response
         return $self;
     }
 
-    public function __construct($content = '', $status = 200, $header = [], $options = [])
+    public function __construct($status = 200, $header = [], $options = [])
     {
-        $this->content = $content;
         $this->status = $status;
         $this->header = $header;
         $this->options = $options;
@@ -168,7 +166,7 @@ class response
         if (!$tpl)
             throw new \Exception('need template');
         $this->status = $status;
-        $this->setContentType('html/text');
+        $this->setContentType('text/html');
         $this->header();
         $view = app('view');
         if (!empty($this->options))
