@@ -26,10 +26,7 @@ ljw                     WEB部署目录（或者子目录）
 │  ├─app.php            项目配置
 │  ├─routes.php         路由配置文件
 │  ├─redis.php          redis配置
-│  └─database.php       数据库配置文件
-├─data
-│  ├─log                日志文件目录
-│  └─smarty             smarty使用的目录
+│  └─database.php       数据库配置文件 
 ├─lib                   框架系统目录
 │  ├─http               http目录
 │  ├─session            session存放实现目录
@@ -40,6 +37,10 @@ ljw                     WEB部署目录（或者子目录）
 │  ├─static             静态文件目录，比如js，image
 │  ├─index.php          入口文件
 │  └─.htaccess          用于apache的重写
+├─runtime
+│  ├─cache              缓存文件目录
+│  ├─log                日志文件目录
+│  └─smarty             smarty使用的目录
 ├─vendor                第三方类库目录（Composer依赖库）
 ├─composer.json         composer 定义文件
 └─README.md             README 文件
