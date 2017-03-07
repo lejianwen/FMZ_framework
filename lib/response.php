@@ -10,20 +10,38 @@ namespace lib;
 
 class response
 {
+    protected $status = 200;
+    protected $content = null;
+    protected $header = [];
+    protected $options = [];
 
     public static function _instance()
     {
         static $self;
-        if(!$self)
+        if (!$self)
         {
             $self = new self();
         }
         return $self;
     }
 
-    public static function status($code)
+    public function __construct($content = '', $status = 200, $header = [], $options = [])
     {
-        static $_status = array(
+        $this->content = $content;
+        $this->status = $status;
+        $this->header = $header;
+        $this->options = $options;
+        $this->setContentType('html/text');
+    }
+
+    /**设置状态
+     * @param $code
+     * @return $this
+     * @deprecated 被系统的http_response_code替代
+     */
+    public function status($code)
+    {
+        $_status = array(
             // Informational 1xx
             100 => 'Continue',
             101 => 'Switching Protocols',
@@ -78,28 +96,126 @@ class response
             // 确保FastCGI模式下正常
             header('Status:' . $code . ' ' . $_status[$code]);
         }
+        return $this;
     }
 
-    public static function json($data, $status = 200)
+    /**设置contentType
+     * @param $content_type
+     * @param string $charset
+     */
+    public function setContentType($content_type, $charset = 'utf-8')
     {
-        self::status($status);
-        header('Content-Type:application/json; charset=utf-8');
+        $this->setHeader('Content-Type', $content_type . '; charset=' . $charset);
+    }
+
+    /**设置头信息
+     * @param $name
+     * @param $value
+     * @return $this
+     */
+    public function setHeader($name, $value)
+    {
+        if (is_array($name))
+        {
+            $this->header = array_merge($this->header, $name);
+        } else
+        {
+            $this->header[$name] = $value;
+        }
+        return $this;
+    }
+
+    /**发送头信息
+     *
+     */
+    public function header()
+    {
+        http_response_code($this->status);
+        foreach ($this->header as $key => $value)
+        {
+            header($key . ':' . $value);
+        }
+    }
+
+    public function json($data = [], $status = 200)
+    {
+        $this->status = $status;
+        $this->setContentType('application/json');
+        $this->header();
         echo json_encode($data);
     }
 
-    public static function jsonp($data, $callback = 'callback', $status = 200)
+    public function jsonp($data = [], $callback = 'callback', $status = 200)
     {
-        self::status($status);
-        header('Content-Type:application/json; charset=utf-8');
+        $this->status = $status;
+        $this->setContentType('application/json');
+        $this->header();
         echo($callback . '(' . json_encode($data) . ');');
     }
 
-    public static function view($content, $tpl, $status = 200)
+    /**设置输出参数
+     * @param array $options
+     * @return $this
+     */
+    public function with($options = [])
     {
-        if(!$tpl)
+        $this->options = array_merge($this->options, $options);
+        return $this;
+    }
+
+    public function view($tpl, $status = 200)
+    {
+        if (!$tpl)
             throw new \Exception('need template');
-        self::status($status);
-        header('Content-Type:html/text; charset=utf-8');
-        view::_instance()->setTpl($tpl)->with('content', $content)->display();
+        $this->status = $status;
+        $this->setContentType('html/text');
+        $this->header();
+        $view = app('view');
+        if (!empty($this->options))
+        {
+            foreach ($this->options as $key => $val)
+            {
+                $view->with($key, $val);
+            }
+        }
+        $view->setTpl($tpl)->display();
+
+        if (function_exists('fastcgi_finish_request'))
+        {
+            // FASTCGI下提高页面响应
+            fastcgi_finish_request();
+        }
+        return $this;
+    }
+
+    /**跳转
+     * @param $url
+     * @param string $msg
+     * @param int $time
+     */
+    public function redirect($url, $msg = '', $time = 0)
+    {
+        $this->status = 301;
+        $this->header();
+        if (empty($msg))
+            $msg = "redirect to  {$url} after {$time} s!";
+        if (!headers_sent())
+        {
+            // redirect
+            if (0 === $time)
+            {
+                header('Location: ' . $url);
+            } else
+            {
+                header("refresh:{$time};url={$url}");
+                echo $msg;
+            }
+        } else
+        {
+            $str = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
+            if ($time != 0)
+                $str .= $msg;
+            echo $str;
+        }
     }
 }

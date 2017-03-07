@@ -18,20 +18,17 @@ class request
     public static function _instance()
     {
         static $self;
-        if(!$self)
+        if (!$self)
         {
             $self = new self();
         }
         return $self;
     }
-    
-    
+
+
     public function __construct()
     {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $arr_uri = explode('/', $uri);
-        $this->setController($arr_uri[1] ?: 'index');
-        $this->setAction($arr_uri[2] ?: 'index');
         $this->setMethod($_SERVER['REQUEST_METHOD']);
         $this->setUri($_SERVER['REQUEST_URI']);
         $this->setClientIp();
@@ -82,7 +79,7 @@ class request
      */
     public function getClientIp()
     {
-        if(!$this->ip)
+        if (!$this->ip)
         {
             $this->setClientIp();
         }
@@ -91,7 +88,7 @@ class request
 
     protected function setClientIp()
     {
-        if(!$this->ip)
+        if (!$this->ip)
         {
             if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown'))
             {

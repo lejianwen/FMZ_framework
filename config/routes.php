@@ -9,6 +9,11 @@
 return [
     'get'  => [
         ''        => 'app\controllers\IndexController@index',
+        'index/index' => 'app\controllers\IndexController@index',
+        'index/test' => function (){
+            app('response')->json(['a' => 'aaa']);
+        },
+        //匹配
         '(:str)/(:str)' => function ($controller, $method) {
             $class = 'app\\controllers\\' . ucwords($controller) . 'Controller';
             if (method_exists($class, $method) && is_callable([$class, $method]))

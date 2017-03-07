@@ -10,7 +10,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use NoahBuscher\Macaw\Macaw as Route;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use lib\http\request;
 
 class bootstrap
 {
@@ -30,6 +29,7 @@ class bootstrap
         self::exception();
         //cli模式不载入路由
         IS_CLI OR self::route();
+
         define('APP_EXIT', microtime(true));
 //        var_dump(APP_EXIT-APP_START);
     }
@@ -45,6 +45,8 @@ class bootstrap
         setlocale(LC_ALL, "zh_CN.utf-8");
         //设置根路径
         defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
+        //系统日志路径
+        defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
         //是否是命令行模式
         defined('IS_CLI') or define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
         //是否是Ajax请求
@@ -55,8 +57,8 @@ class bootstrap
     public static function log()
     {
         $info_log = new Logger('SYS_INFO');
-        $info_log->pushHandler(new StreamHandler(BASE_PATH . 'data/log/system/' . date('Y-m-d') . '.log', Logger::DEBUG));
-        $request = request::_instance();
+        $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') .'.log', Logger::DEBUG));
+        $request = app('request');
         $info_log->debug('request_info:', [
             'ip'     => $request->getClientIp(),
             'method' => $request->getMethod(),
@@ -103,7 +105,7 @@ class bootstrap
         }
 
         $error_log = new Logger('SYS_ERROR');
-        $error_log->pushHandler(new StreamHandler(BASE_PATH . 'data/log/system/error.log', Logger::ERROR));
+        $error_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . 'error.log', Logger::ERROR));
 
         $whoops_log_handler = new \Whoops\Handler\PlainTextHandler($error_log);
         $whoops_log_handler->loggerOnly(true);
@@ -125,6 +127,8 @@ class bootstrap
     {
         //添加正则匹配字符串
         Route::$patterns[':str'] = '[a-zA-Z0-9_]+';
+        //只匹配一次
+        Route::haltOnMatch();
         $routes = require BASE_PATH . '/config/routes.php';
         foreach ($routes as $method => $route)
             foreach ($route as $uri => $callback)

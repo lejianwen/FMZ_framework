@@ -8,9 +8,6 @@
  */
 namespace lib;
 
-use lib\http\request;
-use lib\http\response;
-
 class controller
 {
     protected $view;
@@ -20,24 +17,9 @@ class controller
 
     public function __construct()
     {
-        $this->session = new session();
-        $this->request = request::_instance();
-        $this->response = new response();
-        $this->view = view::_instance();
-        $this->initView();
+        $this->session = app('session');
+        $this->request = app('request');
+        $this->response = app('response');
     }
 
-    /**初始化视图模板
-     *
-     */
-    protected function initView()
-    {
-
-        $this->view->setTpl(strtolower($this->request->getController()) . '/' . strtolower($this->request->getAction() . '.tpl'));
-    }
-
-    protected function response()
-    {
-
-    }
 }

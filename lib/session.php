@@ -9,6 +9,14 @@
 namespace lib;
 class session
 {
+    public static function _instance()
+    {
+        static $self;
+        if (!$self)
+            $self = new self();
+        return $self;
+    }
+
     public function get($key = null)
     {
         if ($key === null)

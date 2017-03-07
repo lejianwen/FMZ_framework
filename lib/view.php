@@ -26,8 +26,8 @@ abstract class view
 
     public function setTpl($tpl)
     {
-        if (is_file(self::VIEW_PATH . $tpl))
-            $this->tpl = self::VIEW_PATH . $tpl;
+        if (is_file(self::VIEW_PATH . $tpl . '.tpl'))
+            $this->tpl = self::VIEW_PATH . $tpl . '.tpl';
         return $this;
     }
 

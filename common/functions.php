@@ -149,54 +149,90 @@ function doByFork($num = 10, $callback)
  * @return null
  * @throws Exception
  */
-function &config($key, $value = null)
+if (!function_exists('config'))
 {
-    static $config;
-    if ($key == '')
-        return $config;
-    $key_arr = explode('.', $key);
-    $key_len = count($key_arr);
-    if (!$config[$key_arr[0]])
+    function &config($key, $value = null)
     {
-        if (file_exists(BASE_PATH . 'config/' . $key_arr[0] . '.php'))
-            $config[$key_arr[0]] = require BASE_PATH . 'config/' . $key_arr[0] . '.php';
-        else
-            throw new Exception("{$key_arr[0]}.php not found!");
-    }
-    if ($value !== null)
-    {
+        static $config;
+        if ($key == '')
+            return $config;
+        $key_arr = explode('.', $key);
+        $key_len = count($key_arr);
+        if (!$config[$key_arr[0]])
+        {
+            if (file_exists(BASE_PATH . 'config/' . $key_arr[0] . '.php'))
+                $config[$key_arr[0]] = require BASE_PATH . 'config/' . $key_arr[0] . '.php';
+            else
+                throw new Exception("{$key_arr[0]}.php not found!");
+        }
+        if ($value !== null)
+        {
+            switch ($key_len)
+            {
+                case 1:
+                    $config[$key_arr[0]] = $value;
+                    return true;
+                    break;
+                case 2:
+                    $config[$key_arr[0]][$key_arr[1]] = $value;
+                    return true;
+                    break;
+                case 3:
+                    $config[$key_arr[0]][$key_arr[1]][$key_arr[2]] = $value;
+                    return true;
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+        }
         switch ($key_len)
         {
             case 1:
-                $config[$key_arr[0]] = $value;
-                return true;
+                return $config[$key_arr[0]];
                 break;
             case 2:
-                $config[$key_arr[0]][$key_arr[1]] = $value;
-                return true;
+                return $config[$key_arr[0]][$key_arr[1]];
                 break;
             case 3:
-                $config[$key_arr[0]][$key_arr[1]][$key_arr[2]] = $value;
-                return true;
+                return $config[$key_arr[0]][$key_arr[1]][$key_arr[2]];
                 break;
             default:
-                return false;
+                return null;
                 break;
         }
     }
-    switch ($key_len)
+}
+/**单例实例化
+ * @param $name
+ * @return mixed
+ */
+if (!function_exists('app'))
+{
+    function app($name)
     {
-        case 1:
-            return $config[$key_arr[0]];
-            break;
-        case 2:
-            return $config[$key_arr[0]][$key_arr[1]];
-            break;
-        case 3:
-            return $config[$key_arr[0]][$key_arr[1]][$key_arr[2]];
-            break;
-        default:
-            return null;
-            break;
+        $class = 'lib\\' . $name;
+        return $class::_instance();
+    }
+}
+
+
+function redirect($url, $msg = '', $time = 0)
+{
+    if (empty($msg))
+        $msg    = "redirect to  {$url} after {$time} s!";
+    if (!headers_sent()) {
+        // redirect
+        if (0 === $time) {
+            header('Location: ' . $url);
+        } else {
+            header("refresh:{$time};url={$url}");
+            echo($msg);
+        }
+    } else {
+        $str    = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
+        if ($time != 0)
+            $str .= $msg;
+        echo $str;
     }
 }
