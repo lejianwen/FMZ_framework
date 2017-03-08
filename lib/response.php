@@ -196,12 +196,14 @@ class response
                 break;
             case 'view' :
                 app('view')->display();
-                if (function_exists('fastcgi_finish_request'))
-                {
-                    // FASTCGI下提高页面响应
-                    fastcgi_finish_request();
-                }
                 break;
+            default :
+                break;
+        }
+        if (function_exists('fastcgi_finish_request'))
+        {
+            // FASTCGI下提高页面响应
+            fastcgi_finish_request();
         }
 
     }
