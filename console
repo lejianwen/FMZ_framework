@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Created by PhpStorm.
+ * User: lejianwen
+ * Date: 2017/3/8
+ * Time: 14:48
+ * QQ: 84855512
+ */
+require __DIR__ . '/vendor/autoload.php';
+console::start();

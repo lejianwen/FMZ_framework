@@ -1,0 +1,102 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: lejianwen
+ * Date: 2017/3/8
+ * Time: 14:50
+ * QQ: 84855512
+ * CLI模式启动文件
+ */
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+class console
+{
+    public static function start()
+    {
+        define('APP_START', microtime(true));
+        //系统初始化
+        self::init();
+        //日志
+        self::log();
+        //数据库配置载入
+        self::database();
+        //错误信息
+        self::exception();
+        //运行
+        self::run();
+        define('APP_EXIT', microtime(true));
+        var_dump((APP_EXIT-APP_START)*1000);
+    }
+
+
+    /**定义一些配置
+     *
+     */
+    public static function init()
+    {
+        //默认时区定义
+        date_default_timezone_set('Asia/Shanghai');
+        //设置默认区域
+        setlocale(LC_ALL, "zh_CN.utf-8");
+        //设置根路径
+        defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
+        //系统日志路径
+        defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
+        //是否是命令行模式
+        defined('IS_CLI') or define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
+
+    }
+
+    public static function log()
+    {
+        if (config('app.sys_log'))
+        {
+            $info_log = new Logger('SYS_INFO');
+            $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', Logger::DEBUG));
+            $info_log->debug('console_info:', $_SERVER['argv']);
+        }
+    }
+
+    /**报错提示
+     *
+     */
+    public static function exception()
+    {
+        $whoops = new \Whoops\Run;
+
+        if (config('app.sys_error_log'))
+        {
+            $error_log = new Logger('SYS_ERROR');
+            $error_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . 'cli_error.log', Logger::ERROR));
+
+            $whoops_log_handler = new \Whoops\Handler\PlainTextHandler($error_log);
+            $whoops_log_handler->loggerOnly(true);
+            $whoops->pushHandler($whoops_log_handler);
+        }
+        $whoops->register();
+    }
+
+    public static function run()
+    {
+        $argv = $_SERVER['argv'];
+        $cmd = explode('/', $argv[1]);
+        $params = array_slice($cmd, 2);
+        $class = 'app\\commands\\' . ucwords($cmd[0]);
+        $obj = new $class;
+        if(!empty($params))
+            $obj->$cmd[1]($params);
+        else
+            $obj->$cmd[1]();
+    }
+
+    //orm 模型
+    public static function database()
+    {
+        // Create a new Database connection
+        $capsule = new Capsule;
+        $capsule->addConnection(require BASE_PATH . '/config/database.php');
+        $capsule->bootEloquent();
+    }
+
+}
