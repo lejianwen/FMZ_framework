@@ -29,6 +29,8 @@ class bootstrap
         self::exception();
         //cli模式不载入路由
         IS_CLI OR self::route();
+        //响应
+        app('response')->send();
 
         define('APP_EXIT', microtime(true));
 //        var_dump(APP_EXIT-APP_START);
@@ -56,14 +58,17 @@ class bootstrap
 
     public static function log()
     {
-        $info_log = new Logger('SYS_INFO');
-        $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') .'.log', Logger::DEBUG));
-        $request = app('request');
-        $info_log->debug('request_info:', [
-            'ip'     => $request->getClientIp(),
-            'method' => $request->getMethod(),
-            'uri'    => $request->getUri()
-        ]);
+        if (config('app.sys_log'))
+        {
+            $info_log = new Logger('SYS_INFO');
+            $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', Logger::DEBUG));
+            $request = app('request');
+            $info_log->debug('request_info:', [
+                'ip'     => $request->getClientIp(),
+                'method' => $request->getMethod(),
+                'uri'    => $request->getUri()
+            ]);
+        }
     }
 
 
@@ -104,12 +109,15 @@ class bootstrap
             $whoops->pushHandler($whoops_handler);
         }
 
-        $error_log = new Logger('SYS_ERROR');
-        $error_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . 'error.log', Logger::ERROR));
+        if (config('app.sys_error_log'))
+        {
+            $error_log = new Logger('SYS_ERROR');
+            $error_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . 'error.log', Logger::ERROR));
 
-        $whoops_log_handler = new \Whoops\Handler\PlainTextHandler($error_log);
-        $whoops_log_handler->loggerOnly(true);
-        $whoops->pushHandler($whoops_log_handler);
+            $whoops_log_handler = new \Whoops\Handler\PlainTextHandler($error_log);
+            $whoops_log_handler->loggerOnly(true);
+            $whoops->pushHandler($whoops_log_handler);
+        }
         $whoops->register();
     }
 

@@ -13,6 +13,9 @@ class response
     protected $status = 200;
     protected $header = [];
     protected $options = [];
+    protected $type = 'view';
+    protected $jsonp_callback = 'callback';
+
 
     public static function _instance()
     {
@@ -24,11 +27,8 @@ class response
         return $self;
     }
 
-    public function __construct($status = 200, $header = [], $options = [])
+    public function __construct()
     {
-        $this->status = $status;
-        $this->header = $header;
-        $this->options = $options;
         $this->setContentType('html/text');
     }
 
@@ -137,18 +137,19 @@ class response
 
     public function json($data = [], $status = 200)
     {
+        $this->type = 'json';
         $this->status = $status;
         $this->setContentType('application/json');
-        $this->header();
-        echo json_encode($data);
+        $this->options = $data;
     }
 
     public function jsonp($data = [], $callback = 'callback', $status = 200)
     {
+        $this->type = 'jsonp';
         $this->status = $status;
         $this->setContentType('application/json');
-        $this->header();
-        echo($callback . '(' . json_encode($data) . ');');
+        $this->options = $data;
+        $this->jsonp_callback = $callback;
     }
 
     /**设置输出参数
@@ -167,7 +168,6 @@ class response
             throw new \Exception('need template');
         $this->status = $status;
         $this->setContentType('text/html');
-        $this->header();
         $view = app('view');
         if (!empty($this->options))
         {
@@ -176,14 +176,34 @@ class response
                 $view->with($key, $val);
             }
         }
-        $view->setTpl($tpl)->display();
-
-        if (function_exists('fastcgi_finish_request'))
-        {
-            // FASTCGI下提高页面响应
-            fastcgi_finish_request();
-        }
+        $view->setTpl($tpl);
         return $this;
+    }
+
+    /**响应
+     *
+     */
+    public function send()
+    {
+        $this->header();
+        switch ($this->type)
+        {
+            case 'json' :
+                echo json_encode($this->options);
+                break;
+            case 'jsonp' :
+                echo($this->jsonp_callback . '(' . json_encode($this->options) . ');');
+                break;
+            case 'view' :
+                app('view')->display();
+                if (function_exists('fastcgi_finish_request'))
+                {
+                    // FASTCGI下提高页面响应
+                    fastcgi_finish_request();
+                }
+                break;
+        }
+
     }
 
     /**跳转
