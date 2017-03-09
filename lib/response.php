@@ -13,7 +13,7 @@ class response
     protected $status = 200;
     protected $header = [];
     protected $options = [];
-    protected $type = 'view';
+    protected $type = '';
     protected $jsonp_callback = 'callback';
 
 
@@ -29,7 +29,7 @@ class response
 
     public function __construct()
     {
-        $this->setContentType('html/text');
+        $this->setContentType('text/html');
     }
 
     /**设置状态
