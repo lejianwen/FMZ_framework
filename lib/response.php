@@ -166,6 +166,7 @@ class response
     {
         if (!$tpl)
             throw new \Exception('need template');
+        $this->type = 'view';
         $this->status = $status;
         $this->setContentType('text/html');
         $view = app('view');
