@@ -1,17 +1,20 @@
-# A simple framework
+# A simple framework for FMZ！
 
-#安装
-
-* 运行composer create-project ljw/framework ljw --prefer-dist
-* 直接下载,然后运行composer install
-
-#简介
+# 简介
 * 自己开发的一个简单框架，功能比较简单，以后有时间会慢慢扩展
 * 依赖的类库请查看composer.json
 * ORM使用的是[eloquent](https://laravel.com/docs/5.4/eloquent)，即laravel使用的ORM
-* 视图使用的是[smarty](http://www.smarty.net/)或者原生
-* session支持存放到mysql和redis
-* cache支持文件和redis 
+* 视图使用的是[smarty](http://www.smarty.net/)或者原生PHP
+* session支持存放到mysql和redis和PHP自带方式
+* cache支持文件和redis
+ 
+#安装
+
+## 方法一
+* 运行composer create-project ljw/framework ljw --prefer-dist
+## 方法二
+* 直接下载或克隆 (git clone https://github.com/lejianwen/FMZ_framework.git)
+* 然后运行composer install
 
 #目录结构
 ~~~
