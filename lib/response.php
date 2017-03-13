@@ -37,7 +37,7 @@ class response
      * @return $this
      * @deprecated 被系统的http_response_code替代
      */
-    public function status($code)
+    /*public function status($code)
     {
         $_status = array(
             // Informational 1xx
@@ -95,6 +95,16 @@ class response
             header('Status:' . $code . ' ' . $_status[$code]);
         }
         return $this;
+    }*/
+
+    /**设置状态
+     * @param $status
+     * @return $this
+     */
+    public function status($status = 200)
+    {
+        $this->status = $status;
+        return $this;
     }
 
     /**设置contentType
@@ -135,22 +145,6 @@ class response
         }
     }
 
-    public function json($data = [], $status = 200)
-    {
-        $this->type = 'json';
-        $this->status = $status;
-        $this->setContentType('application/json');
-        $this->options = $data;
-    }
-
-    public function jsonp($data = [], $callback = 'callback', $status = 200)
-    {
-        $this->type = 'jsonp';
-        $this->status = $status;
-        $this->setContentType('application/json');
-        $this->options = $data;
-        $this->jsonp_callback = $callback;
-    }
 
     /**设置输出参数
      * @param array $options
@@ -158,24 +152,48 @@ class response
      */
     public function with($options = [])
     {
-        $this->options = array_merge($this->options, $options);
+        if (is_array($options))
+            $this->options = array_merge($this->options, $options);
+        elseif (is_string($options))
+            $this->options = $options;
         return $this;
     }
 
-    public function view($tpl, $status = 200)
+    public function json($data = [], $status = null)
+    {
+        $this->type = 'json';
+        $status === null or $this->status = $status;
+        $this->setContentType('application/json');
+        $this->options = $data;
+    }
+
+    public function jsonp($data = [], $callback = 'callback', $status = null)
+    {
+        $this->type = 'jsonp';
+        $status === null or $this->status = $status;
+        $this->setContentType('application/json');
+        $this->options = $data;
+        $this->jsonp_callback = $callback;
+    }
+
+    public function view($tpl, $status = null)
     {
         if (!$tpl)
             throw new \Exception('need template');
         $this->type = 'view';
-        $this->status = $status;
+        $status === null or $this->status = $status;
         $this->setContentType('text/html');
         $view = app('view');
         if (!empty($this->options))
         {
-            foreach ($this->options as $key => $val)
+            if (is_array($this->options))
             {
-                $view->with($key, $val);
+                foreach ($this->options as $key => $val)
+                {
+                    $view->with($key, $val);
+                }
             }
+
         }
         $view->setTpl($tpl);
         return $this;
