@@ -1,8 +1,7 @@
 # A simple framework for FMZ！
 
 # 简介
-* 自己开发的一个简单框架，功能比较简单，以后有时间会慢慢扩展
-* 依赖的类库请查看composer.json
+* 通过开发框架，让自己对web开发有了更好的认识
 * ORM使用的是[eloquent](https://laravel.com/docs/5.4/eloquent)，即laravel使用的ORM
 * 视图使用的是[smarty](http://www.smarty.net/)或者原生PHP
 * session支持存放到mysql和redis和PHP自带方式
