@@ -28,7 +28,7 @@ class request
 
     public function __construct()
     {
-        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        //$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $this->setMethod($_SERVER['REQUEST_METHOD']);
         $this->setUri($_SERVER['REQUEST_URI']);
         $this->setClientIp();
@@ -109,5 +109,25 @@ class request
             $ip = preg_match('/[\d\.]{7,15}/', $ip, $matches) ? $matches [0] : '';
             $this->ip = $ip;
         }
+    }
+
+    public function get($key = null, $default = null)
+    {
+        if($key === null)
+            return $_GET;
+        $value = $_GET[$key] ;
+        if($default !== null && $value === null)
+            $value = $default;
+        return $value;
+    }
+
+    public function post($key = null, $default = null)
+    {
+        if($key === null)
+            return $_POST;
+        $value = $_POST[$key] ;
+        if($default !== null && $value === null)
+            $value = $default;
+        return $value;
     }
 }
