@@ -127,6 +127,9 @@ class bootstrap
         // Create a new Database connection
         $capsule = new Capsule;
         $capsule->addConnection(require BASE_PATH . '/config/database.php');
+        //为了能使用 DB::table()这种形式
+        //use Illuminate\Database\Capsule\Manager as DB;
+        $capsule->setAsGlobal();
         $capsule->bootEloquent();
     }
 
