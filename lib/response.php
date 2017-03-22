@@ -15,7 +15,7 @@ class response
     protected $options = [];
     protected $type = '';
     protected $jsonp_callback = 'callback';
-
+    protected $sended = false;
 
     public static function _instance()
     {
@@ -204,6 +204,8 @@ class response
      */
     public function send()
     {
+        if($this->sended)
+            return;
         $this->header();
         switch ($this->type)
         {
@@ -224,7 +226,7 @@ class response
             // FASTCGI下提高页面响应
             fastcgi_finish_request();
         }
-
+        $this->sended = true;
     }
 
     /**跳转
@@ -256,5 +258,6 @@ class response
                 $str .= $msg;
             echo $str;
         }
+        $this->sended = true;
     }
 }
