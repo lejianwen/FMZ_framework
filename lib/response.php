@@ -164,7 +164,7 @@ class response
         $this->type = 'json';
         $status === null or $this->status = $status;
         $this->setContentType('application/json');
-        $this->options = $data;
+        $this->with($data);
     }
 
     public function jsonp($data = [], $callback = 'callback', $status = null)
@@ -172,7 +172,7 @@ class response
         $this->type = 'jsonp';
         $status === null or $this->status = $status;
         $this->setContentType('application/json');
-        $this->options = $data;
+        $this->with($data);
         $this->jsonp_callback = $callback;
     }
 
@@ -204,7 +204,7 @@ class response
      */
     public function send()
     {
-        if($this->sended)
+        if ($this->sended)
             return;
         $this->header();
         switch ($this->type)
