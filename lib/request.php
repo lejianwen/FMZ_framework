@@ -113,20 +113,20 @@ class request
 
     public function get($key = null, $default = null)
     {
-        if($key === null)
+        if ($key === null)
             return $_GET;
-        $value = $_GET[$key] ;
-        if($default !== null && $value === null)
+        $value = isset($_GET[$key]) ? $_GET[$key] : null;
+        if ($default !== null && $value === null)
             $value = $default;
         return $value;
     }
 
     public function post($key = null, $default = null)
     {
-        if($key === null)
+        if ($key === null)
             return $_POST;
-        $value = $_POST[$key] ;
-        if($default !== null && $value === null)
+        $value = isset($_POST[$key]) ? $_POST[$key] : null;
+        if ($default !== null && $value === null)
             $value = $default;
         return $value;
     }
