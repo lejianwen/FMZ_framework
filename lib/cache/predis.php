@@ -24,7 +24,6 @@ class predis extends cache
             if ($db = config('app.cache_redis_db'))
                 self::$client->select($db);
         }
-        $this->gc();
     }
 
     public function set($key, $value, $expire = null)
