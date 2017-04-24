@@ -185,4 +185,7 @@ return [
 ];
 ~~~
 
-
+### 添加命令行模式
+~~~php
+php console demo/first[/param1[/param2[...]]]
+~~~
