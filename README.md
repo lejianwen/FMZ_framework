@@ -124,40 +124,23 @@ return [
 ##### *cache_file_dir* 缓存文件目录
 ##### *cache_redis_db* 缓存使用的redis db
 ###2. <i id="2-routesphp">routes.php</i> 
-#### 路由配置
-~~~
-return [
-    'get'  => [
-        ''        => 'app\controllers\IndexController@index',
-        'demo/(:num)' => 'app\controllers\DemoController@num'
-    ],
-    'post' => [
+#### [路由配置](https://github.com/lejianwen/route)
+~~~php
+use \Ljw\Route\Route;
+Route::space('app\\controllers\\', 'app\\middleware\\');
 
-    ],
-    'error' => [
-        function () {
-            app\controllers\ErrorController::NotFound_404();
-        }
-    ]
+Route::get('', 'IndexController@index');
+Route::get('index/middle','Index@index', 'IndexController@middle');
 
-];
+Route::error(function (){
+    app('response')->status('404');
+    echo '404 Not Found!';
+});
+Route::run();
 ~~~
 #### *get*  get请求
 #### *post*  post请求
 #### *error*  错误
-
-* **如果要自动匹配,加入以下代码**
-~~~
-'(:str)/(:str)' => function ($controller, $method) {
-            $class = 'app\\controllers\\' . ucwords($controller) . 'Controller';
-            if (method_exists($class, $method) && is_callable([$class, $method]))
-            {
-                $object = new $class;
-                $object->$method();
-            } else
-                app\controllers\ErrorController::NotFound_404();
-        }
-~~~
 
 ###3.    <i id="3-redisphp">redis.php</i>
 ####    redis相关配置
