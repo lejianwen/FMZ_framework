@@ -8,11 +8,11 @@
   "require": {
     "predis/predis": "*",
     "filp/whoops": "2.1.4",
-    "noahbuscher/macaw": "dev-master",
     "monolog/monolog": "1.21.0",
     "illuminate/database": "*",
     "smarty/smarty":"*",
-    "ljw/excel": "dev-master"
+    "ljw/excel": "dev-master",
+    "ljw/route": "dev-master"
   },
   "autoload": {
     "psr-4": {

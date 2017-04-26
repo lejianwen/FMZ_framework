@@ -28,7 +28,7 @@ class bootstrap
         //错误信息
         self::exception();
         //cli模式不载入路由
-        IS_CLI OR self::route();
+        IS_CLI OR (require_once BASE_PATH . '/config/routes.php');
         //响应
         app('response')->send();
 
@@ -133,22 +133,6 @@ class bootstrap
         $capsule->bootEloquent();
     }
 
-    //路由
-    public static function route()
-    {
-        //添加正则匹配字符串
-        Route::$patterns[':str'] = '[a-zA-Z0-9_]+';
-        //只匹配一次
-        Route::haltOnMatch();
-        $routes = require BASE_PATH . '/config/routes.php';
-        foreach ($routes as $method => $route)
-            foreach ($route as $uri => $callback)
-                if (is_string($uri))
-                    Route::$method($uri, $callback);
-                else// if($callback instanceof Closure)
-                    Route::$method($callback);
-        Route::dispatch();
-    }
 
     public static function redis()
     {

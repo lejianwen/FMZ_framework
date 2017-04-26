@@ -15,4 +15,9 @@ class IndexController extends BaseController
             ->with(['framework' => 'FMZ_framework'])
             ->view('index/index');
     }
+
+    public function middle($middle_result)
+    {
+        echo $middle_result;
+    }
 }
