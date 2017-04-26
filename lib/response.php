@@ -138,10 +138,13 @@ class response
      */
     public function header()
     {
-        http_response_code($this->status);
-        foreach ($this->header as $key => $value)
+        if (!headers_sent())
         {
-            header($key . ':' . $value);
+            http_response_code($this->status);
+            foreach ($this->header as $key => $value)
+            {
+                header($key . ':' . $value);
+            }
         }
     }
 
