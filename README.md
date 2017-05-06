@@ -124,7 +124,7 @@ return [
 ##### *cache_file_dir* 缓存文件目录
 ##### *cache_redis_db* 缓存使用的redis db
 ###2. <i id="2-routesphp">routes.php</i> 
-#### [路由配置](https://github.com/lejianwen/route)
+#### 路由配置 [参考ljw/route](https://github.com/lejianwen/route)
 ~~~php
 use \Ljw\Route\Route;
 Route::space('app\\controllers\\', 'app\\middleware\\');
