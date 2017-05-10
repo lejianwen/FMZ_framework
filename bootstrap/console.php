@@ -85,7 +85,7 @@ class console
         $class = 'app\\commands\\' . ucwords($cmd[0]);
         $obj = new $class;
         if(!empty($params))
-            $obj->$cmd[1]($params);
+            $obj->$cmd[1](...$params);
         else
             $obj->$cmd[1]();
     }

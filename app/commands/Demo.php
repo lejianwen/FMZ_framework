@@ -7,13 +7,13 @@
  * QQ: 84855512
  */
 namespace app\commands;
-use app\models\User;
 
 class Demo
 {
-    public function first()
+    //php console demo/first/aaa/bbb/ccc
+    public function first($a, $b, $c)
     {
         echo "test succ \n";
-//        echo User::first()->id;
+        var_dump($a, $b, $c);
     }
 }
