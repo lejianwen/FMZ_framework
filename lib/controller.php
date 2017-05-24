@@ -17,7 +17,6 @@ class controller
 
     public function __construct()
     {
-        $this->session = app('session');
         $this->request = app('request');
         $this->response = app('response');
     }
