@@ -91,8 +91,6 @@ class bootstrap
                 array(&$handler, "gc"));
         }
         register_shutdown_function('session_write_close');
-        session_write_close();
-        session_start();
     }
 
     /**报错提示
