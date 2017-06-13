@@ -19,8 +19,6 @@ class bootstrap
         define('APP_START', microtime(true));
         //系统初始化
         self::init();
-        //日志
-        self::log();
         //session系统
         self::session();
         //数据库配置载入
@@ -31,9 +29,9 @@ class bootstrap
         IS_CLI OR (require_once BASE_PATH . '/config/routes.php');
         //响应
         app('response')->send();
-
-        define('APP_EXIT', microtime(true));
-//        var_dump(APP_EXIT-APP_START);
+        //日志
+        self::log();
+        define('APP_END', microtime(true));
     }
 
     /**定义一些配置
