@@ -17,16 +17,16 @@ class console
         define('APP_START', microtime(true));
         //系统初始化
         self::init();
-        //日志
-        self::log();
         //数据库配置载入
         self::database();
         //错误信息
         self::exception();
         //运行
         self::run();
-        define('APP_EXIT', microtime(true));
-        var_dump((APP_EXIT-APP_START)*1000);
+        //日志
+        self::log();
+        define('APP_END', microtime(true));
+//        var_dump((APP_EXIT-APP_START)*1000);
     }
 
 
