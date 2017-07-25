@@ -216,23 +216,3 @@ if (!function_exists('app'))
     }
 }
 
-
-function redirect($url, $msg = '', $time = 0)
-{
-    if (empty($msg))
-        $msg    = "redirect to  {$url} after {$time} s!";
-    if (!headers_sent()) {
-        // redirect
-        if (0 === $time) {
-            header('Location: ' . $url);
-        } else {
-            header("refresh:{$time};url={$url}");
-            echo($msg);
-        }
-    } else {
-        $str    = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
-        if ($time != 0)
-            $str .= $msg;
-        echo $str;
-    }
-}
