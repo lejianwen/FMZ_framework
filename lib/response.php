@@ -237,9 +237,9 @@ class response
      * @param string $msg
      * @param int $time
      */
-    public function redirect($url, $msg = '', $time = 0)
+    public function redirect($url, $msg = '', $time = 0, $status = 302)
     {
-        $this->status = 301;
+        $this->status = $status;
         $this->header();
         if (empty($msg))
             $msg = "redirect to  {$url} after {$time} s!";
