@@ -6,7 +6,9 @@
  * Time: 11:22
  * QQ: 84855512
  */
+
 namespace lib;
+
 abstract class cache
 {
     protected $expire;
@@ -14,8 +16,7 @@ abstract class cache
     public static function _instance()
     {
         static $self;
-        if($self === null)
-        {
+        if ($self === null) {
             $class = 'lib\cache\\' . config('app.cache');
             $self = new $class;
         }
