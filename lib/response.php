@@ -6,11 +6,12 @@
  * Time: 16:42
  * QQ: 84855512
  */
+
 namespace lib;
 
 class response
 {
-    protected $status = 200;
+    protected $status = null;
     protected $header = [];
     protected $options = [];
     protected $type = '';
@@ -20,8 +21,7 @@ class response
     public static function _instance()
     {
         static $self;
-        if (!$self)
-        {
+        if (!$self) {
             $self = new self();
         }
         return $self;
@@ -123,11 +123,9 @@ class response
      */
     public function setHeader($name, $value)
     {
-        if (is_array($name))
-        {
+        if (is_array($name)) {
             $this->header = array_merge($this->header, $name);
-        } else
-        {
+        } else {
             $this->header[$name] = $value;
         }
         return $this;
@@ -138,11 +136,9 @@ class response
      */
     public function header()
     {
-        if (!headers_sent())
-        {
+        if (!headers_sent()) {
             http_response_code($this->status);
-            foreach ($this->header as $key => $value)
-            {
+            foreach ($this->header as $key => $value) {
                 header($key . ':' . $value);
             }
         }
@@ -155,10 +151,11 @@ class response
      */
     public function with($options = [])
     {
-        if (is_array($options))
+        if (is_array($options)) {
             $this->options = array_merge($this->options, $options);
-        elseif (is_string($options))
+        } elseif (is_string($options)) {
             $this->options = $options;
+        }
         return $this;
     }
 
@@ -168,6 +165,7 @@ class response
         $status === null or $this->status = $status;
         $this->setContentType('application/json');
         $this->with($data);
+        return $this;
     }
 
     public function jsonp($data = [], $callback = 'callback', $status = null)
@@ -177,22 +175,21 @@ class response
         $this->setContentType('application/json');
         $this->with($data);
         $this->jsonp_callback = $callback;
+        return $this;
     }
 
     public function view($tpl, $status = null)
     {
-        if (!$tpl)
+        if (!$tpl) {
             throw new \Exception('need template');
+        }
         $this->type = 'view';
         $status === null or $this->status = $status;
         $this->setContentType('text/html');
         $view = app('view');
-        if (!empty($this->options))
-        {
-            if (is_array($this->options))
-            {
-                foreach ($this->options as $key => $val)
-                {
+        if (!empty($this->options)) {
+            if (is_array($this->options)) {
+                foreach ($this->options as $key => $val) {
                     $view->with($key, $val);
                 }
             }
@@ -207,11 +204,14 @@ class response
      */
     public function send()
     {
-        if ($this->sended)
+        if ($this->sended) {
             return;
+        }
+        if (!$this->status) {
+            $this->status();
+        }
         $this->header();
-        switch ($this->type)
-        {
+        switch ($this->type) {
             case 'json' :
                 echo json_encode($this->options);
                 break;
@@ -224,8 +224,7 @@ class response
             default :
                 break;
         }
-        if (function_exists('fastcgi_finish_request'))
-        {
+        if (function_exists('fastcgi_finish_request')) {
             // FASTCGI下提高页面响应
             fastcgi_finish_request();
         }
@@ -241,24 +240,22 @@ class response
     {
         $this->status = $status;
         $this->header();
-        if (empty($msg))
+        if (empty($msg)) {
             $msg = "redirect to  {$url} after {$time} s!";
-        if (!headers_sent())
-        {
+        }
+        if (!headers_sent()) {
             // redirect
-            if (0 === $time)
-            {
+            if (0 === $time) {
                 header('Location: ' . $url);
-            } else
-            {
+            } else {
                 header("refresh:{$time};url={$url}");
                 echo $msg;
             }
-        } else
-        {
+        } else {
             $str = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
-            if ($time != 0)
+            if ($time != 0) {
                 $str .= $msg;
+            }
             echo $str;
         }
         $this->sended = true;

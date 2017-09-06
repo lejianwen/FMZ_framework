@@ -158,7 +158,7 @@ if (!function_exists('config'))
             return $config;
         $key_arr = explode('.', $key);
         $key_len = count($key_arr);
-        if (!$config[$key_arr[0]])
+        if (!isset($config[$key_arr[0]]) || !$config[$key_arr[0]])
         {
             if (file_exists(BASE_PATH . 'config/' . $key_arr[0] . '.php'))
                 $config[$key_arr[0]] = require BASE_PATH . 'config/' . $key_arr[0] . '.php';
