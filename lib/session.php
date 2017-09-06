@@ -11,13 +11,12 @@ namespace lib;
 
 class session
 {
+    protected $session_data;
+
     public static function _instance()
     {
         static $self;
         if (!$self) {
-            if (!isset($_SESSION)) {
-                session_start();
-            }
             $self = new self();
         }
         return $self;
@@ -25,23 +24,32 @@ class session
 
     public function get($key = null)
     {
-        if ($key === null) {
-            return $_SESSION;
+        isset($_SESSION) or session_start();
+        if (!$this->session_data) {
+            $this->session_data = $_SESSION;
+            session_write_close();
         }
-        return $_SESSION[$key];
+        if ($key === null) {
+            return $this->session_data;
+        }
+        return isset($this->session_data[$key]) ? $this->session_data[$key] : null;
     }
 
     public function set($key, $value)
     {
         if ($key !== null) {
+            session_start();
             $_SESSION[$key] = $value;
+            $this->session_data[$key] = $value;
             session_write_close();
         }
     }
 
     public function del($key)
     {
+        session_start();
         unset($_SESSION[$key]);
+        unset($this->session_data[$key]);
         session_write_close();
     }
 }
