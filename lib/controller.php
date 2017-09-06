@@ -6,13 +6,18 @@
  * Time: 9:50
  * QQ: 84855512
  */
+
 namespace lib;
 
 class controller
 {
-    protected $view;
+    /**
+     * @var \lib\request
+     */
     protected $request;
-    protected $session;
+    /**
+     * @var \lib\response
+     */
     protected $response;
 
     public function __construct()

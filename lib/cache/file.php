@@ -6,6 +6,7 @@
  * Time: 11:26
  * QQ: 84855512
  */
+
 namespace lib\cache;
 
 use lib\cache;
@@ -18,21 +19,25 @@ class file extends cache
     public function __construct()
     {
         $this->file_dir = config('app.cache_file_dir');
-        if (!is_dir($this->file_dir))
+        if (!is_dir($this->file_dir)) {
             @mkdir($this->file_dir, 0777, true);
+        }
         $this->expire = config('app.cache_expire');
         $this->gc();
     }
 
     public function set($key, $value, $expire = null)
     {
-        if ($expire === null)
+        if ($expire === null) {
             $expire = $this->expire;
+        }
         $expire += time();
         $value = serialize($value);
+        if (function_exists('gzcompress')) {
+            $value = gzcompress($value);
+        }
         $file = $this->getCacheFile($key);
-        if (@file_put_contents($file, $value, LOCK_EX) == strlen($value))
-        {
+        if (@file_put_contents($file, $value, LOCK_EX) == strlen($value)) {
             @chmod($file, 0777);
             return @touch($file, $expire);
         }
@@ -42,8 +47,9 @@ class file extends cache
     public function isExists($key)
     {
         $cacheFile = $this->getCacheFile($key);
-        if (@filemtime($cacheFile) && @filemtime($cacheFile) > time())
+        if (@filemtime($cacheFile) && @filemtime($cacheFile) > time()) {
             return true;
+        }
         return false;
 
     }
@@ -56,11 +62,17 @@ class file extends cache
     public function get($key)
     {
         $cacheFile = $this->getCacheFile($key);
-        if (($time = @filemtime($cacheFile)) > time())
-        {
-            return unserialize(file_get_contents($cacheFile));
-        } else if ($time > 0)
-            @unlink($cacheFile);
+        if (($time = @filemtime($cacheFile)) > time()) {
+            $value = file_get_contents($cacheFile);
+            if (function_exists('gzcompress')) {
+                $value = gzuncompress($value);
+            }
+            return unserialize($value);
+        } else {
+            if ($time > 0) {
+                @unlink($cacheFile);
+            }
+        }
         return false;
     }
 
@@ -69,14 +81,16 @@ class file extends cache
      */
     protected function gc($expire_only = true)
     {
-        if (($handle = opendir($this->file_dir)) === false)
+        if (($handle = opendir($this->file_dir)) === false) {
             return;
-        while (($file = readdir($handle)) !== false)
-        {
-            if ($file[0] === '.' || $file[0] === '..')
+        }
+        while (($file = readdir($handle)) !== false) {
+            if ($file[0] === '.' || $file[0] === '..') {
                 continue;
-            else if (@filemtime($this->file_dir . $file) < time() || !$expire_only){
-                @unlink($this->file_dir . $file);
+            } else {
+                if (@filemtime($this->file_dir . $file) < time() || !$expire_only) {
+                    @unlink($this->file_dir . $file);
+                }
             }
         }
         closedir($handle);

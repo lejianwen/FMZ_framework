@@ -6,6 +6,7 @@
  * Time: 11:26
  * QQ: 84855512
  */
+
 namespace lib\cache;
 
 use lib\cache;
@@ -17,31 +18,37 @@ class predis extends cache
 
     public function __construct()
     {
-        if (!self::$client)
-        {
+        if (!self::$client) {
             $this->expire = config('app.cache_expire');
             self::$client = new \Predis\Client(config('redis'));
-            if ($db = config('app.cache_redis_db'))
+            if ($db = config('app.cache_redis_db')) {
                 self::$client->select($db);
+            }
         }
     }
 
     public function set($key, $value, $expire = null)
     {
-        if ($expire === null)
+        if ($expire === null) {
             $expire = $this->expire;
+        }
         $key = $this->getCacheKey($key);
         $value = serialize($value);
-        if (self::$client->setex($key, $expire, $value))
+        if (function_exists('gzcompress')) {
+            $value = gzcompress($value);
+        }
+        if (self::$client->setex($key, $expire, $value)) {
             return true;
+        }
         return false;
     }
 
     public function isExists($key)
     {
         $key = $this->getCacheKey($key);
-        if (self::$client->keys($key))
+        if (self::$client->keys($key)) {
             return true;
+        }
         return false;
     }
 
@@ -53,7 +60,11 @@ class predis extends cache
     public function get($key)
     {
         $key = $this->getCacheKey($key);
-        return self::$client->get($key) ? unserialize(self::$client->get($key)) : '';
+        $value = self::$client->get($key);
+        if (function_exists('gzcompress')) {
+            $value = gzuncompress($value);
+        }
+        return unserialize($value);
     }
 
     /**回收缓存
@@ -61,7 +72,8 @@ class predis extends cache
      */
     protected function gc($expire_only = true)
     {
-        if (!$expire_only)
+        if (!$expire_only) {
             self::$client->flushDB();
+        }
     }
 }
