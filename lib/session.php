@@ -18,17 +18,17 @@ class session
         static $self;
         if (!$self) {
             $self = new self();
+            if (!isset($_SESSION)) {
+                session_start();
+                $self->session_data = $_SESSION;
+                session_write_close();
+            }
         }
         return $self;
     }
 
     public function get($key = null)
     {
-        isset($_SESSION) or session_start();
-        if (!$this->session_data) {
-            $this->session_data = $_SESSION;
-            session_write_close();
-        }
         if ($key === null) {
             return $this->session_data;
         }
