@@ -23,7 +23,7 @@ class file extends cache
             @mkdir($this->file_dir, 0777, true);
         }
         $this->expire = config('app.cache_expire');
-        $this->gc();
+//        $this->gc();
     }
 
     public function set($key, $value, $expire = null)
@@ -56,7 +56,7 @@ class file extends cache
 
     protected function getCacheFile($key)
     {
-        return $this->file_dir . '/' . md5($key) . '.cache';
+        return $this->file_dir . '/' . md5($key) . '.tmp';
     }
 
     public function get($key)
@@ -69,7 +69,7 @@ class file extends cache
             }
             return unserialize($value);
         } else {
-            if ($time > 0) {
+            if ($time) {
                 @unlink($cacheFile);
             }
         }
@@ -79,7 +79,7 @@ class file extends cache
     /**回收缓存
      * @param $expire_only boolean 是否只清除已过期的
      */
-    protected function gc($expire_only = true)
+    public function gc($expire_only = true)
     {
         if (($handle = opendir($this->file_dir)) === false) {
             return;
