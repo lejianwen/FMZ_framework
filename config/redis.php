@@ -7,8 +7,8 @@
  */
 //redis的配置
 return [
-    'host' => '192.168.0.88',
-    'port' => 6379,
-    'db' => 0,
-    'password' => null
+    'host'     => env('REDIS_HOST', '127.0.0.1'),
+    'password' => env('REDIS_PASSWORD', null),
+    'port'     => env('REDIS_PORT', 6379),
+    'database' => 0,
 ];

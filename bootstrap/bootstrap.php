@@ -19,6 +19,8 @@ class bootstrap
         define('APP_START', microtime(true));
         //系统初始化
         self::init();
+        //环境配置
+        self::env();
         //session系统
         self::session();
         //数据库配置载入
@@ -45,6 +47,10 @@ class bootstrap
         setlocale(LC_ALL, "zh_CN.utf-8");
         //设置根路径
         defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
+        //设置web根路径
+        defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
+        //设置runtime路径
+        defined('RUNTIME_PATH') or define('RUNTIME_PATH', BASE_PATH . 'runtime/');
         //系统日志路径
         defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
         //是否是命令行模式
@@ -56,15 +62,15 @@ class bootstrap
 
     public static function log()
     {
-        if (config('app.sys_log'))
-        {
-            $info_log = new Logger('SYS_INFO');
-            $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', Logger::DEBUG));
+        if (config('app.sys_log')) {
+            $info_log = new Logger('SYS_LOG');
+            $level = config('app.sys_log_level');
+            $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', $level));
             $request = app('request');
-            $info_log->debug('request_info:', [
-                'ip'     => $request->getClientIp(),
-                'method' => $request->getMethod(),
-                'uri'    => $request->getUri()
+            $info_log->$level('request_info:', [
+                'ip' => $request->getClientIp(),
+                'method' => $request->method(),
+                'uri' => $request->uri()
             ]);
         }
     }
@@ -76,8 +82,7 @@ class bootstrap
     public static function session()
     {
         $session_driver = config('app.session');
-        if ($session_driver)
-        {
+        if ($session_driver) {
             $class = 'lib\\session\\' . $session_driver;
             $handler = new $class;
             session_set_save_handler(
@@ -99,14 +104,12 @@ class bootstrap
         $whoops = new \Whoops\Run;
 
         //错误信息,调试模式打开则显示,否则只记录到日志
-        if (config('app.debug'))
-        {
+        if (config('app.debug')) {
             $whoops_handler = new \Whoops\Handler\PrettyPageHandler;
             $whoops->pushHandler($whoops_handler);
         }
 
-        if (config('app.sys_error_log'))
-        {
+        if (config('app.sys_error_log')) {
             $error_log = new Logger('SYS_ERROR');
             $error_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . 'error.log', Logger::ERROR));
 
@@ -129,13 +132,10 @@ class bootstrap
         $capsule->bootEloquent();
     }
 
-
-    public static function redis()
+    //载入配置
+    public static function env()
     {
-        $config = require BASE_PATH . '/config/redis.php';
-        static $redis_client;
-        if (!$redis_client)
-            $redis_client = new Predis\Client($config);
-        return $redis_client;
+        $dotenv = new Dotenv\Dotenv(BASE_PATH);
+        $dotenv->load();
     }
 }

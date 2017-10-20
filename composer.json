@@ -12,7 +12,8 @@
     "illuminate/database": "*",
     "smarty/smarty":"*",
     "ljw/excel": "dev-master",
-    "ljw/route": "dev-master"
+    "ljw/route": "dev-master",
+    "vlucas/phpdotenv": "v2.4.0"
   },
   "autoload": {
     "psr-4": {
@@ -23,5 +24,10 @@
       "bootstrap"
     ],
     "files": ["common/functions.php"]
+  },
+  "scripts": {
+    "env-file-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ]
   }
 }
