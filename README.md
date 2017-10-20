@@ -43,48 +43,57 @@ ljw                     WEB部署目录（或者子目录）
 │  ├─cache              缓存文件目录
 │  ├─log                日志文件目录
 │  └─smarty             smarty使用的目录
+|
 ├─vendor                第三方类库目录（Composer依赖库）
+├─.env                  环境配置文件，请自行创建或复制.env.example
+├─.env.example          环境配置文件示例，请复制修改为.env
 ├─composer.json         composer 定义文件
 └─README.md             README 文件
 ~~~
 ## 配置简介
+
+### env($name, $default = null)方法会读取文件 *.env* 中的配置项。
+每个环境可能不同，顾没有加入到git版本控制中，请自行添加，或者复制 *.env.example* 文件为 *.env*
 
 * [app.php](#1-appphp)           项目配置文件
 * [routes.php](#2-routesphp)       路由配置文件
 * [redis.php](#3-redisphp)          redis配置文件
 * [database.php](#4-databasephp)       数据库配置文件
 
+
+
 ###1. <i id="1-appphp">app.php</i> 
 ~~~
 return [
-    //session存放 为空表示用自带的, '' || mysql_pdo || redis || prdis, 具体看lib/session中的文件
-    'session'          => '',
-    'session_table'    => 'session',    //session 存放在mysql中的表名
-    'session_lefttime' => 1000,         //session有效时间
-    'session_redis_db' => 0,            //session 存放在redis中的某个db
-    'debug'            => true,         //调试模式
-    'view'             => 'smarty',     //模板 smarty||native
-    'smarty'           => [             //smarty配置
-        'debug'           => false,     //是否弹出debug窗口
-        'force_compile'   => false,     //检查模板是否改动,开发时打开,正式 关闭
-        'cache'           => false,     //是否缓存
-        'cache_lifetime'  => 120,       //缓存时间
-        'cache_dir'       => BASE_PATH . 'data/smarty/cache/',          //缓存目录
-        'compile_dir'     => BASE_PATH . 'data/smarty/templates_c/',    //编译目录
-        'left_delimiter'  => '<{',      //左定界符
-        'right_delimiter' => '}>'       //右定界符
-    ],
-    'cache'            => 'predis',       //缓存类型，file||redis||predis
-    'cache_expire'     => 120,          //缓存时间
-    'cache_file_dir'   => BASE_PATH . 'data/cache/',
-    'cache_redis_db'   => 1
-
-
+     //session存放 为空表示用自带的, '' || mysql_pdo || redis || prdis, 具体看lib/session中的文件
+     'session'          => '',
+     'session_table'    => 'session',    //session 存放在mysql中的表名
+     'session_lefttime' => 1000,         //session有效时间
+     'session_redis_db' => 0,            //session 存放在redis中的某个db
+     'debug'            => env('APP_DEBUG', false),         //调试模式
+     'view'             => 'smarty',     //模板 smarty||native
+     'smarty'           => [             //smarty配置
+         'debug'           => env('SMARTY_DEBUG', false),            //是否弹出debug窗口
+         'force_compile'   => env('SMARTY_FORCE_COMPILE', false),    //检查模板是否改动,开发时打开,正式 关闭
+         'cache'           => env('SMARTY_CACHE', true),             //是否缓存
+         'cache_lifetime'  => 1200,       //缓存时间
+         'cache_dir'       => RUNTIME_PATH . 'smarty/cache/',          //缓存目录
+         'compile_dir'     => RUNTIME_PATH . 'smarty/templates_c/',    //编译目录
+         'left_delimiter'  => '<{',      //左定界符
+         'right_delimiter' => '}>'       //右定界符
+     ],
+     'cache'            => 'file',       //缓存类型，file||redis||predis
+     'cache_expire'     => 1200,         //缓存时间
+     'cache_file_dir'   => RUNTIME_PATH . 'cache/',
+     'cache_redis_db'   => 0,
+     'sys_log'          => env('SYS_LOG', true),                 //系统日志是否开启
+     'sys_log_level'    => env('SYS_LOG_LEVEL', 'debug'),        //系统日志级别
+     'sys_error_log'    => env('SYS_ERROR_LOG', true)            //系统错误日志是否开启
 ];
 ~~~
 ##### *debug*   是否打开DEBUG模式
 
-####1) SESSION的相关配置
+#### 1) SESSION的相关配置
 ##### *session* session存储方式
 * ''             使用PHP默认的session存储方式,此时session_lefttime配置失效,请查看**php.ini**;
 * 'mysql_pdo'    使用mysql存储session,**暂时只支持pdo，请安装好pdo扩展**
@@ -108,14 +117,14 @@ return [
 ##### *session_redis_db* 用redis存储session时的db
 ##### *session_lefttime* session的过期时间,单位秒
 
-####2) 视图配置
+#### 2) 视图配置
 **视图模板都用.tpl作为文件后缀**
 ##### *view* 视图
 * 'smarty'  使用smarty作为视图
     * 使用此配置时，请填写smarty详细配置
 * 'native'  使用原生PHP作为视图,在视图模板使用原生php
 
-####3) 缓存配置
+#### 3) 缓存配置
 ##### *cache*  缓存使用方式
 * 'file'    使用文件缓存
 * 'redis'   使用redis缓存,**必须安装php_redis扩展**
@@ -123,7 +132,7 @@ return [
 ##### *cache_expire*   缓存有效时间
 ##### *cache_file_dir* 缓存文件目录
 ##### *cache_redis_db* 缓存使用的redis db
-###2. <i id="2-routesphp">routes.php</i> 
+### 2. <i id="2-routesphp">routes.php</i> 
 #### 路由配置 [参考ljw/route](https://github.com/lejianwen/route)
 ~~~php
 use \Ljw\Route\Route;
@@ -146,10 +155,10 @@ Route::run();
 ####    redis相关配置
 ~~~
 return [
-    'host' => '127.0.0.1',
-    'port' => 6379,
-    'db' => 0,
-    'password' => null
+    'host'     => env('REDIS_HOST', '127.0.0.1'),
+    'password' => env('REDIS_PASSWORD', null),
+    'port'     => env('REDIS_PORT', 6379),
+    'database' => 0,
 ];
 ~~~
 ###4.    <i id="4-databasephp">database.php</i>
@@ -157,14 +166,18 @@ return [
 
 ~~~
 return [
-    'driver'    => 'mysql',
-    'host'      => '127.0.0.1',
-    'database'  => 'ljw',
-    'username'  => 'root',
-    'password'  => '',
-    'charset'   => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix'    => ''
+    'driver'      => 'mysql',
+    'host'        => env('DB_HOST', '127.0.0.1'),
+    'port'        => env('DB_PORT', '3306'),
+    'database'    => env('DB_DATABASE', 'forge'),
+    'username'    => env('DB_USERNAME', 'forge'),
+    'password'    => env('DB_PASSWORD', ''),
+    'unix_socket' => env('DB_SOCKET', ''),
+    'charset'     => 'utf8mb4',
+    'collation'   => 'utf8mb4_unicode_ci',
+    'prefix'      => '',
+    'strict'      => true,
+    'engine'      => null,
 ];
 ~~~
 
