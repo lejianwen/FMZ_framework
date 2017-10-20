@@ -35,12 +35,23 @@ class session
         return isset($this->session_data[$key]) ? $this->session_data[$key] : null;
     }
 
-    public function set($key, $value)
+    /**
+     * set
+     * 设置session
+     * @param string|array $key
+     * @param $value
+     * @author Lejianwen
+     */
+    public function set($key, $value = '')
     {
         if ($key !== null) {
             session_start();
-            $_SESSION[$key] = $value;
-            $this->session_data[$key] = $value;
+            if (is_array($key)) {
+                $this->session_data = array_merge($this->session_data, $key);
+            } else {
+                $this->session_data[$key] = $value;
+            }
+            $_SESSION = $this->session_data;
             session_write_close();
         }
     }
