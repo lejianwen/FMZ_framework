@@ -200,7 +200,7 @@ if (!function_exists('config')) {
             if (file_exists(BASE_PATH . 'config/' . $key_arr[0] . '.php')) {
                 $config[$key_arr[0]] = require BASE_PATH . 'config/' . $key_arr[0] . '.php';
             } else {
-                throw new Exception("{$key_arr[0]}.php not found!");
+                return null;
             }
         }
         if ($value !== null) {
