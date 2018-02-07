@@ -6,6 +6,7 @@
  * Time: 17:36
  * QQ: 84855512
  */
+
 /**
  *CREATE TABLE session (
  *      id varchar(255) NOT NULL,
@@ -15,25 +16,28 @@
  *      KEY `expire` (`expire`) USING BTREE
  *    )ENGINE=myisam default charset=utf8;
  */
+
 namespace lib\session;
-class mysql_pdo extends session
+
+class mysql_pdo extends \SessionHandler
 {
     static $dbh = null;
     private $table;
+    protected $left_time;
+
     public function __construct()
     {
-        if (self::$dbh === null)
-        {
+        if (self::$dbh === null) {
             $this->table = config('app.session_table');
             $this->left_time = config('app.session_lefttime');
             $dns = config('database.driver')
                 . ':host=' . config('database.host')
                 . ';dbname=' . config('database.database')
-                . ';charset=' .config('database.charset');
+                . ';charset=' . config('database.charset');
             self::$dbh = new \PDO($dns, config('database.username'), config('database.password'), array(
-               // \PDO::ATTR_PERSISTENT       => TRUE,
+                // \PDO::ATTR_PERSISTENT       => TRUE,
                 \PDO::ATTR_ERRMODE          => \PDO::ERRMODE_EXCEPTION,
-                \PDO::ATTR_EMULATE_PREPARES => FALSE
+                \PDO::ATTR_EMULATE_PREPARES => false
             ));
         }
     }
@@ -60,8 +64,8 @@ class mysql_pdo extends session
         $sql = "DELETE FROM {$this->table} WHERE id = ?";
         $stmt = self::$dbh->prepare($sql);
         $stmt->execute(array($session_id));
-        $dbh = NULL;
-        return TRUE;
+        $dbh = null;
+        return true;
     }
 
     public function gc($left_time)
@@ -69,8 +73,8 @@ class mysql_pdo extends session
         $sql = "DELETE FROM {$this->table} WHERE expire < ?";
         $stmt = self::$dbh->prepare($sql);
         $stmt->execute(array(date('Y-m-d H:i:s')));
-        $dbh = NULL;
-        return TRUE;
+        $dbh = null;
+        return true;
     }
 
 }

@@ -6,6 +6,7 @@
  * Time: 14:46
  * QQ: 84855512
  */
+
 namespace lib\view;
 
 use lib\view;
@@ -16,8 +17,7 @@ class smarty extends view
 
     public function __construct()
     {
-        if (!$this->smarty)
-        {
+        if (!$this->smarty) {
             $smarty = new \Smarty;
             $smarty->setTemplateDir(self::VIEW_PATH);
             $smarty->setCompileDir(config('app.smarty.compile_dir'));
@@ -42,8 +42,9 @@ class smarty extends view
 
     public function display($tpl = null)
     {
-        if (!empty($tpl))
+        if (!empty($tpl)) {
             $this->setTpl($tpl);
+        }
         $this->smarty->display($this->tpl);
         unset($this->tpl);
         return $this;
