@@ -12,7 +12,8 @@
     "smarty/smarty":"*",
     "ljw/excel": "dev-master",
     "ljw/route": "dev-master",
-    "vlucas/phpdotenv": "v2.4.0"
+    "vlucas/phpdotenv": "v2.4.0",
+    "guzzlehttp/guzzle": "~6.0"
   },
   "autoload": {
     "psr-4": {
