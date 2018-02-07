@@ -6,6 +6,7 @@
  * Time: 10:48
  * QQ: 84855512
  */
+
 use Illuminate\Database\Capsule\Manager as Capsule;
 use NoahBuscher\Macaw\Macaw as Route;
 use Monolog\Logger;
@@ -68,9 +69,9 @@ class bootstrap
             $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', $level));
             $request = app('request');
             $info_log->$level('request_info:', [
-                'ip' => $request->getClientIp(),
+                'ip'     => $request->getClientIp(),
                 'method' => $request->method(),
-                'uri' => $request->uri()
+                'uri'    => $request->uri()
             ]);
         }
     }
@@ -91,7 +92,10 @@ class bootstrap
                 array(&$handler, "read"),
                 array(&$handler, "write"),
                 array(&$handler, "destroy"),
-                array(&$handler, "gc"));
+                array(&$handler, "gc")
+            );
+        } else {
+            ini_set('session.gc_maxlifetime', config('app.session_lefttime'));
         }
         register_shutdown_function('session_write_close');
     }

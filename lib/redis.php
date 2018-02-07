@@ -18,6 +18,7 @@ class redis
 
     public static function _instance($name = 'default')
     {
+        $name = $name ?: 'default';
         static $store;
         if (!isset($store[$name]) || !$store[$name]) {
             $store[$name] = new static($name);
@@ -39,8 +40,8 @@ class redis
             if (!empty($config['pwd'])) {
                 $this->client->auth($config['pwd']);
             }
-            if (!empty($config['db'])) {
-                $this->client->select($config['db']);
+            if (!empty($config['database'])) {
+                $this->client->select($config['database']);
             }
             if (!empty($config['prefix'])) {
                 $this->client->setOption(\Redis::OPT_PREFIX, $config['prefix']);

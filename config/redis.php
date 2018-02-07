@@ -9,9 +9,15 @@
 return [
     'default' => [
         'host'     => env('REDIS_HOST', '127.0.0.1'),
-        'pwd' => env('REDIS_PASSWORD', null),
+        'pwd'      => env('REDIS_PASSWORD', null),
         'port'     => env('REDIS_PORT', 6379),
         'database' => 0,
+        'prefix'   => 'fmz:'
+    ],
+    'other'   => [
+        'host'     => env('REDIS_HOST', '127.0.0.1'),
+        'pwd'      => env('REDIS_PASSWORD', null),
+        'port'     => env('REDIS_PORT', 6379),
+        'database' => 1,
     ]
-
 ];

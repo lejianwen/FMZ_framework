@@ -243,9 +243,12 @@ if (!function_exists('config')) {
  * @return mixed
  */
 if (!function_exists('app')) {
-    function app($name)
+    function app($name, $conf = null)
     {
         $class = 'lib\\' . $name;
+        if ($conf) {
+            return $class::_instance($conf);
+        }
         return $class::_instance();
     }
 }
@@ -284,3 +287,16 @@ if (!function_exists('env')) {
 
 }
 
+if (!function_exists('redis')) {
+    function redis($name = null)
+    {
+        return lib\redis::_instance($name);
+    }
+}
+
+if (!function_exists('cache')) {
+    function cache()
+    {
+        return lib\cache::_instance();
+    }
+}

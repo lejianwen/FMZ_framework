@@ -33,9 +33,9 @@ class file extends cache
         }
         $expire += time();
         $value = serialize($value);
-        if (function_exists('gzcompress')) {
-            $value = gzcompress($value);
-        }
+//        if (function_exists('gzcompress')) {
+//            $value = gzcompress($value);
+//        }
         $file = $this->getCacheFile($key);
         if (@file_put_contents($file, $value, LOCK_EX) == strlen($value)) {
             @chmod($file, 0777);
@@ -64,9 +64,9 @@ class file extends cache
         $cacheFile = $this->getCacheFile($key);
         if (($time = @filemtime($cacheFile)) > time()) {
             $value = file_get_contents($cacheFile);
-            if (function_exists('gzcompress')) {
-                $value = gzuncompress($value);
-            }
+//            if (function_exists('gzcompress')) {
+//                $value = gzuncompress($value);
+//            }
             return unserialize($value);
         } else {
             if ($time) {
