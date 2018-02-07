@@ -6,43 +6,35 @@
  * Time: 10:40
  * QQ: 84855512
  */
+
 namespace lib\session;
+
 class redis extends session
 {
-    static $client;
+    protected $client;
 
     public function __construct()
     {
-        if (!self::$client)
-        {
+        if (!$this->client) {
             $this->left_time = config('app.session_lefttime');
-            self::$client = new \Redis();
-            self::$client->connect(config('redis.host'), config('redis.port'));
-            if ($password = config('redis.password'))
-                self::$client->auth($password);
-            if ($db = config('app.session_redis_db'))
-                self::$client->select($db);
+            $name = !empty(config('app.session_redis_dir')) ? config('app.session_redis_dir') : 'default';
+            $this->client = \lib\redis::_instance($name);
         }
-
     }
 
     public function read($session_id)
     {
-        return self::$client->get($session_id) ?: '';
+        return $this->client->get($session_id) ?: '';
     }
 
     public function write($session_id, $data)
     {
-        self::$client->setex($session_id, $this->left_time, $data);
+        $this->client->setex($session_id, $this->left_time, $data);
     }
 
     public function destroy($session_id)
     {
-        self::$client->del($session_id);
+        $this->client->del($session_id);
     }
 
-    public function gc($left_time)
-    {
-        return true;
-    }
 }

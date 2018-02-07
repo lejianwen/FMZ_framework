@@ -14,20 +14,14 @@ use lib\cache;
 class redis extends cache
 {
     protected $expire;
-    static $client;
+    protected $client;
 
     public function __construct()
     {
-        if (!self::$client) {
+        if (!$this->client) {
             $this->expire = config('app.cache_expire');
-            self::$client = new \Redis();
-            self::$client->connect(config('redis.host'), config('redis.port'));
-            if ($password = config('redis.password')) {
-                self::$client->auth($password);
-            }
-            if ($db = config('app.cache_redis_db')) {
-                self::$client->select($db);
-            }
+            $name = !empty(config('app.cache_redis_dir')) ? config('app.cache_redis_dir') : 'default';
+            $this->client = \lib\redis::_instance($name);
         }
     }
 
@@ -37,11 +31,13 @@ class redis extends cache
             $expire = $this->expire;
         }
         $key = $this->getCacheKey($key);
-        $value = serialize($value);
-        if (function_exists('gzcompress')) {
-            $value = gzcompress($value);
+        if (!is_numeric($value)) {
+            $value = serialize($value);
         }
-        if (self::$client->setex($key, $expire, $value)) {
+//        if (function_exists('gzcompress')) {
+//            $value = gzcompress($value);
+//        }
+        if ($this->client->setex($key, $expire, $value)) {
             return true;
         }
         return false;
@@ -50,7 +46,7 @@ class redis extends cache
     public function isExists($key)
     {
         $key = $this->getCacheKey($key);
-        if (self::$client->keys($key)) {
+        if ($this->client->keys($key)) {
             return true;
         }
         return false;
@@ -64,20 +60,14 @@ class redis extends cache
     public function get($key)
     {
         $key = $this->getCacheKey($key);
-        $value = self::$client->get($key);
-        if (function_exists('gzcompress')) {
-            $value = gzuncompress($value);
+        $value = $this->client->get($key);
+        if ($value && !is_numeric($value)) {
+            $value = unserialize($value);
         }
-        return unserialize($value);
+//        if (function_exists('gzcompress')) {
+//            $value = gzuncompress($value);
+//        }
+        return $value;
     }
 
-    /**回收缓存
-     * @param $expire_only boolean 是否只清除已过期的
-     */
-    protected function gc($expire_only = true)
-    {
-        if (!$expire_only) {
-            self::$client->flushDB();
-        }
-    }
 }
