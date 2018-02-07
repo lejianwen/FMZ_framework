@@ -146,23 +146,31 @@ class response
 
 
     /**设置输出参数
-     * @param array $options
+     * @param array $param
+     * @param mixed $value
      * @return $this
      */
-    public function with($options = [])
+    public function with($param = [], $value = null)
     {
-        if (is_array($options)) {
-            $this->options = array_merge($this->options, $options);
-        } elseif (is_string($options)) {
-            $this->options = $options;
+        if (is_array($param)) {
+            $this->options = array_merge($this->options, $param);
+        } elseif (is_string($param)) {
+            $this->options[$param] = $value;
         }
         return $this;
+    }
+
+    public function setOptions($options)
+    {
+        $this->options = $options;
     }
 
     public function json($data = [], $status = null)
     {
         $this->type = 'json';
-        $status === null or $this->status = $status;
+        if ($status) {
+            $this->status($status);
+        }
         $this->setContentType('application/json');
         $this->with($data);
         return $this;
@@ -171,7 +179,9 @@ class response
     public function jsonp($data = [], $callback = 'callback', $status = null)
     {
         $this->type = 'jsonp';
-        $status === null or $this->status = $status;
+        if ($status) {
+            $this->status($status);
+        }
         $this->setContentType('application/json');
         $this->with($data);
         $this->jsonp_callback = $callback;
@@ -184,7 +194,9 @@ class response
             throw new \Exception('need template');
         }
         $this->type = 'view';
-        $status === null or $this->status = $status;
+        if ($status) {
+            $this->status($status);
+        }
         $this->setContentType('text/html');
         $view = app('view');
         if (!empty($this->options)) {
