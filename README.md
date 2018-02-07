@@ -112,7 +112,7 @@ return [
 * 'redis'        使用redis存储session, **必须安装php_redis扩展**
 
 ##### *session_table* 用mysql存储session时的表名
-##### *session_redis_db* 用redis存储session时的db
+##### *session_redis_dir* 用redis存储session时的配置
 ##### *session_lefttime* session的过期时间,单位秒
 
 #### 2) 视图配置
