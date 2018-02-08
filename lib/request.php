@@ -16,6 +16,8 @@ class request
     public $action;
     public $method;
     public $uri;
+    public $server;
+    public $header;
 
     public static function _instance()
     {
@@ -127,8 +129,47 @@ class request
         return env($name, $default);
     }
 
-    public function server($name)
+    public function server($name = '')
     {
-        return env($name);
+        if (empty($this->server)) {
+            $this->server = $_SERVER;
+        }
+        if ('' === $name) {
+            return $this->server;
+        }
+        return $this->server[$name];
+    }
+
+    public function header($name = '')
+    {
+        if (empty($this->header)) {
+            $header = [];
+            if (function_exists('apache_request_headers') && $result = apache_request_headers()) {
+                $header = $result;
+            } else {
+                $server = $this->server ?: $_SERVER;
+                foreach ($server as $key => $val) {
+                    if (0 === strpos($key, 'HTTP_')) {
+                        $key = str_replace('_', '-', strtolower(substr($key, 5)));
+                        $header[$key] = $val;
+                    }
+                }
+                if (isset($server['CONTENT_TYPE'])) {
+                    $header['content-type'] = $server['CONTENT_TYPE'];
+                }
+                if (isset($server['CONTENT_LENGTH'])) {
+                    $header['content-length'] = $server['CONTENT_LENGTH'];
+                }
+            }
+            $this->header = array_change_key_case($header);
+        }
+        if (is_array($name)) {
+            return $this->header = array_merge($this->header, $name);
+        }
+        if ('' === $name) {
+            return $this->header;
+        }
+        $name = str_replace('_', '-', strtolower($name));
+        return isset($this->header[$name]) ? $this->header[$name] : $default;
     }
 }
