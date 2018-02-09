@@ -49,9 +49,20 @@ class Store
             return null;
         }
         $store->origin_data = $data;
-        $store->data = $data;
-        $store->deCodeJsonAttr();
+        $store->data();
         return $store;
+    }
+
+    protected function data()
+    {
+        $this->data = $this->origin_data;
+        $this->deCodeJsonAttr();
+    }
+
+    protected function originData()
+    {
+        $this->origin_data = $this->data;
+        $this->enCodeJsonAttr();
     }
 
     public static function init($data)
@@ -98,8 +109,7 @@ class Store
 
     public function save()
     {
-        $this->origin_data = $this->data;
-        $this->enCodeJsonAttr();
+        $this->originData();
         $data = $this->origin_data;
         $key = $this->key();
         redis()->hMset($key, $data);
