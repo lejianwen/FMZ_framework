@@ -8,12 +8,13 @@
 
 namespace lib;
 
+
 /**
  * Class Store
  * 基于redis的模型，方便使用
  * @package lib
  */
-class Store
+class Store implements \ArrayAccess
 {
     //主键，会根据主键查找记录
     protected $pr_key = 'id';
@@ -140,19 +141,11 @@ class Store
         return $this;
     }
 
-    /**
-     * save之后会调用
-     * @author Lejianwen
-     */
     public function saved()
     {
 
     }
 
-    /**
-     * update之后会调用
-     * @author Lejianwen
-     */
     public function updated()
     {
 
@@ -239,4 +232,23 @@ class Store
         return json_encode($this->data);
     }
 
+    public function offsetExists($key)
+    {
+        return !is_null($this->getAttribute($key));
+    }
+
+    public function offsetUnset($key)
+    {
+        unset($this->data[$key], $this->data[$key]);
+    }
+
+    public function offsetSet($key, $value)
+    {
+        $this->setAttribute($key, $value);
+    }
+
+    public function offsetGet($key)
+    {
+        return $this->getAttribute($key);
+    }
 }
