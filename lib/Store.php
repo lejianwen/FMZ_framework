@@ -8,10 +8,16 @@
 
 namespace lib;
 
+/**
+ * Class Store
+ * 基于redis的模型，方便使用
+ * @package lib
+ */
 class Store
 {
     //主键，会根据主键查找记录
     protected $pr_key = 'id';
+    protected $key;
     protected $model_name;
     //记录有效时间
     protected $exp = 3600;
@@ -21,6 +27,8 @@ class Store
     protected $json_attr = [];
     //源数据
     protected $origin_data;
+    //
+    protected static $redis_connect = 'default';
 
     public function __construct()
     {
@@ -34,17 +42,29 @@ class Store
     protected function key($pr_key = null)
     {
         if ($pr_key) {
-            return $this->model_name . ':' . $pr_key;
+            $this->key = $this->model_name . ':' . $pr_key;
+        } else {
+            $this->key = $this->model_name . ':' . $this->data[$this->pr_key];
         }
-        return $this->model_name . ':' . $this->data[$this->pr_key];
-
+        return $this->key;
     }
 
-    public static function info($id)
+    protected static function redis()
+    {
+        return redis(static::$redis_connect);
+    }
+
+    /**
+     * 根据主键查找信息
+     * @param $id
+     * @return null|static
+     * @author Lejianwen
+     */
+    public static function find($id)
     {
         $store = new static();
         $key = $store->key($id);
-        $data = redis()->hGetAll($key);
+        $data = static::redis()->hGetAll($key);
         if (!$data) {
             return null;
         }
@@ -112,11 +132,30 @@ class Store
         $this->originData();
         $data = $this->origin_data;
         $key = $this->key();
-        redis()->hMset($key, $data);
+        static::redis()->hMset($key, $data);
         if ($this->exp) {
-            redis()->expire($key, $this->exp);
+            static::redis()->expire($key, $this->exp);
         }
+        $this->saved();
         return $this;
+    }
+
+    /**
+     * save之后会调用
+     * @author Lejianwen
+     */
+    public function saved()
+    {
+
+    }
+
+    /**
+     * update之后会调用
+     * @author Lejianwen
+     */
+    public function updated()
+    {
+
     }
 
     /**
@@ -167,11 +206,37 @@ class Store
             $this->data[$data] = $value;
             $this->save();
         }
+        $this->updated();
     }
 
     public function delete()
     {
         $key = $this->key();
-        redis()->del($key);
+        static::redis()->del($key);
     }
+
+    public function increment($column, $step = 1)
+    {
+        if (!isset($this->data[$column])) {
+            return;
+        }
+        $this->data[$column] = static::redis()->hIncrBy($this->key(), $column, $step);
+        $this->updated();
+    }
+
+    public function decrement($column, $step = 1)
+    {
+        if (!isset($this->data[$column])) {
+            return;
+        }
+        $step = -abs($step);
+        $this->data[$column] = static::redis()->hIncrBy($this->key(), $column, $step);
+        $this->updated();
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->data);
+    }
+
 }
