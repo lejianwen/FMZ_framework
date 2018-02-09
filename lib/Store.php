@@ -42,10 +42,12 @@ class Store implements \ArrayAccess
 
     protected function key($pr_key = null)
     {
-        if ($pr_key) {
-            $this->key = $this->model_name . ':' . $pr_key;
-        } else {
-            $this->key = $this->model_name . ':' . $this->data[$this->pr_key];
+        if (!$this->key) {
+            if ($pr_key) {
+                $this->key = $this->model_name . ':' . $pr_key;
+            } else {
+                $this->key = $this->model_name . ':' . $this->data[$this->pr_key];
+            }
         }
         return $this->key;
     }
@@ -135,7 +137,7 @@ class Store implements \ArrayAccess
         $key = $this->key();
         static::redis()->hMset($key, $data);
         if ($this->exp) {
-            static::redis()->expire($key, $this->exp);
+            $this->expire();
         }
         $this->saved();
         return $this;
@@ -214,6 +216,7 @@ class Store implements \ArrayAccess
             return;
         }
         $this->data[$column] = static::redis()->hIncrBy($this->key(), $column, $step);
+        $this->expire();
         $this->updated();
     }
 
@@ -224,6 +227,7 @@ class Store implements \ArrayAccess
         }
         $step = -abs($step);
         $this->data[$column] = static::redis()->hIncrBy($this->key(), $column, $step);
+        $this->expire();
         $this->updated();
     }
 
@@ -250,5 +254,17 @@ class Store implements \ArrayAccess
     public function offsetGet($key)
     {
         return $this->getAttribute($key);
+    }
+
+    /**
+     * 添加延时
+     * @param int $time
+     * @author Lejianwen
+     */
+    public function expire($time = 0)
+    {
+        $time = $time ?: $this->exp;
+        $key = $this->key();
+        static::redis()->expire($key, $time);
     }
 }
