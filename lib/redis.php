@@ -82,7 +82,7 @@ class redis
         $key = "{$column}:list";
         redis()->zAdd($key, $score, $id);
         $num = redis()->zCard($key);
-        if ($num >= $limit) {
+        if ($num > $limit) {
             if ($desc) {
                 //倒序删除多出来分数小的
                 $this->connect()->client->zRemRangeByRank($key, 0, ($num - $limit - 1));
