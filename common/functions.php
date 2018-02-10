@@ -288,6 +288,12 @@ if (!function_exists('env')) {
 }
 
 if (!function_exists('redis')) {
+    /**
+     * redis
+     * @param null $name
+     * @return lib\redis
+     * @author Lejianwen
+     */
     function redis($name = null)
     {
         return lib\redis::_instance($name);
@@ -300,3 +306,19 @@ if (!function_exists('cache')) {
         return lib\cache::_instance();
     }
 }
+
+if (!function_exists('request')) {
+    function request()
+    {
+        return lib\request::_instance();
+    }
+}
+
+
+if (!function_exists('response')) {
+    function response()
+    {
+        return lib\response::_instance();
+    }
+}
+
