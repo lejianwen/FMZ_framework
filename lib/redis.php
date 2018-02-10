@@ -80,8 +80,8 @@ class redis
     public function toAttrList($column, $score, $id, $limit = 1000, $desc = true)
     {
         $key = "{$column}:list";
-        redis()->zAdd($key, $score, $id);
-        $num = redis()->zCard($key);
+        $this->connect()->zAdd($key, $score, $id);
+        $num = $this->connect()->zCard($key);
         if ($num > $limit) {
             if ($desc) {
                 //倒序删除多出来分数小的
