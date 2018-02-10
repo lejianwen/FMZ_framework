@@ -20,8 +20,8 @@ class Store implements \ArrayAccess
     protected $pr_key = 'id';
     protected $key;
     protected $model_name;
-    //记录有效时间
-    protected $exp = 3600;
+    //记录有效时间,没有或者0表示永久
+    protected $exp;
     //属性数组
     protected $data;
     //需要转换成json的属性
@@ -235,6 +235,12 @@ class Store implements \ArrayAccess
     {
         return json_encode($this->data);
     }
+
+    public function toArray()
+    {
+        return $this->data;
+    }
+
 
     public function offsetExists($key)
     {
