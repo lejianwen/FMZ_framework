@@ -9,8 +9,8 @@
 
 namespace app\controllers\admin;
 
-use app\controllers\admin\html\Grid;
 use app\controllers\admin\html\Form;
+use app\controllers\admin\html\Grid;
 
 class UserController extends BaseController
 {
@@ -19,23 +19,19 @@ class UserController extends BaseController
     protected function grid()
     {
         $grid = new Grid();
-        $grid->setHeader(['ID', '昵称', '状态']);
-        $grid->text('id')->orderAble();
-        $grid->text('nick_name')->orderAble();
-        $grid->select('status', [['label' => '禁用', 'value' => 0], ['label' => '启用', 'value' => 1]]);
-        $grid->action()->append('<button class="btn update" value="\'+value+\'">测试</button>');
-//        $grid->disAbleAdd();
+        $grid->setHeader(['id', '昵称', '头像', '金币', '创建时间']);
+        $grid->text('id');
+        $grid->text('nick_name');
+        $grid->img('headimg');
+        $grid->text('gold');
+        $grid->text('created_at');
         return $grid;
     }
 
     protected function form($item = null)
     {
         $form = new Form($item);
-        $form->text('题目', 'content')->required();
-        $form->select('状态', 'status', [
-            ['label' => '启用', 'value' => 1, 'default' => 1],
-            ['label' => '禁用', 'value' => 0]
-        ])->required();
+        $form->text('昵称', 'nick_name')->required();
         return $form;
     }
 }

@@ -45,7 +45,7 @@ class Grid
     public function img($attr, $width = 50, $height = 50)
     {
         $img = new Img($attr, $width, $height);
-        $this->data[] = $this;
+        $this->data[] = $img;
         return $this;
     }
 

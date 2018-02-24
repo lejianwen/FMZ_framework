@@ -39,18 +39,10 @@
     <input runat="server" id="divScrollValue" type="hidden" value="" />
     <div class="menu_dropdown bk_2">
         <dl id="menu-article">
-            <dt class="auto_click"><i class="Hui-iconfont">&#xe616;</i> 用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe616;</i> 用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
                     <li><a _href="/admin/user/index" data-title="用户列表" href="javascript:void(0)">用户列表</a></li>
-                </ul>
-            </dd>
-        </dl>
-        <dl id="menu-article">
-            <dt class="auto_click"><i class="Hui-iconfont">&#xe616;</i> 题目管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a _href="/admin/question/index" data-title="题目列表" href="javascript:void(0)">题目列表</a></li>
                 </ul>
             </dd>
         </dl>
