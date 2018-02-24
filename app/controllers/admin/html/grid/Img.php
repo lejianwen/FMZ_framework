@@ -23,7 +23,7 @@ class Img extends Data
     public function mRenderReturn()
     {
         return <<<js
-              return '<img width='{$this->width}' height='{$this->height}' src='+value+'/>'
+              return '<img width='{$this->width}' height='{$this->height}' src='+value+' />'
 js;
     }
 }
