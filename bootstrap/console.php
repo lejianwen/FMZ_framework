@@ -7,9 +7,11 @@
  * QQ: 84855512
  * CLI模式启动文件
  */
+
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+
 class console
 {
     public static function start()
@@ -43,6 +45,8 @@ class console
         defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
         //系统日志路径
         defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
+        //设置runtime路径
+        defined('RUNTIME_PATH') or define('RUNTIME_PATH', BASE_PATH . 'runtime/');
         //是否是命令行模式
         defined('IS_CLI') or define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
 
@@ -50,8 +54,7 @@ class console
 
     public static function log()
     {
-        if (config('app.sys_log'))
-        {
+        if (config('app.sys_log')) {
             $info_log = new Logger('SYS_INFO');
             $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', Logger::DEBUG));
             $info_log->debug('console_info:', $_SERVER['argv']);
@@ -65,8 +68,7 @@ class console
     {
         $whoops = new \Whoops\Run;
 
-        if (config('app.sys_error_log'))
-        {
+        if (config('app.sys_error_log')) {
             $error_log = new Logger('SYS_ERROR');
             $error_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . 'cli_error.log', Logger::ERROR));
 
@@ -84,10 +86,11 @@ class console
         $params = array_slice($cmd, 2);
         $class = 'app\\commands\\' . ucwords($cmd[0]);
         $obj = new $class;
-        if(!empty($params))
-            $obj->$cmd[1](...$params);
-        else
-            $obj->$cmd[1]();
+        if (!empty($params)) {
+            $obj->{$cmd[1]}(...$params);
+        } else {
+            $obj->{$cmd[1]}();
+        }
     }
 
     //orm 模型
