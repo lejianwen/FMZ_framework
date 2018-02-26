@@ -35,10 +35,13 @@ class TestController extends BaseController
         $grid = new Grid();
         $grid->setHeader(['ID', '名称', '图片', '管理员', '状态']);
         $grid->text('id')->orderAble();
-        $grid->text('name')->orderAble();
+        $grid->label('name')->orderAble();
         $grid->img('images');
         $grid->text('admins.username');
-        $grid->select('status', [['label' => '禁用', 'value' => 0], ['label' => '启用', 'value' => 1]]);
+        $grid->switchLabel('status',[
+            ['label' => '禁用', 'value' => 0, 'class' => 'label-grey'],
+            ['label' => '启用', 'value' => 1, 'class' => 'label-success']
+        ]);
         $grid->action()->append('<button class="btn update" value="\'+value+\'">测试</button>');
 
 //        $grid->disAbleAdd();

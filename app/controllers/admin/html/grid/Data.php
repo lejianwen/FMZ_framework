@@ -42,7 +42,7 @@ abstract class Data
 
     public function addJs($js)
     {
-        $this->add_js = $js;
+        $this->add_js .= $js;
         return $this;
     }
 

@@ -11,11 +11,17 @@ namespace app\controllers\admin\html;
 
 use app\controllers\admin\html\grid\Action;
 use app\controllers\admin\html\grid\Data;
-use app\controllers\admin\html\grid\Img;
-use app\controllers\admin\html\grid\Json;
-use app\controllers\admin\html\grid\Select;
-use app\controllers\admin\html\grid\Text;
 
+/**
+ * Class Grid
+ * @method grid\Text text($attr)
+ * @method grid\Json json($attr)
+ * @method grid\Img img($attr, $width = 50, $height = 50)
+ * @method grid\Select select($attr, $options = [])
+ * @method grid\Label label($attr, $class = 'label-success')
+ * @method grid\SwitchLabel switchLabel($attr, $options = [])
+ * @package app\controllers\admin\html
+ */
 class Grid
 {
     protected $header;
@@ -42,33 +48,12 @@ class Grid
         $this->options = $options;
     }
 
-    public function img($attr, $width = 50, $height = 50)
+    public function __call($func, $params)
     {
-        $img = new Img($attr, $width, $height);
-        $this->data[] = $img;
-        return $this;
-    }
-
-    public function text($attr)
-    {
-        $text = new Text($attr);
-        $this->data[] = $text;
-        return $text;
-    }
-
-    public function json($attr)
-    {
-        $json = new Json($attr);
-        $this->data[] = $json;
-        return $json;
-    }
-
-
-    public function select($attr, $options = [])
-    {
-        $select = new Select($attr, $options);
-        $this->data[] = $select;
-        return $select;
+        $class = 'app\\controllers\\admin\\html\\grid\\' . ucfirst($func);
+        $obj = new $class(...$params);
+        $this->data[] = $obj;
+        return $obj;
     }
 
     public function action()
