@@ -1,8 +1,8 @@
 /* -----------H-ui前端框架-------------
-* iconfont.css v1.0.7
+* iconfont.css v1.0.8
 * http://www.h-ui.net/
 * Created & Modified by guojunhui
-* Date modified 2015.12.21
+* Date modified 2016.06.21
 *
 * Copyright 2013-2015 北京颖杰联创科技有限公司 All rights reserved.
 * Licensed under MIT license.
@@ -27,6 +27,8 @@
 .Hui-iconfont-gotop:before { content: "\e684"; }
 .Hui-iconfont-music:before { content: "\e60f"; }
 .Hui-iconfont-tags:before { content: "\e64b"; }
+.Hui-iconfont-jieri:before { content: "\e727"; }
+.Hui-iconfont-jishiqi:before { content: "\e728"; }
 .Hui-iconfont-pad:before { content: "\e64c"; }
 .Hui-iconfont-lunzi:before { content: "\e64d"; }
 .Hui-iconfont-jiandao:before { content: "\e64e"; }
@@ -40,7 +42,7 @@
 .Hui-iconfont-arrow1-left:before { content: "\e678"; }
 .Hui-iconfont-arrow1-top:before { content: "\e679"; }
 .Hui-iconfont-arrow1-right:before { content: "\e67a"; }
-.Hui-iconfont-jieri:before { content: "\e655"; }
+.Hui-iconfont-jieri1:before { content: "\e655"; }
 .Hui-iconfont-face-weixiao:before { content: "\e656"; }
 .Hui-iconfont-face-chijing:before { content: "\e657"; }
 .Hui-iconfont-face-dai:before { content: "\e658"; }
@@ -119,6 +121,7 @@
 .Hui-iconfont-pifu:before { content: "\e62a"; }
 .Hui-iconfont-menu:before { content: "\e667"; }
 .Hui-iconfont-msg:before { content: "\e62f"; }
+.Hui-iconfont-huangguan1:before { content: "\e729"; }
 .Hui-iconfont-userid:before { content: "\e602"; }
 .Hui-iconfont-cang-selected:before { content: "\e630"; }
 .Hui-iconfont-yundown:before { content: "\e641"; }
@@ -214,6 +217,7 @@
 .Hui-iconfont-del3:before { content: "\e6e2"; }
 .Hui-iconfont-add3:before { content: "\e610"; }
 .Hui-iconfont-add4:before { content: "\e61f"; }
+.Hui-iconfont-xiangpicha:before { content: "\e72a"; }
 .Hui-iconfont-key:before { content: "\e63f"; }
 .Hui-iconfont-yuyin2:before { content: "\e6a4"; }
 .Hui-iconfont-yuyin:before { content: "\e6a5"; }
@@ -272,6 +276,7 @@
 .Hui-iconfont-tongji-bing:before { content: "\e621"; }
 .Hui-iconfont-gouxuan:before { content: "\e615"; }
 .Hui-iconfont-jiansheyinxing:before { content: "\e6f8"; }
+.Hui-iconfont-moban:before { content: "\e72b"; }
 .Hui-iconfont-pay-weixin:before { content: "\e719"; }
 .Hui-iconfont-pay-alipay-2:before { content: "\e71c"; }
 .Hui-iconfont-beijingyinxing:before { content: "\e6fb"; }
@@ -316,3 +321,8 @@
 .Hui-iconfont-zhongguoyinxing:before { content: "\e722"; }
 .Hui-iconfont-zhongxinyinxing:before { content: "\e723"; }
 .Hui-iconfont-shanghaiyinxing:before { content: "\e724"; }
+.Hui-iconfont-banzhu:before { content: "\e72c"; }
+.Hui-iconfont-yuedu:before { content: "\e720"; }
+.Hui-iconfont-yanjing:before { content: "\e725"; }
+.Hui-iconfont-power:before { content: "\e726"; }
+.Hui-iconfont-moban-2:before { content: "\e72d"; }

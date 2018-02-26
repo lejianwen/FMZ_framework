@@ -15,11 +15,13 @@ class Select extends Input
     /**
      * 参数
      * @param array $options [['label' => '属性名', 'value' => 1, 'default' => 1], ...]
+     * @return $this
      * @author Lejianwen
      */
     public function options($options = [])
     {
         $this->options = $options;
+        return $this;
     }
 
     public function toHtml()

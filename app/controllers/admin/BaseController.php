@@ -34,6 +34,8 @@ class BaseController
     protected $model;
     //搜索的字段
     protected $search_columns = [];
+    //关联的数据
+    protected $with = [];
 
     public function __construct()
     {
@@ -101,7 +103,12 @@ class BaseController
         $search = addslashes($this->request->get('search'));
         $order_str = $this->request->get('order_str', 'id');
         $order_dir = $this->request->get('order_dir', 'desc');
-        $query = $this->model::query()
+        if (!empty($this->with)) {
+            $query = $this->model::with($this->with);
+        } else {
+            $query = $this->model::query();
+        }
+        $query
             ->orderBy($order_str, $order_dir)
             ->offset($offset)
             ->limit($length);
@@ -156,6 +163,7 @@ class BaseController
     public function add_post()
     {
         $data = $this->request->post();
+        $this->upFiles($data);
         $item = $this->model::create($data);
         if (!$item->id) {
             return $this->jsonError();
@@ -166,6 +174,7 @@ class BaseController
     public function update_post($id)
     {
         $data = $this->request->post();
+        $this->upFiles($data);
         $item = $this->model::find($id);
         if (!$item) {
             return $this->jsonError();
@@ -220,5 +229,27 @@ class BaseController
     protected function grid()
     {
         return new Grid();
+    }
+
+    protected function upFiles(&$data)
+    {
+        $files = $this->request->file();
+        if (!empty($files)) {
+            foreach ($files as $key => $file) {
+                if (is_array($file)) {
+                    $items = [];
+                    foreach ($file as $_file) {
+                        $path = '/uploads/' . date('Ymd') . '/';
+                        $filename = $_file->moveUpFile(WEB_ROOT . $path);
+                        $items[] = $path . $filename;
+                    }
+                    $data[$key] = implode(',', $items);
+                } else {
+                    $path = '/uploads/' . date('Ymd') . '/';
+                    $filename = $file->moveUpFile(WEB_ROOT . $path);
+                    $data[$key] = $path . $filename;
+                }
+            }
+        }
     }
 }
