@@ -140,7 +140,7 @@ class request
         return $this->server[$name];
     }
 
-    public function header($name = '')
+    public function header($name = '', $default = null)
     {
         if (empty($this->header)) {
             $header = [];
@@ -171,5 +171,44 @@ class request
         }
         $name = str_replace('_', '-', strtolower($name));
         return isset($this->header[$name]) ? $this->header[$name] : $default;
+    }
+
+    /**
+     * file
+     * @param string $name
+     * @return array|file
+     * @author Lejianwen
+     */
+    public function file($name = '')
+    {
+        $files = isset($_FILES) ? $_FILES : [];
+        $file_objs = [];
+        foreach ($files as $key => $file) {
+            if (is_array($file['name'])) {
+                //多文件上传
+                foreach ($file['tmp_name'] as $i => $tmp) {
+                    if (empty($tmp) || !is_file($tmp)) {
+                        continue;
+                    }
+                    $file_objs[$key][] = (new file($tmp))->setUpInfo([
+                        'name' => $file['name'][$i],
+                        'type' => $file['type'][$i]
+                    ]);
+                }
+            } else {
+                if (empty($file['tmp_name']) || !is_file($file['tmp_name'])) {
+                    continue;
+                }
+                $file_objs[$key] = (new file($file['tmp_name']))->setUpInfo([
+                    'name' => $file['name'],
+                    'type' => $file['type']
+                ]);
+            }
+        }
+        if ('' == $name) {
+            return $file_objs;
+        } else {
+            return $file_objs[$name];
+        }
     }
 }

@@ -31,5 +31,6 @@ abstract class Input
     public function required($re = true)
     {
         $this->require = $re ? 'required' : '';
+        return $this;
     }
 }

@@ -46,11 +46,14 @@ function form_submit (url, selector, callback) {
       //window.parent.location.reload();
     }
   }
+  var form = new FormData(document.getElementById(selector))
   $.ajax({
     url: url,
-    data: $('#' + selector).serialize(),
+    data: form,
     type: 'post',
     dataType: 'json',
+    processData: false,
+    contentType: false,
     success: function (res) {
       layer_msg(res.msg)
       if (res.error == 0) {
@@ -109,6 +112,11 @@ $(function () {
     var id = $(this).data('id')
     var attr = $(this).data('attr')
     var value = $(this).data('value')
-    postData('/admin/' + _class + '/changAttr/' + id, {attr: attr, value: value})
+    postData('/admin/' + _class + '/changeAttr/' + id, {attr: attr, value: value})
+  }).on('change', 'select', function () {
+    var id = $(this).data('id')
+    var attr = $(this).data('attr')
+    var value = $(this).val()
+    postData('/admin/' + _class + '/changeAttr/' + id, {attr: attr, value: value})
   })
 })
