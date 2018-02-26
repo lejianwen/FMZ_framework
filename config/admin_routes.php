@@ -36,3 +36,4 @@ Route::post('admin/admin/(:num)', 'admin\AdminController@update_post');
 Route::post('admin/admin/delete', 'admin\AdminController@delete');
 
 adminRouteResource('user');
+adminRouteResource('test');

@@ -32,13 +32,13 @@ class Form
     public function __call($func, $params)
     {
         $value = null;
-        $label = $params[0];
         $attr = $params[1];
         $obj = 'app\\controllers\\admin\\html\\form\\' . ucfirst($func);
         if ($this->item && isset($this->item[$attr])) {
             $value = $this->item[$attr];
         }
-        $input = new $obj($label, $attr, $value);
+        $params[] = $value;
+        $input = new $obj(...$params);
         $this->inputs[] = $input;
         return $input;
     }
