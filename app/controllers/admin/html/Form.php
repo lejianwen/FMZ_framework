@@ -15,6 +15,8 @@ namespace app\controllers\admin\html;
  * @method form\Input text($label, $attr)
  * @method form\Textarea textarea($label, $attr)
  * @method form\File file($label, $attr)
+ * @method form\Image image($label, $attr)
+ * @method form\Hidden hidden($label, $attr)
  * @package app\controllers\admin\html
  */
 class Form
