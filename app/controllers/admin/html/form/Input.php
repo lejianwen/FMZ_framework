@@ -15,8 +15,9 @@ abstract class Input
     protected $label;
     protected $attr;
     protected $value;
+    protected $default = null;
 
-    public function __construct($label, $attr, $value = '')
+    public function __construct($label, $attr, $value = null)
     {
         $this->label = $label;
         $this->attr = $attr;
@@ -32,5 +33,16 @@ abstract class Input
     {
         $this->require = $re ? 'required' : '';
         return $this;
+    }
+
+    public function default($value)
+    {
+        $this->default = $value;
+        return $this;
+    }
+
+    public function value()
+    {
+        return $this->value === null ? $this->default : $this->value;
     }
 }

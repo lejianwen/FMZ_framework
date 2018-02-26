@@ -24,7 +24,7 @@ class Image extends Input
       <label class="form-label col-xs-3">{$required_tag}{$this->label}:</label>
       <div class="formControls col-xs-7">
         <span class="btn-upload form-group" style="height: auto">
-          <img src="{$this->value}" style="max-width: 150px;">
+          <img src="{$this->value()}" style="max-width: 150px;">
           <a href="javascript:void();" class="btn btn-primary radius">
           <i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
           <input type="file" name="{$this->attr}" {$this->require} class="input-file" accept="{$accept}" id="{$image_id}">

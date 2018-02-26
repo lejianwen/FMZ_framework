@@ -8,10 +8,15 @@
 
 namespace app\controllers\admin\html;
 
-use app\controllers\admin\html\form\Select;
-use app\controllers\admin\html\form\Text;
-use app\controllers\admin\html\form\Textarea;
 
+/**
+ * Class Form
+ * @method form\Select select($label, $attr)
+ * @method form\Input text($label, $attr)
+ * @method form\Textarea textarea($label, $attr)
+ * @method form\File file($label, $attr)
+ * @package app\controllers\admin\html
+ */
 class Form
 {
     protected $inputs = [];
@@ -22,36 +27,16 @@ class Form
         $this->item = $item;
     }
 
-    public function text($label, $attr)
+    public function __call($func, $params)
     {
-        $value = '';
+        $value = null;
+        $label = $params[0];
+        $attr = $params[1];
+        $obj = 'app\\controllers\\admin\\html\\form\\' . ucfirst($func);
         if ($this->item && isset($this->item[$attr])) {
             $value = $this->item[$attr];
         }
-        $input = new Text($label, $attr, $value);
-        $this->inputs[] = $input;
-        return $input;
-    }
-
-    public function textarea($label, $attr)
-    {
-        $value = '';
-        if ($this->item && isset($this->item[$attr])) {
-            $value = $this->item[$attr];
-        }
-        $input = new Textarea($label, $attr, $value);
-        $this->inputs[] = $input;
-        return $input;
-    }
-
-    public function select($label, $attr, $options = [])
-    {
-        $value = '';
-        if ($this->item && isset($this->item[$attr])) {
-            $value = $this->item[$attr];
-        }
-        $input = new Select($label, $attr, $value);
-        $input->options($options);
+        $input = new $obj($label, $attr, $value);
         $this->inputs[] = $input;
         return $input;
     }
