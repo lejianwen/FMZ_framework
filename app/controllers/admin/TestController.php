@@ -22,9 +22,10 @@ class TestController extends BaseController
         $form->text('名称', 'name')->required();
 //        $form->file('附件', 'file')->isMultiple();
         $form->image('图片', 'images')->accept('.png,.jpg');
+        $form->hidden('', 'admin_id')->default(4);
         $form->select('状态', 'status')->options([
-            ['label' => '启用', 'value' => 1, 'default' => 1],
-            ['label' => '禁用', 'value' => 0]
+            ['label' => '启用', 'value' => 1],
+            ['label' => '禁用', 'value' => 0, 'default' => 1]
         ])->required();
         return $form;
     }
