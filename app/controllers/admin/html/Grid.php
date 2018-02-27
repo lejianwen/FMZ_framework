@@ -32,6 +32,9 @@ class Grid
     protected $no_action = false;
     protected $action;
     protected $no_add = false;
+    protected $no_search = false;
+    /** @var SearchForm */
+    protected $search_form;
 
     public function __construct()
     {
@@ -73,7 +76,7 @@ class Grid
     public function toHtml()
     {
         if (empty($this->header)) {
-            return ['header' => [], 'jsData' => '', 'js' => '', 'no_add' => $this->no_add];
+            return ['header' => [], 'jsData' => '', 'js' => '', 'no_add' => $this->no_add, 'search_form' => ''];
         }
         $data_js = [];
         /** @var Data $data */
@@ -89,7 +92,13 @@ class Grid
             $data_js[] = $this->action->dataToJs();
         }
         $js = !empty($this->js) ? implode("\n", $this->js) : '';
-        return ['header' => $this->header, 'jsData' => implode(',', $data_js), 'js' => $js, 'no_add' => $this->no_add];
+        return [
+            'header'      => $this->header,
+            'jsData'      => implode(',', $data_js),
+            'js'          => $js,
+            'no_add'      => $this->no_add,
+            'search_form' => $this->no_search ? '' : $this->search_form->inputs()
+        ];
     }
 
     public function addJs($js)
@@ -100,5 +109,17 @@ class Grid
     public function disAbleAdd()
     {
         $this->no_add = true;
+    }
+
+    public function disableSearch()
+    {
+        $this->no_search = true;
+    }
+
+    public function addSearchForm(SearchForm $search_form)
+    {
+        if ($search_form && !$search_form->isEmpty()) {
+            $this->search_form = $search_form;
+        }
     }
 }

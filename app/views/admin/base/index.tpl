@@ -29,11 +29,9 @@
 <div class="page-container">
   <div class="cl pd-5 bg-1 bk-gray mt-20">
     <div class="l" style="width: 50%">
-      <div class="col-xs-4">
-        <input type="text" class="input-text" id="search" placeholder="输入关键字">
-      </div>
-      <input type="button" value="查询" class="btn" id="search_btn">
-      <input type="button" value="重置" class="btn btn-secondary" id="search_reset">
+      {if $grid['search_form']}
+        <input type="button" value="查询" class="btn btn-secondary" id="search">
+      {/if}
     </div>
     <span class="r">
       {if !$grid['no_add']}
@@ -58,12 +56,39 @@
   </div>
 </div>
 </body>
+<div class="page-container" style="display: none" id="search_form_con">
+  <form class="form form-horizontal" id="search_form" onsubmit="return false;">
+    {foreach $grid['search_form'] as $input}
+      {$input}
+    {/foreach}
+    <div class="row cl">
+      <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+        <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+        <button class="btn btn-primary-outline radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
+        <button onClick="layer.closeAll();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+      </div>
+    </div>
+  </form>
+</div>
 <script type="text/javascript" src="/admin/js/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="/admin/js/lib/layer/2.1/layer.js"></script>
 <script type="text/javascript" src="/admin/js/static/h-ui/js/H-ui.js"></script>
 <script type="text/javascript" src="/admin/js/static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="/admin/js/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/admin/js/admin.js"></script>
+<script>
+
+  $(function () {
+    $('#search').click(function () {
+      layer.open({
+        type: 1,
+        skin: 'layui-layer-rim', //加上边框
+        area: ['50%', '80%'], //宽高
+        content: $('#search_form_con')
+      })
+    })
+  })
+</script>
 <script>
   $(function () {
     {$grid['js']}
@@ -72,13 +97,12 @@
 
 <script>
   //        $.fn.dataTable.ext.errMode = 'none';
-
   $(function () {
     var _class = $('#_class').val()
-    $('#search_btn').click(function () {
+    $('#search_form').submit(function () {
+      layer.closeAll()
       table.ajax.reload()
     })
-
     var table = $('#lists').dataTable({
       'sDom': 'lrtip',
       'pagingType': 'full_numbers',
@@ -97,7 +121,7 @@
         'data': function (d) {
           d.order_str = d.columns[[d.order[0].column]].data
           d.order_dir = d.order[0].dir
-          d.search = $('#search').val()
+          d.search = $('#search_form').serializeArray()
         }
       },
       'aoColumns': [
