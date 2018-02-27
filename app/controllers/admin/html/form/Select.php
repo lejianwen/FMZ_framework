@@ -30,7 +30,7 @@ class Select extends Input
         $options_html = '';
         foreach ($this->options as $option) {
             if ($this->value) {
-                $selected = $option['value'] == $this->value ? 'selected' : '';
+                $selected = $option['value'] === $this->value ? 'selected' : '';
             } else {
                 $selected = empty($option['default']) ? '' : 'selected';
             }

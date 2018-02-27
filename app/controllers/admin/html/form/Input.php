@@ -45,4 +45,9 @@ abstract class Input
     {
         return $this->value === null ? $this->default : $this->value;
     }
+
+    public function attr()
+    {
+        return $this->attr;
+    }
 }

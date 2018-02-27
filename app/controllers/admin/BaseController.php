@@ -11,6 +11,8 @@ namespace app\controllers\admin;
 
 use app\controllers\admin\html\Form;
 use app\controllers\admin\html\Grid;
+use app\controllers\admin\html\SearchForm;
+use app\models\User;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class BaseController
@@ -32,10 +34,13 @@ class BaseController
     protected $class_name;
     protected $model_name;
     protected $model;
-    //搜索的字段
-    protected $search_columns = [];
+    //搜索的表单
+    /** @var SearchForm */
+    protected $search_form;
     //关联的数据
     protected $with = [];
+    /** @var Grid */
+    protected $grid;
 
     public function __construct()
     {
@@ -73,7 +78,6 @@ class BaseController
         return false;
     }
 
-
     public function jsonError($code = 1001, $msg = '操作失败', $data = [])
     {
         return $this->response->json(['error' => $code, 'msg' => $msg, 'data' => $data]);
@@ -86,7 +90,10 @@ class BaseController
 
     public function index()
     {
-        $this->response->with('grid', $this->grid()->toHtml());
+        $this->grid();
+        $this->search();
+        $this->grid->addSearchForm($this->search_form);
+        $this->response->with('grid', $this->grid->toHtml());
         $this->response->with(['_model' => $this->model_name, '_class' => $this->class_name]);
         if (is_file(BASE_PATH . "app/views/admin/{$this->class_name}/index.tpl")) {
             return $this->response->view("admin/{$this->class_name}/index");
@@ -100,31 +107,27 @@ class BaseController
     {
         $offset = intval($this->request->get('start', 0));
         $length = intval($this->request->get('length', 20)) ?: 20;
-        $search = addslashes($this->request->get('search'));
         $order_str = $this->request->get('order_str', 'id');
         $order_dir = $this->request->get('order_dir', 'desc');
+        $this->search();
         if (!empty($this->with)) {
             $query = $this->model::with($this->with);
         } else {
             $query = $this->model::query();
         }
-        $query
-            ->orderBy($order_str, $order_dir)
+        if (!$this->search_form->isEmpty()) {
+            $query = $this->searchQuery($query);
+        }
+        $query->orderBy($order_str, $order_dir)
             ->offset($offset)
             ->limit($length);
-        $search_query = "";
-        if ($search && !empty($this->search_columns)) {
-            $search_columns = implode(',', $this->search_columns);
-            $search_query = "CONCAT_WS(',' , {$search_columns}) like '%{$search}%'";
-            $query->whereRaw($search_query);
-        }
         $data = [];
         $data['data'] = $query->get()->toArray();
         $data['recordsTotal'] = $this->model::count('id');
         $data['recordsFiltered'] = $data['recordsTotal'];
-        if ($search_query) {
+        if (!$this->search_form->isEmpty()) {
             $filter_query = $this->model::query();
-            $filter_query->whereRaw($search_query);
+            $filter_query = $this->searchQuery($filter_query);
             $data['recordsFiltered'] = $filter_query->count('id');
         }
         $data['draw'] = intval($this->request->get('draw'));
@@ -228,7 +231,7 @@ class BaseController
 
     protected function grid()
     {
-        return new Grid();
+        $this->grid = new Grid();
     }
 
     protected function upFiles(&$data)
@@ -251,5 +254,28 @@ class BaseController
                 }
             }
         }
+    }
+
+    protected function search()
+    {
+        $form = new SearchForm();
+        $this->search_form = $form;
+        $this->search_form->eq('ID', 'id');
+    }
+
+    protected function searchQuery($query)
+    {
+        $search = $this->request->get('search');
+        if (empty($search)) {
+            return $query;
+        }
+        $array = [];
+        foreach ($search as $item) {
+            $array[$item['name']] = $item['value'];
+        }
+        if (empty($array)) {
+            return $query;
+        }
+        return $this->search_form->buildQuery($query, $array);
     }
 }

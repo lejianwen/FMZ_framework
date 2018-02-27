@@ -14,7 +14,7 @@
     <link href="/admin/js/static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
     <link href="/admin/js/static/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />
     <link href="/admin/js/static/h-ui.admin/css/style.css" rel="stylesheet" type="text/css" />
-    <link href="/admin/js/lib/Hui-iconfont/1.0.7/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="/admin/js/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
     <title>后台登录</title>
 </head>
 <body>
