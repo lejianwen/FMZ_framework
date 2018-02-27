@@ -9,8 +9,6 @@
 
 namespace app\controllers\admin;
 
-use app\models\Source;
-
 class IndexController extends BaseController
 {
     public function index()
