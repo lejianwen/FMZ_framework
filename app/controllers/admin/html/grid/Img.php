@@ -10,20 +10,20 @@ namespace app\controllers\admin\html\grid;
 
 class Img extends Data
 {
-    protected $width;
-    protected $height;
+    protected $max_width;
+    protected $max_height;
 
-    public function __construct($attr, $width = 50, $height = 50)
+    public function __construct($attr, $max_width = 50, $max_height = 50)
     {
         $this->attr = $attr;
-        $this->width = $width;
-        $this->height = $height;
+        $this->max_width = $max_width;
+        $this->max_height = $max_height;
     }
 
     public function mRenderReturn()
     {
         return <<<js
-return '<img width="{$this->width}" height="{$this->height}" src="'+value+'" >'
+return '<img style="max-width:{$this->max_width}px;max-height:{$this->max_height}px" src="'+value+'" >'
 js;
     }
 }

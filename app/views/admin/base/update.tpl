@@ -19,6 +19,7 @@
   <script type="text/javascript" src="/admin/js/lib/layer/2.1/layer.js"></script>
   <script type="text/javascript" src="/admin/js/static/h-ui/js/H-ui.js"></script>
   <script type="text/javascript" src="/admin/js/static/h-ui.admin/js/H-ui.admin.js"></script>
+  <script type="text/javascript" src="/admin/js/lib/My97DatePicker/WdatePicker.js"></script>
   <script type="text/javascript" src="/admin/js/admin.js"></script>
 </head>
 <body>
