@@ -12,7 +12,6 @@ namespace app\controllers\admin;
 use app\controllers\admin\html\Form;
 use app\controllers\admin\html\Grid;
 use app\controllers\admin\html\SearchForm;
-use app\models\User;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class BaseController
@@ -165,12 +164,14 @@ class BaseController
 
     public function add_post()
     {
+        $this->add_before();
         $data = $this->request->post();
         $this->upFiles($data);
         $item = $this->model::create($data);
         if (!$item->id) {
             return $this->jsonError();
         }
+        $this->add_after($item);
         return $this->jsonSuccess();
     }
 
@@ -182,7 +183,9 @@ class BaseController
         if (!$item) {
             return $this->jsonError();
         }
+        $this->update_before($item);
         $item->update($data);
+        $this->update_after($item);
         return $this->jsonSuccess();
     }
 
@@ -277,5 +280,25 @@ class BaseController
             return $query;
         }
         return $this->search_form->buildQuery($query, $array);
+    }
+
+    protected function update_before($item)
+    {
+
+    }
+
+    protected function update_after($item)
+    {
+
+    }
+
+    protected function add_before()
+    {
+
+    }
+
+    protected function add_after($item)
+    {
+
     }
 }
