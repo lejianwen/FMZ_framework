@@ -12,6 +12,7 @@ namespace app\controllers\admin;
 use app\controllers\admin\html\Form;
 use app\controllers\admin\html\Grid;
 use app\controllers\admin\html\SearchForm;
+use app\models\User;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class BaseController
@@ -40,6 +41,8 @@ class BaseController
     protected $with = [];
     /** @var Grid */
     protected $grid;
+    /** @var Form */
+    protected $form;
 
     public function __construct()
     {
@@ -135,7 +138,8 @@ class BaseController
 
     public function add()
     {
-        $this->response->with('inputs', $this->form()->inputs());
+        $this->form();
+        $this->response->with('inputs', $this->form->inputs());
         $this->response->with(['_model' => $this->model_name, '_class' => $this->class_name]);
         if (is_file(BASE_PATH . "app/views/admin/{$this->class_name}/add.tpl")) {
             return $this->response->view("admin/{$this->class_name}/add");
@@ -152,7 +156,8 @@ class BaseController
             return $this->response->redirect("/admin/{$this->class_name}/index");
         }
         $item = $item->toArray();
-        $this->response->with('inputs', $this->form($item)->inputs());
+        $this->form($item);
+        $this->response->with('inputs', $this->form->inputs());
         $this->response->with(['_model' => $this->model_name, '_class' => $this->class_name]);
         $this->response->with(['item' => $item]);
         if (is_file(BASE_PATH . "app/views/admin/{$this->class_name}/update.tpl")) {
@@ -229,7 +234,7 @@ class BaseController
 
     protected function form($item = null)
     {
-        return new Form($item);
+        $this->form = new Form($item);
     }
 
     protected function grid()
@@ -284,21 +289,17 @@ class BaseController
 
     protected function update_before($item)
     {
-
     }
 
     protected function update_after($item)
     {
-
     }
 
     protected function add_before()
     {
-
     }
 
     protected function add_after($item)
     {
-
     }
 }
