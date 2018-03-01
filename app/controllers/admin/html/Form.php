@@ -8,6 +8,8 @@
 
 namespace app\controllers\admin\html;
 
+use app\controllers\admin\html\form\Embeds;
+
 
 /**
  * Class Form
@@ -18,6 +20,7 @@ namespace app\controllers\admin\html;
  * @method form\Image image($label, $attr)
  * @method form\Hidden hidden($label, $attr)
  * @method form\Time time($label, $attr)
+ * @method form\Embeds embeds($label, $attr, \Closure $closure)
  * @package app\controllers\admin\html
  */
 class Form
@@ -29,6 +32,17 @@ class Form
     {
         $this->item = $item;
     }
+
+    /*public function embeds($attr, \Closure $closure)
+    {
+        $value = [];
+        if ($this->item && isset($this->item[$attr])) {
+            $value = $this->item[$attr];
+        }
+        $embeds = new Embeds($attr, $closure, $value);
+        $this->inputs[] = $embeds;
+        return $embeds;
+    }*/
 
     public function __call($func, $params)
     {
