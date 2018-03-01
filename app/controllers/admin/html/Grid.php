@@ -20,6 +20,7 @@ use app\controllers\admin\html\grid\Data;
  * @method grid\Select select($attr, $options = [])
  * @method grid\Label label($attr, $class = 'label-success')
  * @method grid\SwitchLabel switchLabel($attr, $options = [])
+ * @method grid\Icon icon($attr)
  * @package app\controllers\admin\html
  */
 class Grid

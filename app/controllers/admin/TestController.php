@@ -8,6 +8,8 @@
 
 namespace app\controllers\admin;
 
+use app\controllers\admin\html\form\Embeds;
+
 class TestController extends BaseController
 {
     protected $search_columns = ['id', 'name'];
@@ -19,6 +21,14 @@ class TestController extends BaseController
         $this->form->text('名称', 'name')->required();
 //        $this->form->file('附件', 'file')->isMultiple();
         $this->form->image('图片', 'images')->accept('.png,.jpg');
+        $this->form->embeds('位置', 'positions', function (Embeds $form) {
+            $form->text('位置', 'position');
+            $form->text('位置2', 'position2');
+            $form->embeds('子位置', 'pos', function (Embeds $form) {
+                $form->text('位置3', 'position3');
+                $form->text('位置4', 'position4');
+            });
+        });
         $this->form->time('时间', 'created_at');
         $this->form->time('时间', 'updated_at')->format('yyyy-MM-dd');
         $this->form->select('状态', 'status')->options([

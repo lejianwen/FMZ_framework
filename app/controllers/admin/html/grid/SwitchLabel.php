@@ -80,7 +80,7 @@ script;
         return $this;
     }
 
-    public function disableChange()
+    public function disabled()
     {
         $this->disable_change = true;
         return $this;

@@ -9,6 +9,8 @@
 
 namespace app\controllers\admin;
 
+use app\models\Menu;
+
 class IndexController extends BaseController
 {
     public function index()
@@ -16,8 +18,14 @@ class IndexController extends BaseController
         $session = app('session');
         $user_name = $session->get('admin_username');
         $group_id = $session->get('admin_group_id');
+        $menus = Menu::allMenus();
         $this->response
-            ->with(['admin' => $user_name, 'admin_group_id' => $group_id])
+            ->with([
+                'admin'          => $user_name,
+                'admin_group_id' => $group_id,
+                'menus'          => $menus
+
+            ])
             ->view('admin/index');
     }
 
