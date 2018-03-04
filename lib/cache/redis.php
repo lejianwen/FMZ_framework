@@ -54,7 +54,7 @@ class redis extends cache
 
     protected function getCacheKey($key)
     {
-        return md5('cache' . $key);
+        return $key;
     }
 
     public function get($key)
