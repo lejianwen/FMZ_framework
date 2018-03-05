@@ -22,7 +22,7 @@ class Menu extends Model
 
     public function children()
     {
-        return $this->hasMany(Menu::class, 'pid', 'id');
+        return $this->hasMany(Menu::class, 'pid', 'id')->orderBy('sort', 'desc');
     }
 
     public function parent()
@@ -35,6 +35,7 @@ class Menu extends Model
         $menus = Menu::with('children')
             ->where('pid', 0)
             ->where('status', 1)
+            ->orderBy('sort', 'desc')
             ->get()
             ->toArray();
         return $menus;

@@ -54,7 +54,7 @@ class BaseController
         $path = explode('\\', static::class);
         $class_name = array_pop($path);
         $class_name = str_replace('Controller', '', $class_name);
-        $this->class_name = strtolower($class_name);
+        $this->class_name = lcfirst($class_name);
 
         $this->model_name = ucfirst($this->class_name);
         $this->model = 'app\\models\\' . $this->model_name;
@@ -169,14 +169,14 @@ class BaseController
 
     public function add_post()
     {
-        $this->add_before();
+        $this->updateBefore(null);
         $data = $this->request->post();
         $this->upFiles($data);
         $item = $this->model::create($data);
         if (!$item->id) {
             return $this->jsonError();
         }
-        $this->add_after($item);
+        $this->updateAfter($item);
         return $this->jsonSuccess();
     }
 
@@ -188,9 +188,9 @@ class BaseController
         if (!$item) {
             return $this->jsonError();
         }
-        $this->update_before($item);
+        $this->updateBefore($item);
         $item->update($data);
-        $this->update_after($item);
+        $this->updateAfter($item);
         return $this->jsonSuccess();
     }
 
@@ -226,6 +226,7 @@ class BaseController
             }
             $item->setAttribute($attr, $value);
             $item->save();
+            $this->updateAfter($item);
             $this->jsonSuccess();
         } catch (\Exception $e) {
             $this->jsonError($e->getCode() ?: 102, $e->getMessage());
@@ -287,19 +288,16 @@ class BaseController
         return $this->search_form->buildQuery($query, $array);
     }
 
-    protected function update_before($item)
+    protected function updateBefore($item = null)
     {
     }
 
-    protected function update_after($item)
+    protected function updateAfter($item)
     {
     }
 
-    protected function add_before()
+    protected function deleteAfter($item)
     {
-    }
 
-    protected function add_after($item)
-    {
     }
 }
