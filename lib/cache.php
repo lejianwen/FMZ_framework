@@ -51,4 +51,9 @@ abstract class cache
     {
 
     }
+
+    public function del($key)
+    {
+
+    }
 }
