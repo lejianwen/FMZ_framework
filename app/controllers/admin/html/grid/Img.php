@@ -15,7 +15,7 @@ class Img extends Data
 
     public function __construct($attr, $max_width = 50, $max_height = 50)
     {
-        $this->attr = $attr;
+        parent::__construct($attr);
         $this->max_width = $max_width;
         $this->max_height = $max_height;
     }
@@ -23,7 +23,7 @@ class Img extends Data
     public function mRenderReturn()
     {
         return <<<js
-return '<img style="max-width:{$this->max_width}px;max-height:{$this->max_height}px" src="'+value+'" >'
+return '<img style="max-width:{$this->max_width}px;max-height:{$this->max_height}px" src="'+{$this->value()}+'" >'
 js;
     }
 }

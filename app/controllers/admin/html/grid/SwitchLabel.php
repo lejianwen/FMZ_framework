@@ -16,7 +16,7 @@ class SwitchLabel extends Data
 
     public function __construct($attr, $options = [])
     {
-        $this->attr = $attr;
+        parent::__construct($attr);
         $this->options($options);
     }
 
@@ -29,10 +29,11 @@ class SwitchLabel extends Data
         return <<<js
 var options = {$options};
 var labels = {};
+var _value = {$this->value()};
 $.each(options, function(k,v){
   labels[v.value] = v;
 });
-return '<span class="label '+labels[value].class+' switchLabel-{$this->attr}" data-id="'+rd.id+'" data-value="'+value+'">'+labels[value].label+'</span>'
+return '<span class="label '+labels[_value].class+' switchLabel-{$this->origin_attr}" data-id="'+rd.id+'" data-value="'+_value+'" data-attr="{$this->origin_attr}">'+labels[_value].label+'</span>'
 js;
     }
 
@@ -46,19 +47,20 @@ js;
     $.each(options, function(k,v){
       labels[v.value] = v;
     });
-    $('#lists').on('click', '.switchLabel-{$this->attr}', function(){
+    $('#lists').on('click', '.switchLabel-{$this->origin_attr}', function(){
       var that = $(this)
       var _class = $('#_class').val();
       var id = $(this).data('id');
       var to_change = {};
       var value = $(this).data('value');
+      var attr = $(this).data('attr');
       $.each(options, function(k,v){
           if(v.value != value){
              to_change = v;
           }
       });
       console.log(to_change);
-      postData('/admin/' + _class + '/changeAttr/' + id, {attr: '{$this->attr}', value: to_change.value}, function(){
+      postData('/admin/' + _class + '/changeAttr/' + id, {attr: attr, value: to_change.value}, function(){
         that.removeClass(labels[value].class).addClass(to_change.class)
         .attr('data-value', to_change.value).data('value', to_change.value)
         .text(to_change.label);

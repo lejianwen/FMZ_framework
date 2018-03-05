@@ -15,7 +15,7 @@ class Button extends Data
 
     public function __construct($attr, $label = '', $class_name = '')
     {
-        $this->attr = $attr;
+        parent::__construct($attr);
         $this->label = $label;
         $this->class_name = $class_name;
     }
@@ -28,7 +28,7 @@ class Button extends Data
     public function mRenderReturn()
     {
         return <<<js
-              return '<span value="' + value + '" data-id="' + rd.id + '" class="btn {$this->class_name}">{$this->label}</span>'
+              return '<span value="' + {$this->value()} + '" data-id="' + rd.id + '" class="btn {$this->class_name}">{$this->label}</span>'
 js;
     }
 }
