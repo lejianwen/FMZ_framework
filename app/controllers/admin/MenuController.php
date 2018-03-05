@@ -18,7 +18,7 @@ class MenuController extends BaseController
     protected function grid()
     {
         parent::grid();
-        $this->grid->setHeader(['ID', '父菜单ID', '菜单名', '路径', '图标', '状态', '创建时间', '更新时间']);
+        $this->grid->setHeader(['ID', '父菜单ID', '菜单名', '路径', '图标', '排序', '状态', '创建时间', '更新时间']);
         $this->grid->text('id')->orderAble();
         $options = array_map(function ($menu) {
             return ['label' => $menu['name'], 'value' => $menu['id']];
@@ -28,6 +28,7 @@ class MenuController extends BaseController
         $this->grid->text('name')->orderAble();
         $this->grid->text('path');
         $this->grid->icon('icon');
+        $this->grid->text('sort')->orderAble();
         $this->grid->switchLabel('status')->options([
             ['label' => '禁用', 'value' => 0],
             ['label' => '启用', 'value' => 1, 'class' => 'label-success']
@@ -49,6 +50,7 @@ class MenuController extends BaseController
 
         $this->form->text('路径', 'path');
         $this->form->text('图标', 'icon');
+        $this->form->text('排序', 'sort')->default(0);
         $this->form->select('状态', 'status')->options([
             ['label' => '启用', 'value' => 1, 'default' => 1],
             ['label' => '禁用', 'value' => 0]

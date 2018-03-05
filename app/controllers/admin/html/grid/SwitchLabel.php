@@ -32,7 +32,7 @@ var labels = {};
 $.each(options, function(k,v){
   labels[v.value] = v;
 });
-return '<span class="label '+labels[value].class+' switchLabel" data-id="'+rd.id+'" data-value="'+value+'">'+labels[value].label+'</span>'
+return '<span class="label '+labels[value].class+' switchLabel-{$this->attr}" data-id="'+rd.id+'" data-value="'+value+'">'+labels[value].label+'</span>'
 js;
     }
 
@@ -46,7 +46,7 @@ js;
     $.each(options, function(k,v){
       labels[v.value] = v;
     });
-    $('#lists').on('click', '.switchLabel', function(){
+    $('#lists').on('click', '.switchLabel-{$this->attr}', function(){
       var that = $(this)
       var _class = $('#_class').val();
       var id = $(this).data('id');
