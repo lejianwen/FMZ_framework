@@ -95,4 +95,13 @@ class file extends cache
         }
         closedir($handle);
     }
+
+    public function del($key)
+    {
+        $cacheFile = $this->getCacheFile($key);
+        if (is_file($cacheFile)) {
+            @unlink($cacheFile);
+        }
+        return false;
+    }
 }

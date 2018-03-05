@@ -188,6 +188,14 @@ class response
         return $this;
     }
 
+    /**
+     * view
+     * @param $tpl
+     * @param null $status
+     * @return $this
+     * @throws \Exception
+     * @author Lejianwen
+     */
     public function view($tpl, $status = null)
     {
         if (!$tpl) {

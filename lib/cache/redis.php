@@ -70,4 +70,8 @@ class redis extends cache
         return $value;
     }
 
+    public function del($key)
+    {
+        $this->client->del($this->getCacheKey($key));
+    }
 }

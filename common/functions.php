@@ -300,7 +300,13 @@ if (!function_exists('redis')) {
     }
 }
 
+
 if (!function_exists('cache')) {
+    /**
+     * cache
+     * @return \lib\cache
+     * @author Lejianwen
+     */
     function cache()
     {
         return lib\cache::_instance();
@@ -322,3 +328,17 @@ if (!function_exists('response')) {
     }
 }
 
+/**
+ * 补全图片地址
+ * @param $image_url
+ * @return string
+ * @author Lejianwen
+ */
+function fixImageUrl($image_url)
+{
+    if (strstr('https://', $image_url) || strstr('http://', $image_url)) {
+        return $image_url;
+    } else {
+        return env('IMAGE_HOST') . $image_url;
+    }
+}
