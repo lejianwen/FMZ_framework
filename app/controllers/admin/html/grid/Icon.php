@@ -14,7 +14,7 @@ class Icon extends Data
     public function mRenderReturn()
     {
         return <<<js
-return '<i class="Hui-iconfont">'+value+'</i>'
+return '<i class="Hui-iconfont">'+{$this->value()}+'</i>'
 js;
     }
 }

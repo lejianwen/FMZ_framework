@@ -15,7 +15,7 @@ class Select extends Data
 
     public function __construct($attr, $options = [])
     {
-        $this->attr = $attr;
+        parent::__construct($attr);
         $this->options = $options;
     }
 
@@ -26,9 +26,10 @@ class Select extends Data
         return <<<js
             var options = {$options};
             var html = '<select class="select changeAttr" data-id="'+rd.id+'" data-attr="{$this->attr}" {$disabled}>';
+            var _value = {$this->value()};
             $.each(options, function(k,v){
                 var selected = '';
-                if(v['value'] == value){selected = 'selected';}
+                if(v['value'] === _value){selected = 'selected';}
                 html += '<option value="'+v['value']+'" '+selected+'>' + v['label'] + '</option>';
             })
             html += '</select>';

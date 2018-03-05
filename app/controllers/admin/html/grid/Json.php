@@ -14,7 +14,7 @@ class Json extends Data
     {
         return <<<js
                   var html = '';
-                  $.each(value, function (k, v) {
+                  $.each({$this->value()}, function (k, v) {
                     html += k + ' : ' + v + '<br>';
                   });
                   return html;

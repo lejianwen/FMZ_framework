@@ -14,14 +14,14 @@ class Label extends Data
 
     public function __construct($attr, $class = 'label-success')
     {
-        $this->attr = $attr;
+        parent::__construct($attr);
         $this->class = $class;
     }
 
     public function mRenderReturn()
     {
         return <<<js
-return '<span class="label {$this->class}">'+value+'</span>'
+return '<span class="label {$this->class}">'+{$this->value()}+'</span>'
 js;
     }
 }
