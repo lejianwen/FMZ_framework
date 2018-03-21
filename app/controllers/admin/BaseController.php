@@ -12,7 +12,6 @@ namespace app\controllers\admin;
 use app\controllers\admin\html\Form;
 use app\controllers\admin\html\Grid;
 use app\controllers\admin\html\SearchForm;
-use app\models\User;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class BaseController
