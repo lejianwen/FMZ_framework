@@ -34,6 +34,6 @@ Route::post('admin/admin/add', 'admin\AdminController@add_post');
 Route::get('admin/admin/(:num)', 'admin\AdminController@update');
 Route::post('admin/admin/(:num)', 'admin\AdminController@update_post');
 Route::post('admin/admin/delete', 'admin\AdminController@delete');
-
+adminRouteResource('menu');
 adminRouteResource('user');
 adminRouteResource('test');
