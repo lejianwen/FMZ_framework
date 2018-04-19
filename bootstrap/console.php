@@ -73,7 +73,7 @@ class console
             $error_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . 'cli_error.log', Logger::ERROR));
 
             $whoops_log_handler = new \Whoops\Handler\PlainTextHandler($error_log);
-            $whoops_log_handler->loggerOnly(true);
+//            $whoops_log_handler->loggerOnly(true);
             $whoops->pushHandler($whoops_log_handler);
         }
         $whoops->register();
