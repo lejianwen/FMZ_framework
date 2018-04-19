@@ -336,7 +336,7 @@ if (!function_exists('response')) {
  */
 function fixImageUrl($image_url)
 {
-    if (strstr('https://', $image_url) || strstr('http://', $image_url)) {
+    if (stristr($image_url, 'https://') || stristr($image_url, 'http://')) {
         return $image_url;
     } else {
         return env('IMAGE_HOST') . $image_url;
