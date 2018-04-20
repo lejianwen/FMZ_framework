@@ -19,6 +19,8 @@ class console
         define('APP_START', microtime(true));
         //系统初始化
         self::init();
+        //环境配置
+        self::env();
         //数据库配置载入
         self::database();
         //错误信息
@@ -102,4 +104,10 @@ class console
         $capsule->bootEloquent();
     }
 
+    //载入配置
+    public static function env()
+    {
+        $dotenv = new Dotenv\Dotenv(BASE_PATH);
+        $dotenv->load();
+    }
 }
