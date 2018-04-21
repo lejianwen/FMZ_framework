@@ -37,7 +37,10 @@ class redis extends cache
 //        if (function_exists('gzcompress')) {
 //            $value = gzcompress($value);
 //        }
-        if ($this->client->setex($key, $expire, $value)) {
+        if ($this->client->set($key, $value)) {
+            if ($expire > 0) {
+                $this->client->expire($key, $expire);
+            }
             return true;
         }
         return false;
