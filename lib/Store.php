@@ -20,6 +20,7 @@ class Store implements \ArrayAccess
     protected $pr_key = 'id';
     protected $key;
     protected $model_name;
+    protected $model;
     //记录有效时间,没有或者0表示永久
     protected $exp;
     //属性数组
@@ -74,6 +75,21 @@ class Store implements \ArrayAccess
         $store->origin_data = $data;
         $store->data();
         return $store;
+    }
+
+
+    /**
+     * model
+     * @return \Illuminate\Database\Eloquent\Model
+     * @author Lejianwen
+     */
+    public function model()
+    {
+        if (!$this->model) {
+            $model_name = 'app\\models\\' . ucfirst($this->model_name);
+            $this->model = $model_name::find($this->id);
+        }
+        return $this->model;
     }
 
     protected function data()
