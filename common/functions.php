@@ -342,3 +342,25 @@ function fixImageUrl($image_url)
         return env('IMAGE_HOST') . $image_url;
     }
 }
+
+function debugLog($message = '', $data = [])
+{
+    appLog('debug', $message, $data);
+}
+
+function infoLog($message = '', $data = [])
+{
+    appLog('info', $message, $data);
+}
+
+function errorLog($message = '', $data = [])
+{
+    appLog('error', $message, $data);
+}
+
+function appLog($level, $message = '', $data = [])
+{
+    $info_log = new \Monolog\Logger('APP_LOG');
+    $info_log->pushHandler(new \Monolog\Handler\StreamHandler(RUNTIME_PATH . 'app/' . date('Y-m-d') . '.log', $level));
+    $info_log->$level($message, $data);
+}
