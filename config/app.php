@@ -11,6 +11,7 @@ return [
     'session'           => '',
     'session_table'     => 'session',    //session 存放在mysql中的表名
     'session_lefttime'  => 1000,         //session有效时间
+    'session_dir'       => RUNTIME_PATH . 'session/',   //session目录
     'session_redis_dir' => 'default',            //session 使用的redis配置
     'debug'             => env('APP_DEBUG', false),         //调试模式
     'view'              => 'smarty',     //模板 smarty||native
