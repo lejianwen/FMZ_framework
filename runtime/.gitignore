@@ -1,1 +1,6 @@
 *
+!.gitignore
+!log/*
+!session/
+!smarty/
+!cache/
