@@ -11,8 +11,9 @@ namespace lib;
 
 class response
 {
-    protected $status = null;
-    protected $header = [];
+    protected $status;
+    protected $content;
+    protected $headers = [];
     protected $options = [];
     protected $type = '';
     protected $jsonp_callback = 'callback';
@@ -27,81 +28,46 @@ class response
         return $self;
     }
 
-    public function __construct()
+    public function __construct($content = '', $status = 200, $headers = [])
     {
-        $this->setContentType('text/html');
+        $this->headers = $headers;
+        $this->setContent($content);
+        $this->setStatus($status);
     }
 
-    /**设置状态
-     * @param $code
+    /**
+     * setContent
+     * @param $content
      * @return $this
-     * @deprecated 被系统的http_response_code替代
+     * @author Lejianwen
      */
-    /*public function status($code)
+    public function setContent($content)
     {
-        $_status = array(
-            // Informational 1xx
-            100 => 'Continue',
-            101 => 'Switching Protocols',
-            // Success 2xx
-            200 => 'OK',
-            201 => 'Created',
-            202 => 'Accepted',
-            203 => 'Non-Authoritative Information',
-            204 => 'No Content',
-            205 => 'Reset Content',
-            206 => 'Partial Content',
-            // Redirection 3xx
-            300 => 'Multiple Choices',
-            301 => 'Moved Permanently',
-            302 => 'Moved Temporarily ',  // 1.1
-            303 => 'See Other',
-            304 => 'Not Modified',
-            305 => 'Use Proxy',
-            // 306 is deprecated but reserved
-            307 => 'Temporary Redirect',
-            // Client Error 4xx
-            400 => 'Bad Request',
-            401 => 'Unauthorized',
-            402 => 'Payment Required',
-            403 => 'Forbidden',
-            404 => 'Not Found',
-            405 => 'Method Not Allowed',
-            406 => 'Not Acceptable',
-            407 => 'Proxy Authentication Required',
-            408 => 'Request Timeout',
-            409 => 'Conflict',
-            410 => 'Gone',
-            411 => 'Length Required',
-            412 => 'Precondition Failed',
-            413 => 'Request Entity Too Large',
-            414 => 'Request-URI Too Long',
-            415 => 'Unsupported Media Type',
-            416 => 'Requested Range Not Satisfiable',
-            417 => 'Expectation Failed',
-            // Server Error 5xx
-            500 => 'Internal Server Error',
-            501 => 'Not Implemented',
-            502 => 'Bad Gateway',
-            503 => 'Service Unavailable',
-            504 => 'Gateway Timeout',
-            505 => 'HTTP Version Not Supported',
-            509 => 'Bandwidth Limit Exceeded'
-        );
-        if (isset($_status[$code]))
-        {
-            header('HTTP/1.1 ' . $code . ' ' . $_status[$code]);
-            // 确保FastCGI模式下正常
-            header('Status:' . $code . ' ' . $_status[$code]);
+        if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable(array($content, '__toString'))) {
+            throw new \UnexpectedValueException(sprintf('The Response content must be a string or object implementing __toString(), "%s" given.', gettype($content)));
         }
-        return $this;
-    }*/
 
-    /**设置状态
+        $this->content = (string)$content;
+
+        return $this;
+    }
+
+    /**
+     * getContent
+     * @return mixed
+     * @author Lejianwen
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * 设置状态
      * @param $status
      * @return $this
      */
-    public function status($status = 200)
+    public function setStatus($status = 200)
     {
         $this->status = $status;
         return $this;
@@ -116,7 +82,8 @@ class response
         $this->setHeader('Content-Type', $content_type . '; charset=' . $charset);
     }
 
-    /**设置头信息
+    /**
+     * 设置头信息
      * @param $name
      * @param $value
      * @return $this
@@ -124,28 +91,15 @@ class response
     public function setHeader($name, $value)
     {
         if (is_array($name)) {
-            $this->header = array_merge($this->header, $name);
+            $this->headers = array_merge($this->headers, $name);
         } else {
-            $this->header[$name] = $value;
+            $this->headers[$name] = $value;
         }
         return $this;
     }
 
-    /**发送头信息
-     *
-     */
-    public function header()
-    {
-        if (!headers_sent()) {
-            http_response_code($this->status);
-            foreach ($this->header as $key => $value) {
-                header($key . ':' . $value);
-            }
-        }
-    }
-
-
-    /**设置输出参数
+    /**
+     * 设置输出参数
      * @param array $param
      * @param mixed $value
      * @return $this
@@ -165,11 +119,11 @@ class response
         $this->options = $options;
     }
 
-    public function json($data = [], $status = null)
+    public function json($data = [], $status = 200)
     {
         $this->type = 'json';
         if ($status) {
-            $this->status($status);
+            $this->setStatus($status);
         }
         $this->setContentType('application/json');
         $this->with($data);
@@ -180,7 +134,7 @@ class response
     {
         $this->type = 'jsonp';
         if ($status) {
-            $this->status($status);
+            $this->setStatus($status);
         }
         $this->setContentType('application/json');
         $this->with($data);
@@ -203,55 +157,113 @@ class response
         }
         $this->type = 'view';
         if ($status) {
-            $this->status($status);
+            $this->setStatus($status);
         }
         $this->setContentType('text/html');
-        $view = app('view');
-        if (!empty($this->options)) {
-            if (is_array($this->options)) {
-                foreach ($this->options as $key => $val) {
-                    $view->with($key, $val);
-                }
-            }
-
-        }
-        $view->setTpl($tpl);
+        app('view')->setTpl($tpl);
         return $this;
     }
 
-    /**响应
+    /**
+     * Sends HTTP headers.
      *
+     * @return $this
      */
-    public function send()
+    public function sendHeaders()
     {
-        if ($this->sended) {
-            return;
+        // headers have already been sent by the developer
+        if (headers_sent()) {
+            return $this;
         }
-        if (!$this->status) {
-            $this->status();
+
+        if (!headers_sent()) {
+            http_response_code($this->status);
+            foreach ($this->headers as $key => $value) {
+                header($key . ':' . $value);
+            }
         }
-        $this->header();
+
+        return $this;
+    }
+
+    /**
+     * prepareContent
+     * @return $this
+     * @author Lejianwen
+     */
+    public function prepareContent()
+    {
         switch ($this->type) {
             case 'json' :
-                echo json_encode($this->options);
+                $this->setContent(json_encode($this->options));
                 break;
             case 'jsonp' :
-                echo($this->jsonp_callback . '(' . json_encode($this->options) . ');');
+                $this->setContent($this->jsonp_callback . '(' . json_encode($this->options) . ');');
                 break;
             case 'view' :
-                app('view')->display();
+                /** @var view $view */
+                $view = app('view');
+                if (!empty($this->options)) {
+                    $view->with($this->options);
+                }
+                $this->setContent($view->fetch());
                 break;
             default :
                 break;
         }
+        return $this;
+    }
+
+    /**
+     * Sends content for the current web response.
+     *
+     * @return $this
+     */
+    public function sendContent()
+    {
+        if ($this->sended) {
+            return $this;
+        }
+        if (!$this->status) {
+            $this->setStatus(200);
+        }
+        if (!$this->content) {
+            $this->prepareContent();
+        }
+        echo $this->content;
+
+        return $this;
+    }
+
+    public function send()
+    {
+        $this->sendHeaders();
+        $this->sendContent();
+
         if (function_exists('fastcgi_finish_request')) {
-            // FASTCGI下提高页面响应
             fastcgi_finish_request();
         }
         $this->sended = true;
+        return $this;
     }
 
-    /**跳转
+    /**
+     * 保存成静态文件
+     * @param $file
+     * @return $this
+     * @author Lejianwen
+     */
+    public function saveToHtml($file)
+    {
+        if (!$this->content) {
+            $this->prepareContent();
+        }
+        file_put_contents($file, $this->content);
+        return $this;
+    }
+
+    /**
+     * 跳转
      * @param $url
      * @param string $msg
      * @param int $time
@@ -259,7 +271,7 @@ class response
     public function redirect($url, $msg = '', $time = 0, $status = 302)
     {
         $this->status = $status;
-        $this->header();
+        $this->sendHeaders();
         if (empty($msg)) {
             $msg = "redirect to  {$url} after {$time} s!";
         }
@@ -280,4 +292,31 @@ class response
         }
         $this->sended = true;
     }
+
+    /**
+     * Cleans or flushes output buffers up to target level.
+     *
+     * Resulting level can be greater than target level if a non-removable buffer has been encountered.
+     *
+     * @param int $targetLevel The target output buffering level
+     * @param bool $flush Whether to flush or clean the buffers
+     *
+     * @final since version 3.3
+     */
+    public static function closeOutputBuffers($targetLevel, $flush)
+    {
+        $status = ob_get_status(true);
+        $level = count($status);
+        // PHP_OUTPUT_HANDLER_* are not defined on HHVM 3.3
+        $flags = defined('PHP_OUTPUT_HANDLER_REMOVABLE') ? PHP_OUTPUT_HANDLER_REMOVABLE | ($flush ? PHP_OUTPUT_HANDLER_FLUSHABLE : PHP_OUTPUT_HANDLER_CLEANABLE) : -1;
+
+        while ($level-- > $targetLevel && ($s = $status[$level]) && (!isset($s['del']) ? !isset($s['flags']) || ($s['flags'] & $flags) === $flags : $s['del'])) {
+            if ($flush) {
+                ob_end_flush();
+            } else {
+                ob_end_clean();
+            }
+        }
+    }
+
 }

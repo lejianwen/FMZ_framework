@@ -40,14 +40,19 @@ class smarty extends view
         return $this;
     }
 
-    public function display($tpl = null)
+    /**
+     * display
+     * @param null $tpl
+     * @return string|void
+     * @throws \SmartyException
+     * @author Lejianwen
+     */
+    public function fetch($tpl = null)
     {
         if (!empty($tpl)) {
             $this->setTpl($tpl);
         }
-        $this->smarty->display($this->tpl);
-        unset($this->tpl);
-        return $this;
+        return $this->smarty->fetch($this->tpl);
     }
 
 }
