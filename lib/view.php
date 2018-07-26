@@ -6,7 +6,9 @@
  * Time: 13:51
  * QQ: 84855512
  */
+
 namespace lib;
+
 abstract class view
 {
     const VIEW_PATH = BASE_PATH . 'app/views/';
@@ -16,8 +18,7 @@ abstract class view
     public static function _instance()
     {
         static $view;
-        if (!$view)
-        {
+        if (!$view) {
             $class = 'lib\view\\' . config('app.view');
             $view = new $class;
         }
@@ -26,16 +27,24 @@ abstract class view
 
     public function setTpl($tpl)
     {
-        if (is_file(self::VIEW_PATH . $tpl . '.tpl'))
+        if (is_file(self::VIEW_PATH . $tpl . '.tpl')) {
             $this->tpl = self::VIEW_PATH . $tpl . '.tpl';
+        }
         return $this;
     }
 
-    public function with($key, $value)
+    public function with($key, $value = null)
     {
-        $this->data[$key] = $value;
+        if (is_array($key)) {
+            $this->data = $key;
+        } else {
+            $this->data[$key] = $value;
+        }
         return $this;
     }
 
-    public function display($tpl = null) { }
+    public function fetch($tpl = null)
+    {
+        return '';
+    }
 }

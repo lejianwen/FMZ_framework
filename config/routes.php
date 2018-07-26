@@ -10,10 +10,10 @@ use \Ljw\Route\Route;
 Route::space('app\\controllers\\', 'app\\middleware\\');
 
 Route::get('', 'IndexController@index');
-Route::get('index/middle','Index@index', 'IndexController@middle');
+Route::get('index/middle', 'Index@index', 'IndexController@middle');
 
-Route::error(function (){
-    app('response')->status('404');
+Route::error(function () {
+    app('response')->setStatus('404');
     echo '404 Not Found!';
 });
 Route::run();
