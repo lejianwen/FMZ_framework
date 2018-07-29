@@ -10,11 +10,11 @@ namespace lib;
 
 
 /**
- * Class Store
+ * Class Fmz
  * 基于redis的模型，方便使用
  * @package lib
  */
-class Store implements \ArrayAccess
+class Fmz implements \ArrayAccess
 {
     //主键，会根据主键查找记录
     protected $pr_key = 'id';
