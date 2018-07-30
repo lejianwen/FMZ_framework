@@ -34,7 +34,7 @@ class smarty extends view
         return $this;
     }
 
-    public function with($key, $value)
+    public function with($key, $value = null)
     {
         $this->smarty->assign($key, $value);
         return $this;
