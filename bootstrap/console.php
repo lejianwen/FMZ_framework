@@ -101,6 +101,7 @@ class console
         // Create a new Database connection
         $capsule = new Capsule;
         $capsule->addConnection(require BASE_PATH . '/config/database.php');
+        $capsule->setAsGlobal();
         $capsule->bootEloquent();
     }
 

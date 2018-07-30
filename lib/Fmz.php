@@ -10,16 +10,17 @@ namespace lib;
 
 
 /**
- * Class Store
+ * Class Fmz
  * 基于redis的模型，方便使用
  * @package lib
  */
-class Store implements \ArrayAccess
+class Fmz implements \ArrayAccess
 {
     //主键，会根据主键查找记录
     protected $pr_key = 'id';
     protected $key;
     protected $model_name;
+    protected $model;
     //记录有效时间,没有或者0表示永久
     protected $exp;
     //属性数组
@@ -52,6 +53,11 @@ class Store implements \ArrayAccess
         return $this->key;
     }
 
+    /**
+     * redis
+     * @return redis|\Redis
+     * @author Lejianwen
+     */
     protected static function redis()
     {
         return redis(static::$redis_connect);
@@ -74,6 +80,21 @@ class Store implements \ArrayAccess
         $store->origin_data = $data;
         $store->data();
         return $store;
+    }
+
+
+    /**
+     * model
+     * @return \Illuminate\Database\Eloquent\Model
+     * @author Lejianwen
+     */
+    public function model()
+    {
+        if (!$this->model) {
+            $model_name = 'app\\models\\' . ucfirst($this->model_name);
+            $this->model = $model_name::find($this->id);
+        }
+        return $this->model;
     }
 
     protected function data()
@@ -136,9 +157,7 @@ class Store implements \ArrayAccess
         $data = $this->origin_data;
         $key = $this->key();
         static::redis()->hMset($key, $data);
-        if ($this->exp) {
-            $this->expire();
-        }
+        $this->expire();
         $this->saved();
         return $this;
     }
@@ -196,11 +215,17 @@ class Store implements \ArrayAccess
         }
         if (is_array($data)) {
             $this->data = array_merge($this->data, $data);
-            $this->save();
+            foreach ($data as $key => $value) {
+                if (in_array($key, $this->json_attr)) {
+                    $data[$key] = json_encode($value);
+                }
+            }
+            static::redis()->hMset($this->key(), $data);
         } else {
             $this->data[$data] = $value;
-            $this->save();
+            static::redis()->hSet($this->key(), $data, $value);
         }
+        $this->expire();
         $this->updated();
     }
 
@@ -215,7 +240,12 @@ class Store implements \ArrayAccess
         if (!isset($this->data[$column])) {
             return;
         }
-        $this->data[$column] = static::redis()->hIncrBy($this->key(), $column, $step);
+        if (is_float($step)) {
+            $this->data[$column] = static::redis()->hIncrByFloat($this->key(), $column, $step);
+        } else {
+            $this->data[$column] = static::redis()->hIncrBy($this->key(), $column, $step);
+        }
+
         $this->expire();
         $this->updated();
     }
@@ -226,7 +256,11 @@ class Store implements \ArrayAccess
             return;
         }
         $step = -abs($step);
-        $this->data[$column] = static::redis()->hIncrBy($this->key(), $column, $step);
+        if (is_float($step)) {
+            $this->data[$column] = static::redis()->hIncrByFloat($this->key(), $column, $step);
+        } else {
+            $this->data[$column] = static::redis()->hIncrBy($this->key(), $column, $step);
+        }
         $this->expire();
         $this->updated();
     }
@@ -270,6 +304,9 @@ class Store implements \ArrayAccess
     public function expire($time = 0)
     {
         $time = $time ?: $this->exp;
+        if ($time == 0) {
+            return;
+        }
         $key = $this->key();
         static::redis()->expire($key, $time);
     }

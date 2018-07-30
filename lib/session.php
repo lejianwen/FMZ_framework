@@ -19,6 +19,9 @@ class session
         if (!$self) {
             $self = new self();
             if (!isset($_SESSION)) {
+                if (config('app.session_dir')) {
+                    session_save_path(config('app.session_dir'));
+                }
                 session_start();
                 $self->session_data = $_SESSION;
                 session_write_close();

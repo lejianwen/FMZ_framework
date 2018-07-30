@@ -336,9 +336,31 @@ if (!function_exists('response')) {
  */
 function fixImageUrl($image_url)
 {
-    if (stristr($image_url, 'https://') || stristr($image_url, 'http://')) {
+    if (strtolower(substr($image_url, 0, 8)) == 'https://' || strtolower(substr($image_url, 0, 7)) == 'http://') {
         return $image_url;
     } else {
         return env('IMAGE_HOST') . $image_url;
     }
+}
+
+function debugLog($message = '', $data = [])
+{
+    appLog('debug', $message, $data);
+}
+
+function infoLog($message = '', $data = [])
+{
+    appLog('info', $message, $data);
+}
+
+function errorLog($message = '', $data = [])
+{
+    appLog('error', $message, $data);
+}
+
+function appLog($level, $message = '', $data = [])
+{
+    $info_log = new \Monolog\Logger('APP_LOG');
+    $info_log->pushHandler(new \Monolog\Handler\StreamHandler(RUNTIME_PATH . 'app/' . date('Y-m-d') . '.log', $level));
+    $info_log->$level($message, $data);
 }
