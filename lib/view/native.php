@@ -14,13 +14,19 @@ use lib\view;
 class native extends view
 {
 
-    public function display($tpl = null)
+    public function fetch($tpl = null)
     {
         if (!empty($tpl)) {
             $this->setTpl($tpl);
         }
-        extract($this->data);
+        if (!empty($this->data)) {
+            extract($this->data);
+        }
+        ob_start();
         require realpath($this->tpl);
-        return $this;
+        $content = ob_get_contents();
+//        ob_end_flush();
+        ob_end_clean();
+        return $content;
     }
 }
