@@ -14,10 +14,14 @@ class Json extends Data
     {
         return <<<js
                   var html = '';
-                  $.each({$this->value()}, function (k, v) {
-                    html += k + ' : ' + v + '<br>';
-                  });
-                  return html;
+                  if({$this->value()}){
+                      $.each({$this->value()}, function (k, v) {
+                        html += k + ' : ' + v + '<br>';
+                      });
+                      return html;
+                  }else{
+                      return '';
+                  }  
 js;
     }
 }
