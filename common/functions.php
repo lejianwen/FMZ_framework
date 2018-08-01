@@ -45,13 +45,7 @@ function getFirstChar($s0)
     if ($fchar >= ord("A") and $fchar <= ord("z")) {
         return strtoupper($s0{0});
     }
-    $s1 = iconv("UTF-8", "gb2312", $s0);
-    $s2 = iconv("gb2312", "UTF-8", $s1);
-    if ($s2 == $s0) {
-        $s = $s1;
-    } else {
-        $s = $s0;
-    }
+    $s = mb_convert_encoding($s0, "GBK");
     $asc = ord($s{0}) * 256 + ord($s{1}) - 65536;
     if ($asc >= -20319 and $asc <= -20284) {
         return "A";
@@ -132,17 +126,12 @@ function getFirstChar($s0)
 function getPinYinFirstChar($zh)
 {
     $ret = "";
-    $s1 = iconv("UTF-8", "gb2312", $zh);
-    $s2 = iconv("gb2312", "UTF-8", $s1);
-    if ($s2 == $zh) {
-        $zh = $s1;
-    }
-    for ($i = 0; $i < strlen($zh); $i++) {
-        $s1 = substr($zh, $i, 1);
+    $zh = mb_convert_encoding($zh, "UTF-8");
+    for ($i = 0; $i < mb_strlen($zh); $i++) {
+        $s1 = mb_substr($zh, $i, 1);
         $p = ord($s1);
         if ($p > 160) {
-            $s2 = substr($zh, $i++, 2);
-            $ret .= getFirstChar($s2);
+            $ret .= getFirstChar($s1);
         } else {
             $ret .= $s1;
         }
