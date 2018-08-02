@@ -129,14 +129,17 @@ function getPinYinFirstChar($zh)
     $zh = mb_convert_encoding($zh, "UTF-8");
     for ($i = 0; $i < mb_strlen($zh); $i++) {
         $s1 = mb_substr($zh, $i, 1);
-        $p = ord($s1);
-        if ($p > 160) {
-            $ret .= getFirstChar($s1);
-        } else {
-            $ret .= $s1;
+        if ($s1) {
+            $p = ord($s1);
+            if ($p > 160) {
+                $ret .= getFirstChar($s1);
+            } else {
+                $ret .= $s1;
+            }
         }
+
     }
-    return $ret;
+    return mb_convert_encoding($ret, "UTF-8");
 }
 
 
