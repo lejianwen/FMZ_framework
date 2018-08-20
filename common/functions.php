@@ -199,18 +199,18 @@ if (!function_exists('config')) {
             switch ($key_len) {
                 case 1:
                     $config[$key_arr[0]] = $value;
-                    return true;
+                    return $value;
                     break;
                 case 2:
                     $config[$key_arr[0]][$key_arr[1]] = $value;
-                    return true;
+                    return $value;
                     break;
                 case 3:
                     $config[$key_arr[0]][$key_arr[1]][$key_arr[2]] = $value;
-                    return true;
+                    return $value;
                     break;
                 default:
-                    return false;
+                    return $value;
                     break;
             }
         }

@@ -45,12 +45,17 @@ class console
         setlocale(LC_ALL, "zh_CN.utf-8");
         //设置根路径
         defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
-        //系统日志路径
-        defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
+        //设置web根路径
+        defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
         //设置runtime路径
         defined('RUNTIME_PATH') or define('RUNTIME_PATH', BASE_PATH . 'runtime/');
+        //系统日志路径
+        defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
         //是否是命令行模式
-        defined('IS_CLI') or define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
+        defined('IS_CLI') or define('IS_CLI', true);
+        //是否是Ajax请求
+        defined('IS_AJAX') or define('IS_AJAX', false);
+
 
     }
 
