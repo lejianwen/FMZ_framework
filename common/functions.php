@@ -143,11 +143,24 @@ function getPinYinFirstChar($zh)
 }
 
 
-/**多进程执行任务
+/**
+ * 多进程执行任务
  * 阻塞的情况下其实并不是多进程，只是创建了一个子进程
  * 非阻塞才会创建多个子进程
  * @param int $num
  * @param $callback
+ * @example
+ * doByFork($num, function ($i) use ($num) {
+ *  for ($j = 0; $j < 10; $j++) {
+ *      if ($j % $num == $i) {
+ *          echo $i . '-' . $j . PHP_EOL;
+ *          sleep(1);
+ *      } else {
+ *          continue;
+ *      }
+ *  }
+ *  exit;
+ * });
  */
 function doByFork($num = 10, $callback)
 {
@@ -199,18 +212,18 @@ if (!function_exists('config')) {
             switch ($key_len) {
                 case 1:
                     $config[$key_arr[0]] = $value;
-                    return true;
+                    return $value;
                     break;
                 case 2:
                     $config[$key_arr[0]][$key_arr[1]] = $value;
-                    return true;
+                    return $value;
                     break;
                 case 3:
                     $config[$key_arr[0]][$key_arr[1]][$key_arr[2]] = $value;
-                    return true;
+                    return $value;
                     break;
                 default:
-                    return false;
+                    return $value;
                     break;
             }
         }
