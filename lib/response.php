@@ -77,6 +77,11 @@ class response
         return $this;
     }
 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
     /**设置contentType
      * @param $content_type
      * @param string $charset
