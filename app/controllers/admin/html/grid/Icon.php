@@ -11,10 +11,11 @@ namespace app\controllers\admin\html\grid;
 
 class Icon extends Data
 {
-    public function mRenderReturn()
+    public function __construct($attr)
     {
-        return <<<js
-return '<i class="Hui-iconfont">'+{$this->value()}+'</i>'
-js;
+        parent::__construct($attr);
+        $this->display = function ($value, $item) {
+            return "<i class=\"Hui-iconfont\">{$value}</i>";
+        };
     }
 }

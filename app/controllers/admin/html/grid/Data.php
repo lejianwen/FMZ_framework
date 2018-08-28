@@ -16,6 +16,7 @@ abstract class Data
     protected $add_js;
     protected $child_attr;
     protected $origin_attr;
+    protected $display;
 
     public function __construct($attr)
     {
@@ -26,14 +27,12 @@ abstract class Data
             array_shift($arr);
             $this->child_attr = $arr;
         }
+        $this->display = function ($value, $item) {
+            return $value;
+        };
     }
 
-    protected function mRenderReturn()
-    {
-        return "return {$this->value()}";
-    }
-
-    public function value()
+    public function mRenderReturn()
     {
         if (empty($this->child_attr)) {
             $js = 'value';
@@ -47,17 +46,11 @@ abstract class Data
             }
             $js .= ") ? {$temp} : value )";
         }
-        return $js;
-    }
-
-    public function dataToJs()
-    {
-        $this->js_data = "{
+        return "{
            data: '{$this->attr}',
            orderable: {$this->order_able},
-           mRender: function(value, d, rd){{$this->mRenderReturn()};}
+           mRender: function(value, d, rd){return {$js};}
         }";
-        return $this->js_data;
     }
 
     public function js()
@@ -75,5 +68,18 @@ abstract class Data
     {
         $this->order_able = $able ? 'true' : 'false';
         return $this;
+    }
+
+    public function display($callback = null)
+    {
+        if ($callback && $callback instanceof \Closure) {
+            $this->display = $callback;
+        }
+        return $this;
+    }
+
+    public function toShow()
+    {
+        return $this->display;
     }
 }

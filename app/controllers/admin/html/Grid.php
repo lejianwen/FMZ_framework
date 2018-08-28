@@ -56,7 +56,7 @@ class Grid
     {
         $class = 'app\\controllers\\admin\\html\\grid\\' . ucfirst($func);
         $obj = new $class(...$params);
-        $this->data[] = $obj;
+        $this->data[$params[0]] = $obj;
         return $obj;
     }
 
@@ -82,7 +82,7 @@ class Grid
         $data_js = [];
         /** @var Data $data */
         foreach ($this->data as $data) {
-            $data_js[] = $data->dataToJs();
+            $data_js[] = $data->mRenderReturn();
             $this->js[] = $data->js();
         }
         if (!$this->no_action) {
@@ -90,7 +90,7 @@ class Grid
                 $this->action();
             }
             $this->header[] = '操作';
-            $data_js[] = $this->action->dataToJs();
+            $data_js[] = $this->action->mRenderReturn();
         }
         $js = !empty($this->js) ? implode("\n", $this->js) : '';
         return [
@@ -122,5 +122,27 @@ class Grid
         if ($search_form && !$search_form->isEmpty()) {
             $this->search_form = $search_form;
         }
+    }
+
+    public function displayData($list)
+    {
+        $re = [];
+        if (empty($list) || empty($this->data)) {
+            return [];
+        }
+        if (!$this->no_action && !$this->action) {
+            $this->action();
+        }
+        foreach ($list as $key => $item) {
+            foreach ($item as $attr => $value) {
+                if (isset($this->data[$attr])) {
+                    $re[$key][$attr] = ($this->data[$attr]->toShow())($value, $item);
+                }
+            }
+            if (!$this->no_action) {
+                $re[$key]['_actions'] = ($this->action->toShow())($item['id'], $item);
+            }
+        }
+        return $re;
     }
 }

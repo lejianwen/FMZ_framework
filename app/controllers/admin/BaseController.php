@@ -111,6 +111,7 @@ class BaseController
         $order_str = $this->request->get('order_str', 'id');
         $order_dir = $this->request->get('order_dir', 'desc');
         $this->search();
+        $this->grid();
         if (!empty($this->with)) {
             $query = $this->model::with($this->with);
         } else {
@@ -123,7 +124,7 @@ class BaseController
             ->offset($offset)
             ->limit($length);
         $data = [];
-        $data['data'] = $query->get()->toArray();
+        $data['data'] = $this->grid->displayData($query->get()->toArray());
         $data['recordsTotal'] = $this->model::count('id');
         $data['recordsFiltered'] = $data['recordsTotal'];
         if (!$this->search_form->isEmpty()) {

@@ -18,26 +18,20 @@ class SwitchLabel extends Data
     {
         parent::__construct($attr);
         $this->options($options);
-    }
-
-    public function mRenderReturn()
-    {
-        $options = json_encode($this->options);
         if (!$this->disable_change) {
             $this->initJs();
         }
-        return <<<js
-var options = {$options};
-var labels = {};
-var _value = {$this->value()};
-$.each(options, function(k,v){
-  labels[v.value] = v;
-});
-return '<span class="label '+labels[_value].class+' switchLabel-{$this->origin_attr}" data-id="'+rd.id+'" data-value="'+_value+'" data-attr="{$this->origin_attr}">'+labels[_value].label+'</span>'
-js;
+        $this->display = function ($value, $item) {
+            foreach ($this->options as $option) {
+                if ($option['value'] == $value) {
+                    return "<span class='label {$option['class']} switchLabel-{$this->origin_attr}' data-id='{$item['id']}' data-value='{$value}' data-attr='{$this->origin_attr}'>{$option['label']}</span>";
+                }
+            }
+            return '';
+        };
     }
 
-    public function initJs()
+    protected function initJs()
     {
         $options = json_encode($this->options);
         $this->add_js = <<<script

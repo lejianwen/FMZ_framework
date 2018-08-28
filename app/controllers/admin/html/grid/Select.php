@@ -17,24 +17,16 @@ class Select extends Data
     {
         parent::__construct($attr);
         $this->options = $options;
-    }
-
-    public function mRenderReturn()
-    {
-        $options = json_encode($this->options);
-        $disabled = $this->disabled ? 'disabled' : '';
-        return <<<js
-            var options = {$options};
-            var html = '<select class="select changeAttr" data-id="'+rd.id+'" data-attr="{$this->attr}" {$disabled}>';
-            var _value = {$this->value()};
-            $.each(options, function(k,v){
-                var selected = '';
-                if(v['value'] === _value){selected = 'selected';}
-                html += '<option value="'+v['value']+'" '+selected+'>' + v['label'] + '</option>';
-            })
-            html += '</select>';
-            return html;
-js;
+        $this->display = function ($value, $item) {
+            $disabled = $this->disabled ? 'disabled' : '';
+            $html = "<select class='select changeAttr' data-id='{$item['id']}' data-attr='{$this->attr}' {$disabled}>";
+            foreach ($this->options as $option) {
+                $selected = $option['value'] == $value ? 'selected' : '';
+                $html .= "<option value='{$option['value']}' {$selected}>{$option['label']}</option>";
+            }
+            $html .= '</select>';
+            return $html;
+        };
     }
 
     public function options($options)

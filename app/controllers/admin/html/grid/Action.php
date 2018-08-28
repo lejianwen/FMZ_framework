@@ -16,12 +16,25 @@ class Action extends Data
 
     public function __construct()
     {
-        $this->attr = 'id';
+        $this->attr = '_actions';
+        $this->display = function ($id, $item) {
+            $html = '';
+            if (!$this->disable_edit) {
+                $html .= "<span value='{$id}' data-id='{$id}' class='btn btn-primary update'>编辑</span>";
+            }
+            if (!$this->disable_del) {
+                $html .= " <span value='{$id}' data-id='{$id}' class='btn btn-danger delete'>删除</span> ";
+            }
+            if (!empty($this->append)) {
+                $html .= str_replace('{$id}', $id, implode("\t", $this->append));
+            }
+            return $html;
+        };
     }
 
     public function append($html)
     {
-        $this->append[] = "'{$html}'";
+        $this->append[] = $html;
         return $this;
     }
 
@@ -35,26 +48,5 @@ class Action extends Data
     {
         $this->disable_del = true;
         return $this;
-    }
-
-    public function mRenderReturn()
-    {
-        $edit = '""';
-        if (!$this->disable_edit) {
-            $edit_btn = new Button('id', '修改', 'btn-primary update');
-            $edit = str_replace('return', '', $edit_btn->mRenderReturn());
-        }
-        $del = '""';
-        if (!$this->disable_del) {
-            $del_btn = new Button('id', '删除', 'btn-danger delete');
-            $del = str_replace('return', '', $del_btn->mRenderReturn());
-        }
-        $append = '""';
-        if (!empty($this->append)) {
-            $append = implode('+ " " +', $this->append);
-        }
-        return <<<js
-              return $edit + " " + $del + " " +$append;
-js;
     }
 }
