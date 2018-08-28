@@ -18,17 +18,13 @@ class Button extends Data
         parent::__construct($attr);
         $this->label = $label;
         $this->class_name = $class_name;
+        $this->display = function ($value, $item) {
+            return "<span value='{$value}' class='btn {$this->class_name}'>{$this->label}</span>";
+        };
     }
 
     public function label($label)
     {
         $this->label = $label;
-    }
-
-    public function mRenderReturn()
-    {
-        return <<<js
-              return '<span value="' + {$this->value()} + '" data-id="' + rd.id + '" class="btn {$this->class_name}">{$this->label}</span>'
-js;
     }
 }

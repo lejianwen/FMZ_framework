@@ -16,12 +16,8 @@ class Label extends Data
     {
         parent::__construct($attr);
         $this->class = $class;
-    }
-
-    public function mRenderReturn()
-    {
-        return <<<js
-return '<span class="label {$this->class}">'+{$this->value()}+'</span>'
-js;
+        $this->display = function ($value, $item) {
+            return "<span class='label {$this->class}'>{$value}</span>";
+        };
     }
 }

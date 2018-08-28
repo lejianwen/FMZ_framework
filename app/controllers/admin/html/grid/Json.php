@@ -10,18 +10,11 @@ namespace app\controllers\admin\html\grid;
 
 class Json extends Data
 {
-    public function mRenderReturn()
+    public function __construct($attr)
     {
-        return <<<js
-                  var html = '';
-                  if({$this->value()}){
-                      $.each({$this->value()}, function (k, v) {
-                        html += k + ' : ' + v + '<br>';
-                      });
-                      return html;
-                  }else{
-                      return '';
-                  }  
-js;
+        parent::__construct($attr);
+        $this->display = function ($value, $item) {
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
+        };
     }
 }
