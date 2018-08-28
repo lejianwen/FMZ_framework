@@ -82,4 +82,19 @@ abstract class Data
     {
         return $this->display;
     }
+
+    public function getOriginAttr()
+    {
+        return $this->origin_attr;
+    }
+
+    public function getAttr()
+    {
+        return $this->attr;
+    }
+
+    public function getChildAttr()
+    {
+        return $this->child_attr;
+    }
 }

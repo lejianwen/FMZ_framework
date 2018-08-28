@@ -134,9 +134,18 @@ class Grid
             $this->action();
         }
         foreach ($list as $key => $item) {
-            foreach ($item as $attr => $value) {
-                if (isset($this->data[$attr])) {
-                    $re[$key][$attr] = ($this->data[$attr]->toShow())($value, $item);
+            foreach ($this->data as $attr => $da) {
+                if (empty($da->getChildAttr())) {
+                    $re[$key][$attr] = ($da->toShow())($item[$attr], $item);
+                } else {
+                    // 暂时只支持一个层关联
+                    $attr = $da->getAttr();
+                    $child_attr = current($da->getChildAttr());
+                    if (isset($item[$attr])) {
+                        $re[$key][$attr][$child_attr] = ($da->toShow())($item[$attr][$child_attr], $item);
+                    } else {
+                        $re[$key][$attr] = [];
+                    }
                 }
             }
             if (!$this->no_action) {
