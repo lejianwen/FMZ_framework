@@ -114,7 +114,7 @@
       layer.closeAll()
       table.ajax.reload()
     })
-    var table = $('#lists').dataTable({
+    table = $('#lists').dataTable({
       'sDom': 'lrtip',
       'pagingType': 'full_numbers',
       'pageLength': 20,

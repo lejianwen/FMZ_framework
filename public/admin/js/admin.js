@@ -131,7 +131,8 @@ $(function () {
       layer_msg('请选择至少一行')
     }
     showConfirm('确定执行该操作?', '/admin/' + _class + '/' + route, {ids: ids}, function () {
-      window.location.reload()
+      table.ajax.reload()
     })
   })
 })
+var table;
