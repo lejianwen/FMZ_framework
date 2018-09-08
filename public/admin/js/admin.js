@@ -129,6 +129,7 @@ $(function () {
     })
     if (ids.length === 0) {
       layer_msg('请选择至少一行')
+      return;
     }
     showConfirm('确定执行该操作?', '/admin/' + _class + '/' + route, {ids: ids}, function () {
       table.ajax.reload()
