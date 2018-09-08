@@ -2,7 +2,7 @@
  * Created by Administrator on 2017/3/21.
  */
 //确认窗口
-function showConfirm (msg, url, data, callback) {
+function showConfirm(msg, url, data, callback) {
   layer.confirm(msg, function () {
     $.ajax({
       url: url,
@@ -22,7 +22,7 @@ function showConfirm (msg, url, data, callback) {
   })
 }
 
-function layer_msg (msg, shade, time) {
+function layer_msg(msg, shade, time) {
   if (typeof shade == 'undefined')
     shade = 0.2
   if (typeof  time == 'undefined')
@@ -37,12 +37,12 @@ function layer_msg (msg, shade, time) {
  * @param callback 回调方法，比如提交完的动作
  * @returns {boolean}
  */
-function form_submit (url, selector, callback) {
+function form_submit(url, selector, callback) {
   if (typeof selector == 'undefined')
     selector = 'form'
   if (typeof callback == 'undefined') {
     callback = function () {
-      setTimeout('window.parent.location.reload()', 1000)
+      setTimeout('window.close()', 1000)
       //window.parent.location.reload();
     }
   }
@@ -66,7 +66,7 @@ function form_submit (url, selector, callback) {
 
 /**关闭上级窗口
  */
-function closeParent () {
+function closeParent() {
   var index = parent.layer.getFrameIndex(window.name)
   parent.layer.close(index)
 }
@@ -76,7 +76,7 @@ function closeParent () {
  * @param data
  * @param callback
  */
-function postData (url, data, callback) {
+function postData(url, data, callback) {
   if (typeof callback == 'undefined')
     callback = function () {}
   $.ajax({
@@ -118,5 +118,20 @@ $(function () {
     var attr = $(this).data('attr')
     var value = $(this).val()
     postData('/admin/' + _class + '/changeAttr/' + id, {attr: attr, value: value})
+  })
+  $('.batch').click(function () {
+    var ids = []
+    var route = $(this).data('route')
+    $('.batch_id').each(function (k, v) {
+      if ($(v).prop('checked')) {
+        ids.push($(v).data('value'))
+      }
+    })
+    if (ids.length === 0) {
+      layer_msg('请选择至少一行')
+    }
+    showConfirm('确定执行该操作?', '/admin/' + _class + '/' + route, {ids: ids}, function () {
+      window.location.reload()
+    })
   })
 })

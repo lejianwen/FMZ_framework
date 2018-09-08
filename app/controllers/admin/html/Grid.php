@@ -10,6 +10,7 @@
 namespace app\controllers\admin\html;
 
 use app\controllers\admin\html\grid\Action;
+use app\controllers\admin\html\grid\Checkbox;
 use app\controllers\admin\html\grid\Data;
 
 /**
@@ -21,6 +22,7 @@ use app\controllers\admin\html\grid\Data;
  * @method grid\Label label($attr, $class = 'label-success')
  * @method grid\SwitchLabel switchLabel($attr, $options = [])
  * @method grid\Icon icon($attr)
+ * @method grid\Checkbox checkbox($attr)
  * @package app\controllers\admin\html
  */
 class Grid
@@ -36,6 +38,9 @@ class Grid
     protected $no_search = false;
     /** @var SearchForm */
     protected $search_form;
+    //批处理
+    protected $batch;
+    protected $no_batch = false;
 
     public function __construct()
     {
@@ -74,12 +79,22 @@ class Grid
         $this->no_action = true;
     }
 
+    /**
+     * 列表页 输出到模板的部分
+     * @return array
+     * @author Lejianwen
+     */
     public function toHtml()
     {
         if (empty($this->header)) {
             return ['header' => [], 'jsData' => '', 'js' => '', 'no_add' => $this->no_add, 'search_form' => ''];
         }
+        //dataTable js需要的json串
         $data_js = [];
+        if (!$this->no_batch) {
+            array_unshift($this->header, '<div class="check-box"><input type="checkbox" class="checkAll"></div>');
+            $this->addBatch('删除', 'batchDelete');
+        }
         /** @var Data $data */
         foreach ($this->data as $data) {
             $data_js[] = $data->mRenderReturn();
@@ -98,7 +113,9 @@ class Grid
             'jsData'      => implode(',', $data_js),
             'js'          => $js,
             'no_add'      => $this->no_add,
-            'search_form' => $this->no_search ? '' : $this->search_form->inputs()
+            'search_form' => $this->no_search ? '' : $this->search_form->inputs(),
+            'no_batch'    => $this->no_batch,
+            'batch'       => $this->batch
         ];
     }
 
@@ -149,9 +166,22 @@ class Grid
                 }
             }
             if (!$this->no_action) {
-                $re[$key]['_actions'] = ($this->action->toShow())($item['id'], $item);
+                //后面的操作展示
+                $re[$key][$this->action->getAttr()] = ($this->action->toShow())($item['id'], $item);
             }
         }
         return $re;
+    }
+
+    public function disableBatch()
+    {
+        $this->no_batch = false;
+        return $this;
+    }
+
+    public function addBatch($label, $route)
+    {
+        $this->batch[] = compact('label', 'route');
+        return $this;
     }
 }

@@ -120,8 +120,10 @@ class BaseController
         if (!$this->search_form->isEmpty()) {
             $query = $this->searchQuery($query);
         }
-        $query->orderBy($order_str, $order_dir)
-            ->offset($offset)
+        if ($order_str) {
+            $query->orderBy($order_str, $order_dir);
+        }
+        $query->offset($offset)
             ->limit($length);
         $data = [];
         $data['data'] = $this->grid->displayData($query->get()->toArray());
@@ -194,6 +196,11 @@ class BaseController
         return $this->jsonSuccess();
     }
 
+    protected function deleteBefore($item)
+    {
+
+    }
+
     public function delete()
     {
         try {
@@ -202,10 +209,12 @@ class BaseController
                 throw new \Exception(101, '数据不存在');
             }
             $item = $this->model::find($id);
+            $this->deleteBefore($item);
             if (!$item || !$item->id) {
                 throw new \Exception(101, '数据不存在');
             }
             $item->delete();
+            $this->deleteAfter($item);
             $this->jsonSuccess();
         } catch (\Exception $e) {
             $this->jsonError($e->getCode() ?: 102, $e->getMessage());
@@ -299,5 +308,17 @@ class BaseController
     protected function deleteAfter($item)
     {
 
+    }
+
+    /**
+     * 批量删除
+     * @return \lib\response
+     * @author Lejianwen
+     */
+    public function batchDelete()
+    {
+        $ids = $this->request->post('ids');
+        $this->model::query()->whereIn('id', $ids)->delete();
+        return $this->jsonSuccess();
     }
 }

@@ -20,6 +20,7 @@ function adminRouteResource($name)
     Route::post("admin/$name/(:num)", "admin\\$controller_name@update_post");
     Route::post("admin/$name/changeAttr/(:num)", "admin\\$controller_name@changeAttr");
     Route::post("admin/$name/delete", "admin\\$controller_name@delete");
+    Route::post("admin/$name/batchDelete", "admin\\$controller_name@batchDelete");
 }
 
 /** 后台 */
