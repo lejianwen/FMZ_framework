@@ -32,6 +32,16 @@
       {if $grid['search_form']}
         <input type="button" value="查询" class="btn btn-secondary" id="search">
       {/if}
+      {if !$grid['no_batch']}
+      <span class="dropDown">
+        <a class="dropDown_A btn btn-danger-outline c-danger" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">批量操作</a>
+        <ul class="dropDown-menu menu radius box-shadow">
+           {foreach $grid['batch'] as $batch}
+            <li><a class="batch" href="javascript:;" data-route="{$batch['route']}">{$batch['label']}</a></li>
+          {/foreach}
+        </ul>
+      </span>
+      {/if}
     </div>
     <span class="r">
       {if !$grid['no_add']}
@@ -64,7 +74,7 @@
     <div class="row cl">
       <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
         <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
-        <button class="btn btn-primary-outline radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
+        <button class="btn btn-primary-outline radius cl" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
         <button onClick="layer.closeAll();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
       </div>
     </div>
@@ -87,7 +97,7 @@
         area: ['50%', '80%'], //宽高
         content: $('#search_form_con')
       })
-    })
+    });
   })
 </script>
 <script>
@@ -110,7 +120,7 @@
       'pageLength': 20,
       'processing': true,
       'serverSide': true,
-      'aaSorting': [[0, 'desc']],
+      'aaSorting': [],
       'lengthMenu': [20, 40, 100],
       'error': function () {
         alert('网络错误!')
@@ -120,12 +130,21 @@
         'dataType': 'json',
         'dataSrc': 'data',
         'data': function (d) {
-          d.order_str = d.columns[[d.order[0].column]].data
-          d.order_dir = d.order[0].dir
+          d.order_str = d.order[0] ? d.columns[[d.order[0].column]].data : ''
+          d.order_dir = d.order[0] ? d.order[0].dir : ''
           d.search = $('#search_form').serializeArray()
         }
       },
       'aoColumns': [
+        {if !$grid['no_batch']}
+        {
+          data: 'id',
+          orderable: false,
+          mRender: function (value, d, rd) {
+            return '<input type="checkbox" class="check-box batch_id" data-value="' + value + '">'
+          }
+        },
+        {/if}
         {$grid['jsData']}
 
       ]
