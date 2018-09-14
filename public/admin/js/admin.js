@@ -42,7 +42,10 @@ function form_submit(url, selector, callback) {
     selector = 'form'
   if (typeof callback == 'undefined') {
     callback = function () {
-      setTimeout('window.close()', 1000)
+      if(window.parent.table){
+          window.parent.table.ajax.reload();
+          setTimeout('closeParent()',1000);
+      }
       //window.parent.location.reload();
     }
   }
