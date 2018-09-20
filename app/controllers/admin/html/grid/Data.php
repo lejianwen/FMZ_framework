@@ -42,7 +42,7 @@ abstract class Data
             $temp = 'value';
             foreach ($this->child_attr as $child) {
                 $temp .= ".{$child}";
-                $js .= " && {$temp}";
+                $js .= " && typeof ({$temp}) != 'undefined'";
             }
             $js .= ") ? {$temp} : value )";
         }
