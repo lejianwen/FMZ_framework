@@ -45,7 +45,7 @@
     </div>
 </div>
 <div class="footer">Copyright FMZ_framework</div>
-<script type="text/javascript" src="/admin/js/lib/jquery/1.9.11/jquery.min.js"></script>
+<script type="text/javascript" src="/admin/js/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="/admin/js/static/h-ui/js/H-ui.js"></script>
 <script type="text/javascript" src="/admin/js/lib/layer/2.1/layer.js"></script>
 <script type="text/javascript" src="/admin/js/admin.js"></script>
