@@ -152,14 +152,14 @@ class response
     }
 
     /**
-     * view
-     * @param $tpl
-     * @param null $status
+     * @param        $tpl
+     * @param null   $status
+     * @param string $content_type
+     * @param string $charset
      * @return $this
      * @throws \Exception
-     * @author Lejianwen
      */
-    public function view($tpl, $status = null)
+    public function view($tpl, $status = null, $content_type = 'text/html', $charset = 'utf-8')
     {
         if (!$tpl) {
             throw new \Exception('need template');
@@ -168,7 +168,7 @@ class response
         if ($status) {
             $this->setStatus($status);
         }
-        $this->setContentType('text/html');
+        $this->setContentType($content_type, $charset);
         app('view')->setTpl($tpl);
         return $this;
     }
