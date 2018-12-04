@@ -184,12 +184,12 @@ class BaseController
 
     public function update_post($id)
     {
-        $data = $this->request->post();
         $item = $this->model::find($id);
         if (!$item) {
             return $this->jsonError();
         }
         $this->updateBefore($item);
+        $data = $this->request->post();
         $this->upFiles($data);
         $item->update($data);
         $this->updateAfter($item);
