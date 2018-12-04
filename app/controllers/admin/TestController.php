@@ -52,11 +52,8 @@ class TestController extends BaseController
             ['label' => '禁用', 'value' => 0, 'class' => 'label-grey'],
             ['label' => '启用', 'value' => 1, 'class' => 'label-success']
         ]);
-        $this->grid->custom('book_path', function ($value) {
-            return <<<js
-'<a href="https://m.ibookv.com'+{$value}+'" target="_blank">m页--' + rd.name +'</a><br>' +
- '<a href="http://www.ibookv.com'+{$value}+'" target="_blank">pc页--' + rd.name +'</a><br>'
-js;
+        $this->grid->text('book_path')->display(function ($value, $item) {
+            return "<a href='https://m.ibookv.com/mipBook/{$item['id']}.html' target='_blank'>{$value}</a><br>";
         });
         $this->grid->action()->append('<button class="btn update" value="\'+value+\'">测试</button>');
 
