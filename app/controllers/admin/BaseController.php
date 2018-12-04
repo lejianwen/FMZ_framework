@@ -171,8 +171,8 @@ class BaseController
 
     public function add_post()
     {
-        $data = $this->request->post();
         $this->updateBefore(null);
+        $data = $this->request->post();
         $this->upFiles($data);
         $item = $this->model::create($data);
         if (!$item->id) {
@@ -184,6 +184,7 @@ class BaseController
 
     public function update_post($id)
     {
+
         $item = $this->model::find($id);
         if (!$item) {
             return $this->jsonError();
@@ -264,7 +265,7 @@ class BaseController
                         $filename = $_file->moveUpFile(WEB_ROOT . $path);
                         $items[] = $path . $filename;
                     }
-                    $data[$key] = implode(',', $items);
+                    $data[$key] = $items;
                 } else {
                     $path = '/uploads/' . date('Ymd') . '/';
                     $filename = $file->moveUpFile(WEB_ROOT . $path);
