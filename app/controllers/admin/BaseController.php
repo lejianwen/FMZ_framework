@@ -171,8 +171,8 @@ class BaseController
 
     public function add_post()
     {
-        $this->updateBefore(null);
         $data = $this->request->post();
+        $this->updateBefore(null);
         $this->upFiles($data);
         $item = $this->model::create($data);
         if (!$item->id) {
@@ -185,12 +185,12 @@ class BaseController
     public function update_post($id)
     {
         $data = $this->request->post();
-        $this->upFiles($data);
         $item = $this->model::find($id);
         if (!$item) {
             return $this->jsonError();
         }
         $this->updateBefore($item);
+        $this->upFiles($data);
         $item->update($data);
         $this->updateAfter($item);
         return $this->jsonSuccess();
