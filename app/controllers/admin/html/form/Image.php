@@ -19,7 +19,7 @@ class Image extends Input
         $required_tag = $this->require ? '<span class="c-red">*</span>' : '';
         $accept = $this->accept ?: 'image/*';
         $image_id = 'image_' . uniqid() . mt_rand(1000, 9999);
-        $value = json_encode(($this->value() ?: []));
+        $value = json_encode(((array)$this->value() ?: []));
         $this->html = <<<html
 <div class="row cl">
       <label class="form-label col-xs-3">{$required_tag}{$this->label}:</label>
