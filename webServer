@@ -1,0 +1,109 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Created by PhpStorm.
+ * User: lejianwen
+ * Date: 2017/3/13
+ * Time: 16:04
+ * QQ: 84855512
+ */
+
+/**
+ * 默认时区定义
+ */
+date_default_timezone_set('Asia/Shanghai');
+
+/**
+ * 设置错误报告模式
+ */
+error_reporting(0);
+
+/**
+ * 设置默认区域
+ */
+setlocale(LC_ALL, "zh_CN.utf-8");
+
+
+define('BASE_PATH', __DIR__ . '/');
+define('LOG_PATH', BASE_PATH . '/runtime/log/');
+define('TASK_PID_PATH', BASE_PATH . '/server/task.pid');
+
+include BASE_PATH . "/server/http.php";
+
+function serverStart()
+{
+    echo "正在启动 swoole-http 服务 \n";
+    $server = new \server\http();
+    $server->run();
+}
+
+function serverStop()
+{
+    echo "正在停止 swoole-http 服务 \n";
+    if (!file_exists(TASK_PID_PATH)) {
+        exit('pid文件:' . TASK_PID_PATH . '不存在' . PHP_EOL);
+    }
+    $pid = explode("\n", file_get_contents(TASK_PID_PATH));
+    $cmd = "kill {$pid[0]}";
+    exec($cmd, $out);
+    do {
+        $out = [];
+        $c = "ps ax | awk '{ print $1 }' | grep -e \"^{$pid[0]}$\"";
+        exec($c, $out);
+        if (empty($out)) {
+            break;
+        }
+    } while (true);
+    //确保停止服务后task-pid文件被删除
+    if (file_exists(TASK_PID_PATH)) {
+        unlink(TASK_PID_PATH);
+    }
+    $msg = "服务已停止" . PHP_EOL;
+    echo $msg;
+}
+
+function serverRestart()
+{
+    echo 'http 服务重启 ' . PHP_EOL;
+    serverStop();
+    serverStart();
+}
+
+function serverReLoad()
+{
+    echo "正在重启 swoole-http 服务 \n";
+    if (!file_exists(TASK_PID_PATH)) {
+        exit('pid文件:' . TASK_PID_PATH . '不存在' . PHP_EOL);
+    }
+    $pid = explode("\n", file_get_contents(TASK_PID_PATH));
+    posix_kill($pid[1], SIGUSR2);
+    echo "服务已重启" . PHP_EOL;
+}
+
+$cmds = [
+    'start',
+    'stop',
+    'reload',
+    'restart',
+    'status'
+];
+//命令检查
+$cmd = $argv[$argc - 1];
+if (!in_array($cmd, $cmds)) {
+    exit("命令错误!");
+}
+switch ($cmd) {
+    case 'start':
+        serverStart();
+        break;
+    case 'reload' :
+        serverReLoad();
+        break;
+    case 'restart' :
+        serverRestart();
+        break;
+    case 'stop' :
+        serverStop();
+        break;
+}
+

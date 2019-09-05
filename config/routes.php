@@ -16,5 +16,6 @@ Route::get('index/middle', 'Index@index', 'IndexController@middle');
 
 Route::error(function () {
     response()->setStatus('404');
-    echo '404 Not Found!';
+    response()->json('404 not');
+//    response()->setContent('404 Not Found!');
 });

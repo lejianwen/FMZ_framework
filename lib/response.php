@@ -18,7 +18,7 @@ class response
     protected $type = '';
     protected $jsonp_callback = 'callback';
     protected $sended = false;
-    static $self;
+    public static $self;
 
     /**
      * @return response

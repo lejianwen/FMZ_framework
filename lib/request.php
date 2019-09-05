@@ -18,21 +18,29 @@ class request
     public $uri;
     public $server;
     public $header;
+    static $self;
 
     public static function _instance()
     {
-        static $self;
-        if (!$self) {
-            $self = new self();
+        if (!self::$self) {
+            self::$self = new self();
         }
-        return $self;
+        return self::$self;
     }
 
+    /**
+     * 重置
+     * @return request
+     * @author lejianwen
+     */
+    public static function reset()
+    {
+        self::$self = null;
+        return self::_instance();
+    }
 
     public function __construct()
     {
-        //$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $this->setClientIp();
     }
 
     public function uri()
@@ -90,7 +98,8 @@ class request
                 $ip = env('HTTP_X_FORWARDED_FOR');
             } elseif (env('REMOTE_ADDR') && strcasecmp(env('REMOTE_ADDR'), 'unknown')) {
                 $ip = env('REMOTE_ADDR');
-            } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+            } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'],
+                    'unknown')) {
                 $ip = $_SERVER['REMOTE_ADDR'];
             } else {
                 $ip = env('HTTP_CLIENT_IP');
