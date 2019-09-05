@@ -8,7 +8,6 @@
  */
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use NoahBuscher\Macaw\Macaw as Route;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -17,48 +16,31 @@ class bootstrap
 
     public static function start()
     {
-        define('APP_START', microtime(true));
-        //系统初始化
         self::init();
-        //环境配置
+        // 路由
+        \Ljw\Route\Route::run();
+        //响应
+        response()->send();
+        //日志
+        self::log();
+    }
+
+    /**
+     * 初始化
+     * @author lejianwen
+     */
+    public static function init()
+    {
+        //系统初始化
         self::env();
         //session系统
-        self::session();
+        IS_CLI || self::session();
         //数据库配置载入
         self::database();
         //错误信息
         self::exception();
-        //cli模式不载入路由
-        IS_CLI OR (require_once BASE_PATH . '/config/routes.php');
-        //响应
-        app('response')->send();
-        //日志
-        self::log();
-        define('APP_END', microtime(true));
-    }
-
-    /**定义一些配置
-     *
-     */
-    public static function init()
-    {
-        //默认时区定义
-        date_default_timezone_set('Asia/Shanghai');
-        //设置默认区域
-        setlocale(LC_ALL, "zh_CN.utf-8");
-        //设置根路径
-        defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
-        //设置web根路径
-        defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
-        //设置runtime路径
-        defined('RUNTIME_PATH') or define('RUNTIME_PATH', BASE_PATH . 'runtime/');
-        //系统日志路径
-        defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
-        //是否是命令行模式
-        defined('IS_CLI') or define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
-        //是否是Ajax请求
-        defined('IS_AJAX') or define('IS_AJAX', ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false);
-
+        //载入路由
+        require_once BASE_PATH . '/config/routes.php';
     }
 
     public static function log()
@@ -69,9 +51,9 @@ class bootstrap
             $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', $level));
             $request = app('request');
             $info_log->$level('request_info:', [
-                'ip'     => $request->getClientIp(),
+                'ip' => $request->getClientIp(),
                 'method' => $request->method(),
-                'uri'    => $request->uri()
+                'uri' => $request->uri()
             ]);
         }
     }
@@ -139,6 +121,24 @@ class bootstrap
     //载入配置
     public static function env()
     {
+        //默认时区定义
+        date_default_timezone_set('Asia/Shanghai');
+        //设置默认区域
+        setlocale(LC_ALL, "zh_CN.utf-8");
+        //设置根路径
+        defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
+        //设置web根路径
+        defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
+        //设置runtime路径
+        defined('RUNTIME_PATH') or define('RUNTIME_PATH', BASE_PATH . 'runtime/');
+        //系统日志路径
+        defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
+        //是否是命令行模式
+        defined('IS_CLI') or define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
+        //是否是Ajax请求
+        defined('IS_AJAX') or define('IS_AJAX',
+            ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false);
+
         $dotenv = new Dotenv\Dotenv(BASE_PATH);
         $dotenv->load();
     }

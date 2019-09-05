@@ -18,14 +18,18 @@ class response
     protected $type = '';
     protected $jsonp_callback = 'callback';
     protected $sended = false;
+    static $self;
 
+    /**
+     * @return response
+     * @author lejianwen
+     */
     public static function _instance()
     {
-        static $self;
-        if (!$self) {
-            $self = new self();
+        if (!self::$self) {
+            self::$self = new self();
         }
-        return $self;
+        return self::$self;
     }
 
     public function __construct($content = '', $status = 200, $headers = [])
@@ -33,6 +37,17 @@ class response
         $this->headers = $headers;
         $this->setContent($content);
         $this->setStatus($status);
+    }
+
+    /**
+     * 重置
+     * @return response
+     * @author lejianwen
+     */
+    public static function reset()
+    {
+        self::$self = null;
+        return self::_instance();
     }
 
     /**
@@ -153,7 +168,7 @@ class response
 
     /**
      * @param        $tpl
-     * @param null   $status
+     * @param null $status
      * @param string $content_type
      * @param string $charset
      * @return $this

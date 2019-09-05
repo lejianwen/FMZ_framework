@@ -16,54 +16,33 @@ class console
 {
     public static function start()
     {
-        define('APP_START', microtime(true));
         //系统初始化
         self::init();
+        //运行
+        self::run();
+        //日志
+        self::log();
+    }
+
+    /**
+     * 定义一些配置
+     */
+    public static function init()
+    {
         //环境配置
         self::env();
         //数据库配置载入
         self::database();
         //错误信息
         self::exception();
-        //运行
-        self::run();
-        //日志
-        self::log();
-        define('APP_END', microtime(true));
-//        var_dump((APP_EXIT-APP_START)*1000);
-    }
-
-
-    /**定义一些配置
-     *
-     */
-    public static function init()
-    {
-        //默认时区定义
-        date_default_timezone_set('Asia/Shanghai');
-        //设置默认区域
-        setlocale(LC_ALL, "zh_CN.utf-8");
-        //设置根路径
-        defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
-        //设置web根路径
-        defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
-        //设置runtime路径
-        defined('RUNTIME_PATH') or define('RUNTIME_PATH', BASE_PATH . 'runtime/');
-        //系统日志路径
-        defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
-        //是否是命令行模式
-        defined('IS_CLI') or define('IS_CLI', true);
-        //是否是Ajax请求
-        defined('IS_AJAX') or define('IS_AJAX', false);
-
-
     }
 
     public static function log()
     {
         if (config('app.sys_log')) {
             $info_log = new Logger('SYS_INFO');
-            $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', Logger::DEBUG));
+            $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log',
+                Logger::DEBUG));
             $info_log->debug('console_info:', $_SERVER['argv']);
         }
     }
@@ -113,6 +92,23 @@ class console
     //载入配置
     public static function env()
     {
+        //默认时区定义
+        date_default_timezone_set('Asia/Shanghai');
+        //设置默认区域
+        setlocale(LC_ALL, "zh_CN.utf-8");
+        //设置根路径
+        defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
+        //设置web根路径
+        defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
+        //设置runtime路径
+        defined('RUNTIME_PATH') or define('RUNTIME_PATH', BASE_PATH . 'runtime/');
+        //系统日志路径
+        defined('SYSTEM_LOG_PATH') or define('SYSTEM_LOG_PATH', __DIR__ . '/../runtime/log/system/');
+        //是否是命令行模式
+        defined('IS_CLI') or define('IS_CLI', true);
+        //是否是Ajax请求
+        defined('IS_AJAX') or define('IS_AJAX', false);
+
         $dotenv = new Dotenv\Dotenv(BASE_PATH);
         $dotenv->load();
     }
