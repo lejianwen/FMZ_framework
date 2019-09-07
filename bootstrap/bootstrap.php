@@ -44,6 +44,27 @@ class bootstrap
         require_once BASE_PATH . '/config/routes.php';
     }
 
+    /**
+     * 运行在swoole中
+     * @return false|string
+     */
+    public static function runInSwoole()
+    {
+        try {
+            ob_start();
+            // 路由
+            \Ljw\Route\Route::run();
+            //响应
+            response()->send();
+            $content = ob_get_contents();
+            ob_end_clean();
+        } catch (\Exception $e) {
+            $content = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+        }
+        return $content;
+    }
+
+
     public static function log()
     {
         if (config('app.sys_log')) {

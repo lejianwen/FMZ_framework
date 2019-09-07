@@ -68,33 +68,20 @@ class http
         request()->reset();
         response()->reset();
         $server = $request->server ?? [];
-        $headers = $request->header ?? [];
         $_GET = $request->get ?? [];
         $_POST = $request->post ?? [];
         $_FILES = $request->files ?? [];
-        foreach ($headers as $k => $v) {
-            $key = 'http_' . str_replace('-', '_', $k);
-            $server[$key] = $v;
+        if (!empty($request->header)) {
+            foreach ($request->header as $k => $v) {
+                $key = 'http_' . str_replace('-', '_', $k);
+                $server[$key] = $v;
+            }
         }
         foreach ($server as $k => $v) {
             $_SERVER[strtoupper($k)] = $v;
             putenv(strtoupper($k) . "={$v}");
         }
-
-        ob_start();
-        var_dump($_FILES);
-        try {
-            // 路由
-            \Ljw\Route\Route::run();
-            //响应
-            response()->send();
-
-        } catch (\Exception $e) {
-            echo $e->getMessage() . PHP_EOL . $e->getTraceAsString();
-        }
-        $content = ob_get_contents();
-        ob_end_clean();
-        $response->end($content);
+        $response->end(\bootstrap::runInSwoole());
         //日志
         \bootstrap::log();
     }

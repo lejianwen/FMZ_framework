@@ -18,6 +18,7 @@ class request
     public $uri;
     public $server;
     public $header;
+    public $file_objs;
     static $self;
 
     public static function _instance()
@@ -190,37 +191,39 @@ class request
      */
     public function file($name = '')
     {
-        $files = isset($_FILES) ? $_FILES : [];
-        $file_objs = [];
-        if (IS_CLI) {
-            // swoole 模式下
-            foreach ($files as $key => $file) {
-                $file_objs[$key] = $this->arrayFileKeyInCli($file);
-            }
+        if (empty($this->file_objs)) {
+            $files = isset($_FILES) ? $_FILES : [];
+            $file_objs = [];
+            if (IS_CLI) {
+                // swoole 模式下
+                foreach ($files as $key => $file) {
+                    $file_objs[$key] = $this->arrayFileKeyInCli($file);
+                }
 
-        } else {
-            // 普通模式下
-            foreach ($files as $key => $file) {
-                if (isset($file['name']) && is_array($file['name'])) {
-                    //多文件上传
-                    $file_objs[$key] = $this->arrayFileKey($file['tmp_name'], $file['name'], $file['type']);
-                } else {
-                    // 单文件
-                    if (empty($file['tmp_name']) || !is_file($file['tmp_name'])) {
-                        continue;
+            } else {
+                // 普通模式下
+                foreach ($files as $key => $file) {
+                    if (isset($file['name']) && is_array($file['name'])) {
+                        //多文件上传
+                        $file_objs[$key] = $this->arrayFileKey($file['tmp_name'], $file['name'], $file['type']);
+                    } else {
+                        // 单文件
+                        if (empty($file['tmp_name']) || !is_file($file['tmp_name'])) {
+                            continue;
+                        }
+                        $file_objs[$key] = (new file($file['tmp_name']))->setUpInfo([
+                            'name' => $file['name'],
+                            'type' => $file['type']
+                        ]);
                     }
-                    $file_objs[$key] = (new file($file['tmp_name']))->setUpInfo([
-                        'name' => $file['name'],
-                        'type' => $file['type']
-                    ]);
                 }
             }
+            $this->file_objs = $file_objs;
         }
-
         if ('' == $name) {
-            return $file_objs;
+            return $this->file_objs;
         } else {
-            return $file_objs[$name];
+            return $this->file_objs[$name];
         }
     }
 
