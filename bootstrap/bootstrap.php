@@ -130,6 +130,8 @@ class bootstrap
         defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
         //设置web根路径
         defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
+        //设置public根路径
+        defined('PUBLIC_PATH') or define('PUBLIC_PATH', BASE_PATH . 'public/');
         //设置runtime路径
         defined('RUNTIME_PATH') or define('RUNTIME_PATH', BASE_PATH . 'runtime/');
         //系统日志路径

@@ -63,12 +63,15 @@ class http
         $this->server->start();
     }
 
-    public function onRequest($request, $response)
+    public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response)
     {
         request()->reset();
         response()->reset();
         $server = $request->server ?? [];
         $headers = $request->header ?? [];
+        $_GET = $request->get ?? [];
+        $_POST = $request->post ?? [];
+        $_FILES = $request->files ?? [];
         foreach ($headers as $k => $v) {
             $key = 'http_' . str_replace('-', '_', $k);
             $server[$key] = $v;
@@ -77,16 +80,21 @@ class http
             $_SERVER[strtoupper($k)] = $v;
             putenv(strtoupper($k) . "={$v}");
         }
+
         ob_start();
-        // 路由
-        \Ljw\Route\Route::run();
-        //响应
-        response()->send();
+        var_dump($_FILES);
+        try {
+            // 路由
+            \Ljw\Route\Route::run();
+            //响应
+            response()->send();
+
+        } catch (\Exception $e) {
+            echo $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+        }
         $content = ob_get_contents();
-//        ob_end_flush();
         ob_end_clean();
         $response->end($content);
-        var_dump(request()->getClientIp());
         //日志
         \bootstrap::log();
     }
@@ -163,7 +171,7 @@ class http
     public function onWorkerStop($server, $workerId)
     {
         if (!$this->setting['daemonize']) {
-            echo 'Date:' . date('Y-m-d H:i:s') . " server {$server->setting['process_name']}  worker:{$workerId} shutdown\n";
+            echo 'Date:' . date('Y-m-d H:i:s') . " server {$this->setting['process_name']}  worker:{$workerId} shutdown\n";
         }
     }
 

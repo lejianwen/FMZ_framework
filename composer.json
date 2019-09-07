@@ -10,7 +10,7 @@
     "guzzlehttp/guzzle": "~6.0",
     "illuminate/database": "*",
     "ljw/excel": "dev-master",
-    "ljw/route": "dev-master",
+    "ljw/route": "v2.6",
     "ljw/validator": "dev-master",
     "monolog/monolog": "1.21.0",
     "smarty/smarty": "*",
@@ -35,5 +35,11 @@
     "preferred-install": "dist",
     "sort-packages": true,
     "optimize-autoloader": true
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://mirrors.aliyun.com/composer/"
+    }
   }
 }

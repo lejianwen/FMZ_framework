@@ -28,6 +28,13 @@ class file
         return $this;
     }
 
+    /**
+     * 移动上传文件到指定目录
+     * @param string $path 目录
+     * @param bool $filename 文件名： true生成随机名，空字符串表示使用原文件名
+     * @param bool $overwrite 是否覆盖
+     * @return bool|string
+     */
     public function moveUpFile($path, $filename = true, $overwrite = false)
     {
         $filename = $this->buildFileName($filename);

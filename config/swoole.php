@@ -10,13 +10,13 @@ return [
     'host' => '0.0.0.0',
     'port' => '9502',
     'env' => 'dev',  //环境 dev|test|prod
-    'process_name' => 'swoole-websoket',  //swoole 进程名称
+    'process_name' => 'swoole-http',  //swoole 进程名称
     'worker_num' => 1, //一般设置为服务器CPU数的1-4倍
     'task_worker_num' => 1,  //task进程的数量
     'task_ipc_mode' => 3,  //使用消息队列通信，并设置为争抢模式
-    'task_max_request' => 1000,  //task进程的最大任务数
+    'task_max_request' => 5,  //task进程的最大任务数
     'daemonize' => 0, //以守护进程执行
-    'max_request' => 1000,
+    'max_request' => 5,
     'dispatch_mode' => 2,
     'log_file' => LOG_PATH . 'server.log',  //日志
     'user' => 'www',
