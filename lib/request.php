@@ -18,21 +18,20 @@ class request
     public $uri;
     public $server;
     public $header;
+    public $file_objs;
+    static $self;
 
     public static function _instance()
     {
-        static $self;
-        if (!$self) {
-            $self = new self();
+        if (!self::$self) {
+            self::$self = new self();
         }
-        return $self;
+        return self::$self;
     }
 
 
     public function __construct()
     {
-        //$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $this->setClientIp();
     }
 
     public function uri()
@@ -176,39 +175,76 @@ class request
     /**
      * file
      * @param string $name
-     * @return array|file
+     * @return file[]||file
      * @author Lejianwen
      */
     public function file($name = '')
     {
-        $files = isset($_FILES) ? $_FILES : [];
-        $file_objs = [];
-        foreach ($files as $key => $file) {
-            if (is_array($file['name'])) {
-                //多文件上传
-                foreach ($file['tmp_name'] as $i => $tmp) {
-                    if (empty($tmp) || !is_file($tmp)) {
-                        continue;
-                    }
-                    $file_objs[$key][] = (new file($tmp))->setUpInfo([
-                        'name' => $file['name'][$i],
-                        'type' => $file['type'][$i]
-                    ]);
+        if (empty($this->file_objs)) {
+            $files = isset($_FILES) ? $_FILES : [];
+            $file_objs = [];
+            if (IS_CLI) {
+                // swoole 模式下
+                foreach ($files as $key => $file) {
+                    $file_objs[$key] = $this->arrayFileKeyInCli($file);
                 }
+
             } else {
-                if (empty($file['tmp_name']) || !is_file($file['tmp_name'])) {
-                    continue;
+                // 普通模式下
+                foreach ($files as $key => $file) {
+                    if (isset($file['name']) && is_array($file['name'])) {
+                        //多文件上传
+                        $file_objs[$key] = $this->arrayFileKey($file['tmp_name'], $file['name'], $file['type']);
+                    } else {
+                        // 单文件
+                        if (empty($file['tmp_name']) || !is_file($file['tmp_name'])) {
+                            continue;
+                        }
+                        $file_objs[$key] = (new file($file['tmp_name']))->setUpInfo([
+                            'name' => $file['name'],
+                            'type' => $file['type']
+                        ]);
+                    }
                 }
-                $file_objs[$key] = (new file($file['tmp_name']))->setUpInfo([
-                    'name' => $file['name'],
-                    'type' => $file['type']
+            }
+            $this->file_objs = $file_objs;
+        }
+        if ('' == $name) {
+            return $this->file_objs;
+        } else {
+            return $this->file_objs[$name];
+        }
+    }
+
+    protected function arrayFileKeyInCli($tmp_file, $re = [])
+    {
+        foreach ($tmp_file as $k => $v) {
+            if (is_array($v)) {
+                $re[$k] = $this->arrayFileKeyInCli($v, $re);
+            } else {
+                $re = $tmp_file;
+                $re['file'] = (new file($tmp_file['tmp_name']))->setUpInfo([
+                    'name' => $tmp_file['name'],
+                    'type' => $tmp_file['type'],
+                ]);
+                break;
+            }
+        }
+        return $re;
+    }
+
+    protected function arrayFileKey($tmp_name, $name, $type, $re = [])
+    {
+        foreach ($tmp_name as $k => $v) {
+            if (is_array($v)) {
+                $re[$k] = $this->arrayFileKey($v, $name[$k], $type[$k], $re);
+            } else {
+                $re[$k] = (new file($v))->setUpInfo([
+                    'name' => $name[$k],
+                    'type' => $type[$k]
                 ]);
             }
         }
-        if ('' == $name) {
-            return $file_objs;
-        } else {
-            return $file_objs[$name];
-        }
+        return $re;
     }
 }
