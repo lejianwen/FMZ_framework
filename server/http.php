@@ -39,10 +39,10 @@ class http
         if ($this->setting['open_ssl']) {
             $setting['ssl_cert_file'] = $this->setting['ssl_cert_file'];
             $setting['ssl_key_file'] = $this->setting['ssl_key_file'];
-            $this->server = new \swoole_http_server($this->setting['host'], $this->setting['port'], SWOOLE_PROCESS,
+            $this->server = new \swoole_http_server($this->setting['host'], $this->setting['port'], SWOOLE_BASE,
                 SWOOLE_SOCK_TCP | SWOOLE_SSL);
         } else {
-            $this->server = new \swoole_http_server($this->setting['host'], $this->setting['port']);
+            $this->server = new \swoole_http_server($this->setting['host'], $this->setting['port'], SWOOLE_BASE);
         }
         $this->server->set($setting);
         $this->server->on('Start', [$this, 'onStart']);
