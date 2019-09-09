@@ -143,6 +143,17 @@ class response
         $this->options = $options;
     }
 
+    public function getOptions($name = null)
+    {
+        if (!$name) {
+            return $this->options;
+        } elseif (!isset($this->options[$name])) {
+            return null;
+        } else {
+            return $this->options[$name];
+        }
+    }
+
     public function json($data = [], $status = 200)
     {
         $this->type = 'json';
