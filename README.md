@@ -1,5 +1,16 @@
 # A simple framework for FMZ！
 
+# in-swoole分支，让FMZ运行在swoole中
+
+## 运行
+
+~~~
+php webServer start
+php webServer stop
+php webServer restart
+php webServer reload
+~~~
+
 # 简介
 * 通过开发框架，让自己对web开发有了更好的认识
 * ORM使用的是[eloquent](https://laravel.com/docs/5.4/eloquent)，即laravel使用的ORM
