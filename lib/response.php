@@ -307,29 +307,10 @@ class response
      * @param string $msg
      * @param int $time
      */
-    public function redirect($url, $msg = '', $time = 0, $status = 302)
+    public function redirect($url, $status = 302)
     {
-        $this->status = $status;
-        $this->sendHeaders();
-        if (empty($msg)) {
-            $msg = "redirect to  {$url} after {$time} s!";
-        }
-        if (!headers_sent()) {
-            // redirect
-            if (0 === $time) {
-                header('Location: ' . $url);
-            } else {
-                header("refresh:{$time};url={$url}");
-                echo $msg;
-            }
-        } else {
-            $str = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
-            if ($time != 0) {
-                $str .= $msg;
-            }
-            echo $str;
-        }
-        $this->sended = true;
+        $this->setStatus($status)
+            ->setHeader('Location', $url);
     }
 
     /**
