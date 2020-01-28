@@ -1,0 +1,34 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: lejianwen
+ * QQ: 84855512
+ * Date: 2018/2/11
+ * Time: 22:14
+ */
+
+use \Ljw\Route\Route;
+
+Route::space('app\\controllers\\api\\', 'app\\middleware\\');
+//
+function adminRouteResource($name)
+{
+    $controller_name = ucfirst($name) . 'Controller';
+    Route::get("api/admin/{$name}/index", "admin\\{$controller_name}@index");
+    Route::get("api/admin/{$name}/detail", "admin\\{$controller_name}@detail");
+    Route::post("api/admin/{$name}/create", "admin\\{$controller_name}@create");
+    Route::post("api/admin/{$name}/update", "admin\\{$controller_name}@update");
+    Route::post("api/admin/{$name}/delete", "admin\\{$controller_name}@delete");
+}
+
+//
+///** 后台 */
+Route::post('api/admin/login', 'admin\LoginController@login');
+Route::post('api/admin/logout', 'admin\LoginController@logout');
+Route::get('api/admin/role', 'admin\AdminController@role');
+Route::post('api/admin/file/upload', 'admin\FileController@upload');
+
+adminRouteResource('admin');
+adminRouteResource('adminRole');
+adminRouteResource('config');
+

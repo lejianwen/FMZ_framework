@@ -6,17 +6,13 @@
  * Time: 10:54
  * QQ: 84855512
  */
+//后台路由
+include_once CONFIG_PATH . 'routes/admin_routes.php';
 
 use \Ljw\Route\Route;
 
-Route::space('app\\controllers\\', 'app\\middleware\\');
+include_once CONFIG_PATH . 'routes/api_routes.php';
 
-Route::get('', 'IndexController@index');
-Route::post('/files', 'IndexController@files');
-Route::get('index/middle', 'Index@index', 'IndexController@middle');
-
-Route::error(function () {
-    response()->setStatus('404');
-    response()->json('404 not');
-//    response()->setContent('404 Not Found!');
-});
+include_once CONFIG_PATH . 'routes/web_routes.php';
+//会匹配最后一个Route space
+Route::error('IndexController@error');

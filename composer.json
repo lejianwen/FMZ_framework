@@ -14,7 +14,8 @@
     "ljw/validator": "dev-master",
     "monolog/monolog": "1.21.0",
     "smarty/smarty": "*",
-    "vlucas/phpdotenv": "v2.4.0"
+    "vlucas/phpdotenv": "v2.4.0",
+    "zircote/swagger-php": "^2.0"
   },
   "autoload": {
     "psr-4": {

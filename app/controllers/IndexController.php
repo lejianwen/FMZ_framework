@@ -36,4 +36,5 @@ class IndexController extends BaseController
     {
         echo $middle_result;
     }
+
 }

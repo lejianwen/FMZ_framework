@@ -394,3 +394,6 @@ if (!function_exists('random_str')) {
         return $string;
     }
 }
+
+defined('COMMON_STATUS_ENABLE') || define('COMMON_STATUS_ENABLE', 1);
+defined('COMMON_STATUS_DISABLE') || define('COMMON_STATUS_DISABLE', 2);
