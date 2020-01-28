@@ -42,14 +42,17 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       role().then(res => {
-        if (res.data.route_names && res.data.route_names !== '*') {
-          const routes = JSON.parse(res.data.route_names).map(route => {
+        const { role, info } = res.data
+        commit('SET_INFO', info)
+        if (role.route_names && role.route_names !== '*') {
+          const routes = JSON.parse(role.route_names).map(route => {
             return route[route.length - 1]
           })
-          res.data.route_names = routes
+          role.route_names = routes
         }
-        commit('SET_ROLE', res.data)
-        resolve({ role: res.data })
+        commit('SET_ROLE', role)
+
+        resolve({ role })
       }).catch(error => {
         reject(error)
       })

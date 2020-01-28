@@ -21,7 +21,7 @@ class AdminController extends BaseController
     public function role()
     {
         $role = AdminRole::find($this->admin->role_id);
-        return $this->jsonSuccess($role);
+        return $this->jsonSuccess(['role' => $role, 'info' => $this->admin]);
     }
 
     protected function afterUpdate($item)
