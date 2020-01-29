@@ -4,6 +4,8 @@ import { resetRouter } from '@/router'
 // import md5 from 'js-md5'
 const state = {
   token: getToken(),
+  name: '',
+  avatar: '',
   introduction: '',
   info: {},
   role: {}
@@ -45,10 +47,7 @@ const actions = {
         const { role, info } = res.data
         commit('SET_INFO', info)
         if (role.route_names && role.route_names !== '*') {
-          const routes = JSON.parse(role.route_names).map(route => {
-            return route[route.length - 1]
-          })
-          role.route_names = routes
+          role.route_names = JSON.parse(role.route_names)
         }
         commit('SET_ROLE', role)
 

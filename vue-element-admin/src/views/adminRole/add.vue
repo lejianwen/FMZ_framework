@@ -11,7 +11,25 @@
         @handleCancel="onCancel"
         @handleSubmit="onSubmit"
         @handleSwitchChange="handleSwitchChange"
-      />
+      >
+        <template slot="route_names">
+          <el-form-item
+            label="路由选择"
+            prop="route_names"
+          >
+            <el-tree
+              ref="tree"
+              :data="routesOptions"
+              :props="{children:'children',label:'label'}"
+              node-key="value"
+              :default-expanded-keys="item.route_names"
+              :default-checked-keys="item.route_names"
+              show-checkbox
+            />
+          </el-form-item>
+        </template>
+
+      </base-form>
     </div>
 
   </div>
@@ -62,8 +80,9 @@ export default {
           this.item.change_routes = 1
         } else {
           this.item.route_names = JSON.parse(this.item.route_names)
-          this.formOptions.push({ type: 'cascader', prop: 'route_names', label: '允许路由', props: { multiple: true }, options: this.routesOptions })
+          this.formOptions.push({ type: 'slot', prop: 'route_names', label: '允许路由' })
         }
+        console.log(this.item)
       })
     }
     if (this.isDetail) {
@@ -73,7 +92,12 @@ export default {
   methods: {
     handleSwitchChange({ formItem, $event }) {
       if ($event === 0) {
-        if (this.formOptions.length === 2) { this.formOptions.push({ type: 'cascader', prop: 'route_names', label: '允许路由', props: { multiple: true }, options: this.routesOptions }) }
+        if (this.formOptions.length === 2) {
+          if (this.item.route_names === '*') {
+            this.item.route_names = []
+          }
+          this.formOptions.push({ type: 'slot', prop: 'route_names', label: '允许路由' })
+        }
       } else if ($event === 1) {
         if (this.formOptions.length === 3) { this.formOptions.splice(2, 1) }
       }
@@ -93,10 +117,10 @@ export default {
     },
     onSubmit() {
       const item = { ...this.item }
-      if (item.change_routes === 1) {
+      if (item.change_routes === 1 || item.route_names === '*') {
         item.route_names = '*'
       } else {
-        item.route_names = JSON.stringify(item.route_names)
+        item.route_names = JSON.stringify(this.$refs.tree.getCheckedKeys())
       }
       item.change_routes = undefined
       if (this.isEdit) {
@@ -149,7 +173,7 @@ export default {
     width: 178px;
     display: block;
   }
-  .admin-role .el-cascader{
+  .admin-role .el-tree{
     width: 50%;
   }
 </style>
