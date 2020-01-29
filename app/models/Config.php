@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Config extends Model
 {
     protected $guarded = [];
+    const CACHE_ALL_KEY = 'all:config';
 
     public static function allInfo()
     {
@@ -14,12 +15,12 @@ class Config extends Model
         if (!empty($list)) {
             return $list;
         }
-        $list = cache()->get('all:config');
+        $list = cache()->get(self::CACHE_ALL_KEY);
         if (!empty($list)) {
             return $list;
         }
         $list = self::query()->where('status', COMMON_STATUS_ENABLE)->orderByDesc('id')->get()->toArray();
-        cache()->set('all:config', $list);
+        cache()->set(self::CACHE_ALL_KEY, $list);
         return $list;
     }
 

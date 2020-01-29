@@ -9,8 +9,13 @@
 
 namespace app\controllers\api\admin;
 
-
 class ConfigController extends BaseController
 {
     protected $filters = ['name' => 'like'];
+
+    protected function afterUpdate($item)
+    {
+        /** @see \app\models\Config::CACHE_ALL_KEY */
+        cache()->del($this->model::CACHE_ALL_KEY);
+    }
 }
