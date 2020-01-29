@@ -16,9 +16,9 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <!--          <el-dropdown-item>-->
-          <!--            <span style="display:block;" @click="upPayPass">修改支付密码</span>-->
-          <!--          </el-dropdown-item>-->
+          <el-dropdown-item>
+            <span style="display:block;" @click="upPass">修改密码</span>
+          </el-dropdown-item>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">登出</span>
           </el-dropdown-item>
@@ -32,7 +32,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-// import Search from '@/components/HeaderSearch'
+import { upPass } from '@/api/admin'
 
 export default {
   components: {
@@ -54,8 +54,20 @@ export default {
       'name'
     ])
   },
-
   methods: {
+    upPass() {
+      this.$prompt('请输入新密码', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'password'
+      }).then(({ value }) => {
+        upPass({ password: value }).then(res => {
+          this.$message.success(res.msg)
+          window.location.reload()
+        })
+      }).catch(() => {
+      })
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },

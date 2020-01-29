@@ -25,10 +25,20 @@ function adminRouteResource($name)
 ///** 后台 */
 Route::post('api/admin/login', 'admin\LoginController@login');
 Route::post('api/admin/logout', 'admin\LoginController@logout');
+Route::post('api/admin/upPass', 'admin\AdminController@upPass');
 Route::get('api/admin/role', 'admin\AdminController@role');
 Route::post('api/admin/file/upload', 'admin\FileController@upload');
 
+
+
 adminRouteResource('admin');
 adminRouteResource('adminRole');
+adminRouteResource('nav');
+adminRouteResource('banner');
+adminRouteResource('category');
+adminRouteResource('article');
+adminRouteResource('site');
+adminRouteResource('good');
 adminRouteResource('config');
 
+Route::get('api/admin/article/caiji', 'admin\ArticleController@caiji');

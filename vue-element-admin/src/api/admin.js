@@ -20,6 +20,13 @@ export function role() {
     method: 'get'
   })
 }
+export function upPass(data) {
+  return request({
+    url: '/upPass',
+    method: 'post',
+    data
+  })
+}
 const model = 'admin'
 export function fetchList(query = {}) {
   return request({

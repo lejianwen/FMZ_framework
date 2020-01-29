@@ -106,6 +106,12 @@
           <template v-if="columnItem.type==='img'">
             <img :src="row[columnItem.prop]" style="max-width: 100px;max-height: 100px;">
           </template>
+          <template v-if="columnItem.type==='editInput'">
+            <el-input v-model="row[columnItem.prop]" :value="row[columnItem.prop]">
+              <el-button slot="append" icon="el-icon-check" @click="saveEditInput({ prop:columnItem.prop, row, column })" />
+            </el-input>
+          </template>
+
         </template>
       </el-table-column>
     </template>
@@ -238,7 +244,17 @@ export default {
     },
     handleButtonClick({ prop, row }) {
       this.$emit('handleButtonClick', { prop, row })
+    },
+    saveEditInput({ prop, row, column }) {
+      this.$emit('saveEditInput', { prop, row, column })
     }
+    /* saveEditInput({ prop, row, column }) {
+      const item = { id: row.id }
+      item[prop] = row[prop]
+      updateItem(item).then(res => {
+        this.$message.success(res.msg)
+      })
+    },*/
   }
 }
 </script>

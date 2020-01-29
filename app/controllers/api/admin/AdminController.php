@@ -28,7 +28,20 @@ class AdminController extends BaseController
     {
         if ($item->password) {
             $item->password = md5($item->password);
+            $item->token = '';
             $item->save();
+        }
+    }
+
+    public function upPass()
+    {
+        if ($this->request->post('password')) {
+            $this->admin->password = md5($this->request->post('password'));
+            $this->admin->token = '';
+            $this->admin->save();
+            return $this->jsonSuccess();
+        } else {
+            return $this->jsonError();
         }
     }
 }
