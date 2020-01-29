@@ -82,7 +82,6 @@ export default {
           this.item.route_names = JSON.parse(this.item.route_names)
           this.formOptions.push({ type: 'slot', prop: 'route_names', label: '允许路由' })
         }
-        console.log(this.item)
       })
     }
     if (this.isDetail) {
@@ -129,13 +128,14 @@ export default {
         updateItem(item).then(res => {
           this.$message.success('修改成功')
           this.$router.back()
-          window.location.reload()
+          if (item.id === this.$store.getters.role.id) {
+            window.location.reload()
+          }
         })
       } else if (!this.isDetail) {
         createItem(item).then(res => {
           this.$message.success('创建成功')
           this.$router.back()
-          window.location.reload()
         })
       } else {
         this.$router.back()
