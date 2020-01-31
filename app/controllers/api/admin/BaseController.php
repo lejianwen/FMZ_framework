@@ -136,7 +136,11 @@ class BaseController extends controller
         if (!$id) {
             return $this->jsonError();
         }
-        $model = $this->model::find($id);
+        if (!empty($this->with)) {
+            $model = $this->model::with($this->with)->find($id);
+        } else {
+            $model = $this->model::find($id);
+        }
         if (!$model) {
             return $this->jsonError();
         }
