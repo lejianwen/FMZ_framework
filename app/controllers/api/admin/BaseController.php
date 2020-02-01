@@ -181,9 +181,10 @@ class BaseController extends controller
         /** @var \Illuminate\Database\Eloquent\Model $model */
         $model = $this->model::create($post_data);
         if ($model && $model->id) {
+            $this->afterUpdate($model);
             return $this->jsonSuccess();
         }
-        $this->afterUpdate($model);
+
         return $this->jsonError();
     }
 
