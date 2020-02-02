@@ -67,11 +67,7 @@ export default {
     }
   },
   created() {
-    roleList({ page_size: 9999 }).then(res => {
-      this.formOptions[0].options = res.data.list.map(item => {
-        return { label: item.name, value: item.id }
-      })
-    })
+    this.beforeCreateGetOtherList(roleList, 'formOptions', 'role_id')
     if (this.isEdit || this.isDetail) {
       itemDetail(this.$route.params.id).then(res => {
         this.item = res.data
@@ -107,6 +103,19 @@ export default {
     },
     onCancel() {
       this.$router.back()
+    },
+    beforeCreateGetOtherList(func, data, prop, otherData = null) {
+      func({ page_size: 999 }).then(res => {
+        const options = res.data.list.map(item => {
+          return { label: item.name, value: item.id }
+        })
+        this[data].forEach(v => {
+          if (v.prop === prop) {
+            v.options = options
+          }
+        })
+        if (otherData) { this[otherData] = options }
+      })
     }
   }
 }
