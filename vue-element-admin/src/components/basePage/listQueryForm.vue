@@ -13,7 +13,7 @@
         <el-form-item :label="formItem.label" :prop="formItem.prop">
           <el-input v-if="formItem.type === 'input'" v-model="currentValue[formItem.prop]" clearable />
           <el-input-number v-if="formItem.type === 'number'" v-model="currentValue[formItem.prop]" clearable />
-          <el-select v-if="formItem.type === 'select'" v-model="currentValue[formItem.prop]" clearable @change="handleSelectChange({formItem, $event})">
+          <el-select v-if="formItem.type === 'select'" v-model="currentValue[formItem.prop]" :filterable="formItem.filterable" clearable @change="handleSelectChange({formItem, $event})">
             <el-option
               v-for="item in formItem.options"
               :key="item.value"
@@ -37,7 +37,16 @@
             type="datetime"
             :placeholder="formItem.placeholder || '选择时间'"
           />
-
+          <el-date-picker
+            v-if="formItem.type === 'datetimerange'"
+            v-model="currentValue[formItem.prop]"
+            :format="formItem.format ? formItem.format : 'yyyy-MM-dd HH:mm:ss'"
+            :value-format="formItem.valueFormat ? formItem.valueFormat : 'yyyy-MM-dd HH:mm:ss'"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+          />
         </el-form-item>
       </el-col>
       <!--其他筛选项-->
