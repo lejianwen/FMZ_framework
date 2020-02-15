@@ -86,6 +86,13 @@ export default {
     },
     onCancel() {
       this.$router.back()
+    },
+    updateFormOptions(prop, options) {
+      this.formOptions.forEach(v => {
+        if (v.prop === prop) {
+          v.options = options
+        }
+      })
     }
   }
 }
