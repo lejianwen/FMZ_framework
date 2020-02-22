@@ -26,7 +26,7 @@ class AdminController extends BaseController
 
     protected function afterUpdate($item)
     {
-        if ($item->password) {
+        if ($this->request->post('password')) {
             $item->password = md5($item->password);
             $item->token = '';
             $item->save();
