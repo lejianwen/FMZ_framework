@@ -54,7 +54,7 @@
           <template v-if="formItem.type === 'checkboxGroup'">
             <el-checkbox v-model="checkAll[formItem.prop]" :indeterminate="isIndeterminate[formItem.prop]" @change="handleCheckAllChange({formItem, $event})">全选</el-checkbox>
             <el-checkbox-group v-model="currentValue[formItem.prop]" @change="handleCheckGroupCheckedChange({formItem, $event})">
-              <el-checkbox v-for="item in formItem.options" :key="item.value" :label="item.value">{{ item.label }}</el-checkbox>
+              <el-checkbox v-for="item in formItem.options" :key="item.value" :label="item.value" :disabled="item.disabled||false">{{ item.label }}</el-checkbox>
             </el-checkbox-group>
           </template>
 
@@ -99,6 +99,8 @@
           <el-time-picker
             v-if="formItem.type === 'timepicker'"
             v-model="currentValue[formItem.prop]"
+            :format="formItem.format ? formItem.format : 'HH:mm:ss'"
+            :value-format="formItem.valueFormat ? formItem.valueFormat : 'HH:mm:ss'"
             :placeholder="formItem.placeholder || '选择时间'"
             :picker-options="formItem.options"
             :disabled="formItem.disabled||false"
@@ -239,10 +241,11 @@ export default {
     init() {
       this.formOptions.forEach(formItem => {
         if (formItem.type === 'checkboxGroup') {
-          this.isIndeterminate[formItem.prop] = ((this.currentValue[formItem.prop].length > 0) && (this.currentValue[formItem.prop].length < formItem.options.length))
-          this.checkAll[formItem.prop] = (this.currentValue[formItem.prop].length === formItem.options.length)
+          this.isIndeterminate[formItem.prop] = false
+          this.checkAll[formItem.prop] = false
           this.checkAll = Object.assign({}, this.checkAll)
           this.isIndeterminate = Object.assign({}, this.isIndeterminate)
+          this.handleCheckGroupCheckedChange({ formItem, $event: undefined })
         }
       })
     },
@@ -264,17 +267,23 @@ export default {
     },
     handleCheckAllChange({ formItem, $event }) {
       this.checkAll[formItem.prop] = $event
-      this.checkAll = Object.assign({}, this.checkAll)
-      this.currentValue[formItem.prop] = $event ? formItem.options.map(item => item.value) : []
+      // this.checkAll = Object.assign({}, this.checkAll)
+      this.currentValue[formItem.prop] = $event ? formItem.options.map(item => item.disabled ? '' : item.value).filter(pro => pro !== '') : []
       this.isIndeterminate[formItem.prop] = false
       this.$emit('handleCheckAllChange', { formItem, $event })
     },
 
     handleCheckGroupCheckedChange({ formItem, $event }) {
-      this.checkAll[formItem.prop] = (this.currentValue[formItem.prop].length === formItem.options.length)
-      this.checkAll = Object.assign({}, this.checkAll)
-      this.isIndeterminate[formItem.prop] = ((this.currentValue[formItem.prop].length > 0) && (this.currentValue[formItem.prop].length < formItem.options.length))
-      this.isIndeterminate = Object.assign({}, this.isIndeterminate)
+      let allLength = 0
+      formItem.options.map(op => {
+        if (!op.disabled) {
+          allLength++
+        }
+      })
+      this.checkAll[formItem.prop] = (this.currentValue[formItem.prop].length === allLength)
+      this.isIndeterminate[formItem.prop] = ((this.currentValue[formItem.prop].length > 0) && (this.currentValue[formItem.prop].length < allLength))
+      // this.checkAll = Object.assign({}, this.checkAll)
+      // this.isIndeterminate = Object.assign({}, this.isIndeterminate)
       this.$emit('handleCheckGroupCheckedChange', { formItem, $event })
     }
   }
