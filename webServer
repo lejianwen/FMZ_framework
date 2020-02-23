@@ -76,7 +76,7 @@ function serverReLoad()
         exit('pid文件:' . TASK_PID_PATH . '不存在' . PHP_EOL);
     }
     $pid = explode("\n", file_get_contents(TASK_PID_PATH));
-    posix_kill($pid[1], SIGUSR2);
+    posix_kill($pid[0], SIGUSR2);
     echo "服务已重启" . PHP_EOL;
 }
 
