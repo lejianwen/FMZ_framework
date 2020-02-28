@@ -138,6 +138,7 @@
             :file-list="formItem.fileList"
             :limit="formItem.limit?formItem.limit:0"
             :disabled="formItem.disabled||false"
+            :multiple="formItem.multiple||false"
             list-type="picture-card"
           >
             <i class="el-icon-plus" />
@@ -253,11 +254,9 @@ export default {
       this.$emit('handleCancel')
     },
     handleSubmit() {
-      let res = false
       this.$refs[this.refId].validate((valid) => {
-        res = valid
+        this.$emit('handleSubmit', valid)
       })
-      this.$emit('handleSubmit', res)
     },
     handleSelectChange({ formItem, $event }) {
       this.$emit('handleSelectChange', { formItem, $event })
