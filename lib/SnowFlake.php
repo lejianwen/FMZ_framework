@@ -95,6 +95,6 @@ class SnowFlake
      */
     private static function timeGen()
     {
-        return microtime(true) * 1000;
+        return floor(microtime(true) * 1000);
     }
 }
