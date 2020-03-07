@@ -245,7 +245,7 @@ if (!function_exists('config')) {
 }
 /**单例实例化
  * @param $name
- * @return mixed
+ * @return mixed|\lib\@param
  */
 if (!function_exists('app')) {
     function app($name, $conf = null)

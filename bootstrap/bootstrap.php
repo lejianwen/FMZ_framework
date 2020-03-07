@@ -139,7 +139,7 @@ class bootstrap
         defined('IS_AJAX') or define('IS_AJAX',
             ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false);
 
-        $dotenv = new Dotenv\Dotenv(BASE_PATH);
+        $dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
         $dotenv->load();
     }
 }

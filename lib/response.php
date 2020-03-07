@@ -9,16 +9,14 @@
 
 namespace lib;
 
-class response
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class response extends \Symfony\Component\HttpFoundation\Response
 {
-    protected $status;
-    protected $content;
-    protected $headers = [];
     protected $options = [];
-    protected $type = '';
-    protected $jsonp_callback = 'callback';
     protected $sended = false;
-    static $self;
+    protected $type = '';
+    static $response;
 
     /**
      * @return response
@@ -26,17 +24,10 @@ class response
      */
     public static function _instance()
     {
-        if (!self::$self) {
-            self::$self = new self();
+        if (!self::$response) {
+            self::$response = new self();
         }
-        return self::$self;
-    }
-
-    public function __construct($content = '', $status = 200, $headers = [])
-    {
-        $this->headers = $headers;
-        $this->setContent($content);
-        $this->setStatus($status);
+        return self::$response;
     }
 
     /**
@@ -46,81 +37,10 @@ class response
      */
     public static function reset()
     {
-        self::$self = null;
+        self::$response = null;
         return self::_instance();
     }
 
-    /**
-     * setContent
-     * @param $content
-     * @return $this
-     * @author Lejianwen
-     */
-    public function setContent($content)
-    {
-        if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable(array(
-                $content,
-                '__toString'
-            ))) {
-            throw new \UnexpectedValueException(sprintf('The Response content must be a string or object implementing __toString(), "%s" given.',
-                gettype($content)));
-        }
-
-        $this->content = (string)$content;
-
-        return $this;
-    }
-
-    /**
-     * getContent
-     * @return mixed
-     * @author Lejianwen
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * 设置状态
-     * @param $status
-     * @return $this
-     */
-    public function setStatus($status = 200)
-    {
-        $this->status = $status;
-        return $this;
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**设置contentType
-     * @param $content_type
-     * @param string $charset
-     */
-    public function setContentType($content_type, $charset = 'utf-8')
-    {
-        $this->setHeader('Content-Type', $content_type . '; charset=' . $charset);
-    }
-
-    /**
-     * 设置头信息
-     * @param $name
-     * @param $value
-     * @return $this
-     */
-    public function setHeader($name, $value)
-    {
-        if (is_array($name)) {
-            $this->headers = array_merge($this->headers, $name);
-        } else {
-            $this->headers[$name] = $value;
-        }
-        return $this;
-    }
 
     /**
      * 设置输出参数
@@ -138,75 +58,34 @@ class response
         return $this;
     }
 
-    public function setOptions($options)
-    {
-        $this->options = $options;
-    }
-
     public function json($data = [], $status = 200)
     {
-        $this->type = 'json';
-        if ($status) {
-            $this->setStatus($status);
-        }
-        $this->setContentType('application/json');
-        $this->with($data);
-        return $this;
+        self::$response = new JsonResponse($data, $status);
+        return self::$response;
     }
 
     public function jsonp($data = [], $callback = 'callback', $status = null)
     {
-        $this->type = 'jsonp';
-        if ($status) {
-            $this->setStatus($status);
-        }
-        $this->setContentType('application/json');
-        $this->with($data);
-        $this->jsonp_callback = $callback;
-        return $this;
+        self::$response = new JsonResponse($data, $status);
+        self::$response->setCallback($callback);
+        return self::$response;
     }
 
     /**
-     * @param        $tpl
+     * @param $tpl
      * @param null $status
-     * @param string $content_type
      * @param string $charset
      * @return $this
      * @throws \Exception
      */
-    public function view($tpl, $status = null, $content_type = 'text/html', $charset = 'utf-8')
+    public function view($tpl, $status = null)
     {
         if (!$tpl) {
             throw new \Exception('need template');
         }
         $this->type = 'view';
-        if ($status) {
-            $this->setStatus($status);
-        }
-        $this->setContentType($content_type, $charset);
+        $this->setStatusCode($status);
         app('view')->setTpl($tpl);
-        return $this;
-    }
-
-    /**
-     * Sends HTTP headers.
-     *
-     * @return $this
-     */
-    public function sendHeaders()
-    {
-        // headers have already been sent by the developer
-        if (headers_sent()) {
-            return $this;
-        }
-
-        if (!headers_sent()) {
-            http_response_code($this->status);
-            foreach ($this->headers as $key => $value) {
-                header($key . ':' . $value);
-            }
-        }
-
         return $this;
     }
 
@@ -218,12 +97,6 @@ class response
     public function prepareContent()
     {
         switch ($this->type) {
-            case 'json' :
-                $this->setContent(json_encode($this->options));
-                break;
-            case 'jsonp' :
-                $this->setContent($this->jsonp_callback . '(' . json_encode($this->options) . ');');
-                break;
             case 'view' :
                 /** @var view $view */
                 $view = app('view');
@@ -302,30 +175,5 @@ class response
             ->setHeader('Location', $url);
     }
 
-    /**
-     * Cleans or flushes output buffers up to target level.
-     *
-     * Resulting level can be greater than target level if a non-removable buffer has been encountered.
-     *
-     * @param int $targetLevel The target output buffering level
-     * @param bool $flush Whether to flush or clean the buffers
-     *
-     * @final since version 3.3
-     */
-    public static function closeOutputBuffers($targetLevel, $flush)
-    {
-        $status = ob_get_status(true);
-        $level = count($status);
-        // PHP_OUTPUT_HANDLER_* are not defined on HHVM 3.3
-        $flags = defined('PHP_OUTPUT_HANDLER_REMOVABLE') ? PHP_OUTPUT_HANDLER_REMOVABLE | ($flush ? PHP_OUTPUT_HANDLER_FLUSHABLE : PHP_OUTPUT_HANDLER_CLEANABLE) : -1;
-
-        while ($level-- > $targetLevel && ($s = $status[$level]) && (!isset($s['del']) ? !isset($s['flags']) || ($s['flags'] & $flags) === $flags : $s['del'])) {
-            if ($flush) {
-                ob_end_flush();
-            } else {
-                ob_end_clean();
-            }
-        }
-    }
 
 }

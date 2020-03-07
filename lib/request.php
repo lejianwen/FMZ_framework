@@ -9,6 +9,11 @@
 
 namespace lib;
 
+/**
+ * 改成返回\Symfony\Component\HttpFoundation\Request
+ * Class request
+ * @package lib
+ */
 class request
 {
     public $ip;
@@ -24,7 +29,7 @@ class request
     public static function _instance()
     {
         if (!self::$self) {
-            self::$self = new self();
+            self::$self = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
         }
         return self::$self;
     }
@@ -89,7 +94,10 @@ class request
                 $ip = env('HTTP_X_FORWARDED_FOR');
             } elseif (env('REMOTE_ADDR') && strcasecmp(env('REMOTE_ADDR'), 'unknown')) {
                 $ip = env('REMOTE_ADDR');
-            } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+            } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp(
+                    $_SERVER['REMOTE_ADDR'],
+                    'unknown'
+                )) {
                 $ip = $_SERVER['REMOTE_ADDR'];
             } else {
                 $ip = env('HTTP_CLIENT_IP');
@@ -188,7 +196,6 @@ class request
                 foreach ($files as $key => $file) {
                     $file_objs[$key] = $this->arrayFileKeyInCli($file);
                 }
-
             } else {
                 // 普通模式下
                 foreach ($files as $key => $file) {
@@ -200,10 +207,12 @@ class request
                         if (empty($file['tmp_name']) || !is_file($file['tmp_name'])) {
                             continue;
                         }
-                        $file_objs[$key] = (new file($file['tmp_name']))->setUpInfo([
-                            'name' => $file['name'],
-                            'type' => $file['type']
-                        ]);
+                        $file_objs[$key] = (new file($file['tmp_name']))->setUpInfo(
+                            [
+                                'name' => $file['name'],
+                                'type' => $file['type']
+                            ]
+                        );
                     }
                 }
             }
@@ -223,10 +232,12 @@ class request
                 $re[$k] = $this->arrayFileKeyInCli($v, $re);
             } else {
                 $re = $tmp_file;
-                $re['file'] = (new file($tmp_file['tmp_name']))->setUpInfo([
-                    'name' => $tmp_file['name'],
-                    'type' => $tmp_file['type'],
-                ]);
+                $re['file'] = (new file($tmp_file['tmp_name']))->setUpInfo(
+                    [
+                        'name' => $tmp_file['name'],
+                        'type' => $tmp_file['type'],
+                    ]
+                );
                 break;
             }
         }
@@ -239,10 +250,12 @@ class request
             if (is_array($v)) {
                 $re[$k] = $this->arrayFileKey($v, $name[$k], $type[$k], $re);
             } else {
-                $re[$k] = (new file($v))->setUpInfo([
-                    'name' => $name[$k],
-                    'type' => $type[$k]
-                ]);
+                $re[$k] = (new file($v))->setUpInfo(
+                    [
+                        'name' => $name[$k],
+                        'type' => $type[$k]
+                    ]
+                );
             }
         }
         return $re;

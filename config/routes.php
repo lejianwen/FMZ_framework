@@ -12,6 +12,7 @@ use \Ljw\Route\Route;
 Route::space('app\\controllers\\', 'app\\middleware\\');
 
 Route::get('', 'IndexController@index');
+Route::any('test', 'IndexController@test');
 Route::get('index/middle', 'Index@index', 'IndexController@middle');
 
 Route::error(function () {
