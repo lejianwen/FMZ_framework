@@ -15,11 +15,10 @@ class FileController extends controller
 {
     public function upload()
     {
-        /** @var \lib\file $file */
         $file = request()->file('file');
         $path = '/uploads/' . date('Ymd') . '/';
-        $filename = $file->moveUpFile(WEB_ROOT . $path);
-        $file_path = $path . $filename;
-        return $this->response->json(['code' => 0, 'data' => '//' .env('HTTP_HOST') . $file_path]);
+        $name = $file->getClientOriginalName();
+        $filename = $file->move(WEB_ROOT . $path, $name);
+        return $this->response->json(['code' => 0, 'data' => $path . $name]);
     }
 }

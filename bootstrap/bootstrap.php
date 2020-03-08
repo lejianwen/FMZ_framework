@@ -13,7 +13,6 @@ use Monolog\Handler\StreamHandler;
 
 class bootstrap
 {
-    public static $server;
 
     public static function start()
     {
@@ -44,27 +43,6 @@ class bootstrap
         require_once BASE_PATH . '/config/routes.php';
     }
 
-    /**
-     * 运行在swoole中
-     * @return false|string
-     */
-    public static function runInSwoole()
-    {
-        try {
-            ob_start();
-            // 路由
-            \Ljw\Route\Route::run();
-            //响应
-            response()->send();
-            $content = ob_get_contents();
-            ob_end_clean();
-        } catch (\Exception $e) {
-            $content = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
-        }
-        return $content;
-    }
-
-
     public static function log()
     {
         if (config('app.sys_log')) {
@@ -74,8 +52,8 @@ class bootstrap
             $request = request();
             $info_log->$level('request_info:', [
                 'ip' => $request->getClientIp(),
-                'method' => $request->method(),
-                'uri' => $request->uri()
+                'method' => $request->getMethod(),
+                'uri' => $request->getRequestUri()
             ]);
         }
     }
@@ -149,11 +127,8 @@ class bootstrap
         setlocale(LC_ALL, "zh_CN.utf-8");
         //设置根路径
         defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
-        defined('CONFIG_PATH') or define('CONFIG_PATH', __DIR__ . '/../config/');
         //设置web根路径
         defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
-        //设置public根路径
-        defined('PUBLIC_PATH') or define('PUBLIC_PATH', BASE_PATH . 'public/');
         //设置runtime路径
         defined('RUNTIME_PATH') or define('RUNTIME_PATH', BASE_PATH . 'runtime/');
         //系统日志路径
@@ -164,7 +139,7 @@ class bootstrap
         defined('IS_AJAX') or define('IS_AJAX',
             ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false);
 
-        $dotenv = new Dotenv\Dotenv(BASE_PATH);
+        $dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
         $dotenv->load();
     }
 }
