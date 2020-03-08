@@ -1,4 +1,4 @@
-<h1>THIS IS A <{$framework}>!</h1>
+<h1>THIS IS A {$framework}!</h1>
 
 
 

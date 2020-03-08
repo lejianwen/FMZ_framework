@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: lejianwen
@@ -22,8 +23,8 @@ return [
         'cache_lifetime'  => 1200,       //缓存时间
         'cache_dir'       => RUNTIME_PATH . 'smarty/cache/',          //缓存目录
         'compile_dir'     => RUNTIME_PATH . 'smarty/templates_c/',    //编译目录
-        'left_delimiter'  => '<{',      //左定界符
-        'right_delimiter' => '}>'       //右定界符
+        'left_delimiter'  => '{',      //左定界符
+        'right_delimiter' => '}'       //右定界符
     ],
     'cache'             => 'file',       //缓存类型，file||redis
     'cache_expire'      => 1200,         //缓存时间

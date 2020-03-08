@@ -6,11 +6,15 @@
  * Time: 18:20
  * QQ: 84855512
  */
+
 namespace app\middleware;
-class Index
+
+use Ljw\Route\Middleware;
+
+class Index implements Middleware
 {
-    public function index()
+    public function handle($params, $next)
     {
-        return 'middle';
+        $next();
     }
 }
