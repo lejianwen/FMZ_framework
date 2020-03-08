@@ -11,23 +11,30 @@ namespace lib;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class response extends \Symfony\Component\HttpFoundation\Response
+class response
 {
     protected $options = [];
-    protected $sended = false;
     protected $type = '';
-    static $response;
+    protected $sended = false;
+    /** @var \Symfony\Component\HttpFoundation\Response|JsonResponse $response */
+    public $response;
+    protected static $self;
 
     /**
      * @return response
      * @author lejianwen
      */
-    public static function _instance()
+    public static function _instance($content = '', $status = 200, $headers = [])
     {
-        if (!self::$response) {
-            self::$response = new self();
+        if (!self::$self) {
+            self::$self = new self($content, $status, $headers);
         }
-        return self::$response;
+        return self::$self;
+    }
+
+    public function __construct($content = '', $status = 200, $headers = [])
+    {
+        $this->response = new \Symfony\Component\HttpFoundation\Response($content, $status, $headers);
     }
 
     /**
@@ -37,10 +44,48 @@ class response extends \Symfony\Component\HttpFoundation\Response
      */
     public static function reset()
     {
-        self::$response = null;
+        self::$self = null;
         return self::_instance();
     }
 
+    public function setHeader($key, $value, $replace = true)
+    {
+        $this->response->headers->set($key, $value, $replace);
+        return $this;
+    }
+
+    public function addHeaders($headers)
+    {
+        $this->response->headers->add($headers);
+        return $this;
+    }
+
+    public function getHeader($key, $default = null, $first = true)
+    {
+        return $this->response->headers->get($key, $default, $first);
+    }
+
+    public function allHeader()
+    {
+        return $this->response->headers->all();
+    }
+
+    public function setCallback($callback)
+    {
+        $this->response->setCallback($callback);
+        return $this;
+    }
+
+    public function setStatusCode($code, $text = null)
+    {
+        $this->response->setStatusCode($code, $text);
+        return $this;
+    }
+
+    public function __call($func, $params)
+    {
+        return $this->response->$func(...$params);
+    }
 
     /**
      * 设置输出参数
@@ -58,33 +103,38 @@ class response extends \Symfony\Component\HttpFoundation\Response
         return $this;
     }
 
-    public function json($data = [], $status = 200)
+    public function json($data = [], $status = 200, $headers = [])
     {
-        self::$response = new JsonResponse($data, $status);
-        return self::$response;
+        $this->type = 'json';
+        $this->with($data);
+        $this->addHeaders($headers);
+        $this->response = new JsonResponse([], $status, $this->response->headers->all());
+        return $this;
     }
 
-    public function jsonp($data = [], $callback = 'callback', $status = null)
+    public function jsonp($data = [], $status = 200, $headers = [])
     {
-        self::$response = new JsonResponse($data, $status);
-        self::$response->setCallback($callback);
-        return self::$response;
+        $this->type = 'jsonp';
+        $this->with($data);
+        $this->addHeaders($headers);
+        $this->response = new JsonResponse([], $status, $this->response->headers->all());
+        return $this;
     }
 
     /**
      * @param $tpl
-     * @param null $status
-     * @param string $charset
+     * @param int $status
+     * @param array $headers
      * @return $this
-     * @throws \Exception
      */
-    public function view($tpl, $status = null)
+    public function view($tpl, $status = 200, $headers = [])
     {
         if (!$tpl) {
-            throw new \Exception('need template');
+            throw new \RuntimeException('need template');
         }
-        $this->type = 'view';
         $this->setStatusCode($status);
+        $this->addHeaders($headers);
+        $this->type = 'view';
         app('view')->setTpl($tpl);
         return $this;
     }
@@ -96,14 +146,19 @@ class response extends \Symfony\Component\HttpFoundation\Response
      */
     public function prepareContent()
     {
+        $this->response->prepare(request());
         switch ($this->type) {
+            case 'json' :
+            case 'jsonp' :
+                $this->response->setData($this->options);
+                break;
             case 'view' :
                 /** @var view $view */
                 $view = app('view');
                 if (!empty($this->options)) {
                     $view->with($this->options);
                 }
-                $this->setContent($view->fetch());
+                $this->response->setContent($view->fetch());
                 break;
             default :
                 break;
@@ -111,37 +166,13 @@ class response extends \Symfony\Component\HttpFoundation\Response
         return $this;
     }
 
-    /**
-     * Sends content for the current web response.
-     *
-     * @return $this
-     */
-    public function sendContent()
+    public function send($force = false)
     {
-        if ($this->sended) {
-            return $this;
-        }
-        if (!$this->status) {
-            $this->setStatus(200);
-        }
-        if (!$this->content) {
+        if ($force || !$this->sended) {
             $this->prepareContent();
-        }
-        echo $this->content;
-
-        return $this;
-    }
-
-    public function send()
-    {
-        $this->sendHeaders();
-        $this->sendContent();
-
-        if (function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
+            $this->response->send();
         }
         $this->sended = true;
-        return $this;
     }
 
     /**
@@ -152,14 +183,14 @@ class response extends \Symfony\Component\HttpFoundation\Response
      */
     public function saveToHtml($file)
     {
-        if (!$this->content) {
+        if (!$this->getContent()) {
             $this->prepareContent();
         }
         $dir = dirname($file);
         if (!file_exists($dir)) {
             mkdir($dir, 0777, true);
         }
-        file_put_contents($file, $this->content);
+        file_put_contents($file, $this->getContent());
         return $this;
     }
 

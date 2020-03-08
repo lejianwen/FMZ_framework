@@ -1,4 +1,4 @@
-THIS IS A <{$framework}>!
+THIS IS A {$framework}!
 
 
 

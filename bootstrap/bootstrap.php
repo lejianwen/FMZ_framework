@@ -49,11 +49,11 @@ class bootstrap
             $info_log = new Logger('SYS_LOG');
             $level = config('app.sys_log_level');
             $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', $level));
-            $request = app('request');
+            $request = request();
             $info_log->$level('request_info:', [
                 'ip' => $request->getClientIp(),
-                'method' => $request->method(),
-                'uri' => $request->uri()
+                'method' => $request->getMethod(),
+                'uri' => $request->getRequestUri()
             ]);
         }
     }

@@ -11,8 +11,19 @@ namespace lib;
 
 class controller
 {
+    /**
+     * @var \lib\request
+     */
+    protected $request;
+    /**
+     * @var \lib\response
+     */
+    protected $response;
+
     public function __construct()
     {
+        $this->request = request();
+        $this->response = response();
     }
 
 }

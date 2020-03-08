@@ -319,6 +319,9 @@ if (!function_exists('cache')) {
 }
 
 if (!function_exists('request')) {
+    /**
+     * @return \lib\request
+     */
     function request()
     {
         return lib\request::_instance();

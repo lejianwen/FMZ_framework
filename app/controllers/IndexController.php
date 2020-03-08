@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IndexController extends BaseController
 {
+    protected $request;
+
     public function index()
     {
         $this->response
@@ -23,30 +25,13 @@ class IndexController extends BaseController
 
     public function test()
     {
-//        var_dump($this->request->getClientIp());
-//        var_dump($this->request->file());
-//        echo '==================================<br>';
-        $this->request = Request::createFromGlobals();
-//        var_dump($this->request->query);
-//        var_dump($this->request->request);
-//        var_dump($this->request->files->get('a')[0][0]->move(WEB_ROOT));
-        $response = new Response();
-        $response->prepare($this->request);
-        $this->response
-            ->with(['framework' => 'FMZ_framework'])
-            ->view('index/index');
-        /** @var \lib\view\smarty $view */
-        $view = app('view');
-        $response->setContent($view->with(['framework' => 'FMZ_framework'])->fetch())->send();
-        exit;
+        $this->request = \request();
+        var_dump($this->request->getClientIp());
+        var_dump($this->request->get());
     }
 
-    public function testSy()
+    public function middle()
     {
-    }
-
-    public function middle($middle_result)
-    {
-        echo $middle_result;
+        echo 'middle';
     }
 }
