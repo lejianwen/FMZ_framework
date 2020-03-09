@@ -196,13 +196,12 @@ class response
 
     /**
      * 跳转
-     * @param $url
-     * @param string $msg
-     * @param int $time
+     * @param string $url
+     * @param int $status
      */
     public function redirect($url, $status = 302)
     {
-        $this->setStatus($status)
+        $this->setStatusCode($status)
             ->setHeader('Location', $url);
     }
 
