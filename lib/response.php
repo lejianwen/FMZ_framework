@@ -11,6 +11,10 @@ namespace lib;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Class response
+ * @package lib
+ */
 class response
 {
     protected $options = [];
@@ -82,6 +86,12 @@ class response
         return $this;
     }
 
+    /**
+     * @param $func
+     * @param $params
+     * @return mixed
+     * @see \Symfony\Component\HttpFoundation\Response
+     */
     public function __call($func, $params)
     {
         return $this->response->$func(...$params);
