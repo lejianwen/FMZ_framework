@@ -25,7 +25,7 @@ use lib\controller;
  *     )
  * )
  *
- * @SWG\Definition(definition="commonResponse",
+ * @SWG\Definition(definition="commonResponse",type="object",required={"code","msg"},
  *     @SWG\Property(property="code", type="number", default=200),
  *     @SWG\Property(property="msg", type="string")
  * )
