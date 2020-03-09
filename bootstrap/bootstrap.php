@@ -50,11 +50,14 @@ class bootstrap
             $level = config('app.sys_log_level');
             $info_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . date('Y-m') . '/' . date('d') . '.log', $level));
             $request = request();
-            $info_log->$level('request_info:', [
-                'ip' => $request->getClientIp(),
-                'method' => $request->getMethod(),
-                'uri' => $request->getRequestUri()
-            ]);
+            $info_log->$level(
+                'request_info:',
+                [
+                    'ip' => $request->getClientIp(),
+                    'method' => $request->getMethod(),
+                    'uri' => $request->getRequestUri()
+                ]
+            );
         }
     }
 
@@ -127,6 +130,7 @@ class bootstrap
         setlocale(LC_ALL, "zh_CN.utf-8");
         //设置根路径
         defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
+        defined('CONFIG_PATH') or define('CONFIG_PATH', __DIR__ . '/../config/');
         //设置web根路径
         defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
         //设置runtime路径
@@ -136,8 +140,12 @@ class bootstrap
         //是否是命令行模式
         defined('IS_CLI') or define('IS_CLI', PHP_SAPI == 'cli' ? true : false);
         //是否是Ajax请求
-        defined('IS_AJAX') or define('IS_AJAX',
-            ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false);
+        defined('IS_AJAX') or define(
+            'IS_AJAX',
+            ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower(
+                    $_SERVER['HTTP_X_REQUESTED_WITH']
+                ) == 'xmlhttprequest')) ? true : false
+        );
 
         $dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
         $dotenv->load();
