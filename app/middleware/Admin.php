@@ -12,6 +12,7 @@ class Admin implements Middleware
     {
         $token = request()->header('admin-token');
         if (!$token) {
+            response()->json(['code' => 403, 'msg' => '登陆超时']);
             return;
         }
         $admin = \app\models\Admin::where('token', $token)->first();

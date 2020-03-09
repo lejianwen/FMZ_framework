@@ -45,30 +45,12 @@ class BaseController extends controller
         $this->model = 'app\\models\\' . $this->model_name;
     }
 
-    /**验证登录
-     * @return bool
-     */
-    public function checkLogin()
-    {
-        $token = request()->header('admin-token');
-        if (!$token) {
-            return false;
-        }
-        $admin = Admin::where('token', $token)->first();
-        if (!$admin || strtotime($admin->token_expire_time) < time()) {
-            return false;
-        }
-        $this->admin = $admin;
-        return true;
-    }
-
-
-    public function jsonError($code = 1001, $msg = '操作失败')
+    public function jsonError($msg = '操作失败', $code = 1001)
     {
         return $this->response->json(['code' => $code, 'msg' => $msg]);
     }
 
-    public function jsonSuccess($data = [], $code = 200, $msg = '操作成功')
+    public function jsonSuccess($data = [], $msg = '操作成功', $code = 200)
     {
         return $this->response->json(['code' => $code, 'msg' => $msg, 'data' => $data]);
     }
@@ -201,6 +183,5 @@ class BaseController extends controller
 
     protected function afterUpdate($item)
     {
-
     }
 }
