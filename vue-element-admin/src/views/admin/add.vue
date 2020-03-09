@@ -88,6 +88,7 @@ export default {
         if (this.item.password === this.oldPassword) {
           this.item.password = undefined
         }
+        this.item.role = undefined
         updateItem(this.item).then(res => {
           this.$message.success('修改成功')
           this.$router.back()
