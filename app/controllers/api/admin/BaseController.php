@@ -9,7 +9,9 @@
 
 namespace app\controllers\api\admin;
 
+use app\helpers\MessageException;
 use app\models\Admin;
+use Illuminate\Database\Capsule\Manager;
 use lib\controller;
 
 class BaseController extends controller
@@ -23,7 +25,7 @@ class BaseController extends controller
     protected $model;
     protected $filters;
     protected $with = [];
-
+    protected $withCount = [];
     protected $form_ignore = [];    //新增,修改是忽略的字段
 
     public function __construct()
@@ -31,12 +33,6 @@ class BaseController extends controller
         /** @var \lib\request */
         $this->request = request();
         $this->response = response();
-        $this->is_login = $this->checkLogin();
-
-        if (!$this->is_login) {
-            $this->jsonError(403, '登录超时！')->send();
-            exit;
-        }
 
         $path = explode('\\', static::class);
         $class_name = array_pop($path);
@@ -106,6 +102,10 @@ class BaseController extends controller
         if (!empty($this->with)) {
             $query->with($this->with);
         }
+        if (!empty($this->withCount)) {
+            $query->withCount($this->withCount);
+        }
+
         $this->buildQuery($query, $this->request->get());
         $total = $query->count();
         $data = $query->forPage($page, $page_size)->get();
@@ -129,6 +129,10 @@ class BaseController extends controller
         return $this->jsonSuccess($model->toArray());
     }
 
+    /**
+     * @return \lib\response
+     * @throws \Exception
+     */
     public function update()
     {
         $post_data = $this->getPostData();
@@ -137,9 +141,17 @@ class BaseController extends controller
         if (!$model) {
             return $this->jsonError();
         }
-        $model->update($post_data);
-        $this->afterUpdate($model);
-        return $this->jsonSuccess();
+        try {
+            Manager::beginTransaction();
+            $model->update($post_data);
+            $this->afterUpdate($model);
+            Manager::commit();
+            return $this->jsonSuccess();
+        } catch (MessageException $e) {
+            return $this->jsonError($e->getMessage());
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     public function delete()
@@ -157,17 +169,28 @@ class BaseController extends controller
         return $this->jsonSuccess();
     }
 
+    /**
+     * @return \lib\response
+     * @throws \Exception
+     */
     public function create()
     {
         $post_data = $this->getPostData();
-        /** @var \Illuminate\Database\Eloquent\Model $model */
-        $model = $this->model::create($post_data);
-        if ($model && $model->id) {
-            $this->afterUpdate($model);
+        try {
+            Manager::beginTransaction();
+            /** @var \Illuminate\Database\Eloquent\Model $model */
+            $model = $this->model::create($post_data);
+            if (!$model || !$model->id) {
+                return $this->jsonError();
+            }
+            $this->afterUpdate($model, true);
+            Manager::commit();
             return $this->jsonSuccess();
+        } catch (MessageException $e) {
+            return $this->jsonError($e->getMessage());
+        } catch (\Exception $e) {
+            throw $e;
         }
-
-        return $this->jsonError();
     }
 
     protected function getPostData()
@@ -181,7 +204,7 @@ class BaseController extends controller
         return $post_data;
     }
 
-    protected function afterUpdate($item)
+    protected function afterUpdate($item, $is_create = false)
     {
     }
 }
