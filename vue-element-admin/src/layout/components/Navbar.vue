@@ -11,7 +11,8 @@
       <div style="line-height: 50px;float: left">{{ admin.nickname }}</div>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="admin.avatar||'@/assets/login_images/default_head_image.jpg'" class="user-avatar">
+          <img v-if="admin.avatar" :src="admin.avatar" class="user-avatar">
+          <img v-else src="@/assets/login_images/default_head_image.jpg" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
