@@ -8,11 +8,10 @@
       <!--      <template v-if="device!=='mobile'">-->
       <!--        <search id="header-search" class="right-menu-item" />-->
       <!--      </template>-->
-      <div style="line-height: 50px;float: left">{{ name }}</div>
+      <div style="line-height: 50px;float: left">{{ admin.nickname }}</div>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img v-if="avatar" :src="avatar ? avatar : '@/assets/login_images/default_head_image.jpg'" class="user-avatar">
-          <img v-if="!avatar" src="@/assets/login_images/default_head_image.jpg" class="user-avatar">
+          <img :src="admin.avatar||'@/assets/login_images/default_head_image.jpg'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -48,10 +47,9 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar',
-      'avatar',
+      'admin',
       'device',
-      'name'
+      'sidebar'
     ])
   },
   methods: {

@@ -14,9 +14,9 @@ export function logout() {
     method: 'post'
   })
 }
-export function role() {
+export function info() {
   return request({
-    url: '/role',
+    url: '/info',
     method: 'get'
   })
 }

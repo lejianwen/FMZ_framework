@@ -1,4 +1,4 @@
-import { login, logout, role } from '@/api/admin'
+import { login, logout, info } from '@/api/admin'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 // import md5 from 'js-md5'
@@ -43,7 +43,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      role().then(res => {
+      info().then(res => {
         const { role, info } = res.data
         commit('SET_INFO', info)
         if (role.route_names && role.route_names !== '*') {
