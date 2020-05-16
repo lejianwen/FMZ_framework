@@ -18,13 +18,13 @@ class AdminController extends BaseController
     protected $filters = ['nickname' => 'like'];
     protected $with = ['role'];
 
-    public function role()
+    public function role($admin)
     {
-        $role = AdminRole::find($this->admin->role_id);
+        $role = AdminRole::find($admin->role_id);
         return $this->jsonSuccess(['role' => $role, 'info' => $this->admin]);
     }
 
-    protected function afterUpdate($item)
+    protected function afterUpdate($item, $is_create = false)
     {
         if ($this->request->post('password')) {
             $item->password = md5($item->password);
@@ -33,12 +33,12 @@ class AdminController extends BaseController
         }
     }
 
-    public function upPass()
+    public function upPass($admin)
     {
         if ($this->request->post('password')) {
-            $this->admin->password = md5($this->request->post('password'));
-            $this->admin->token = '';
-            $this->admin->save();
+            $admin->password = md5($this->request->post('password'));
+            $admin->token = '';
+            $admin->save();
             return $this->jsonSuccess();
         } else {
             return $this->jsonError();
