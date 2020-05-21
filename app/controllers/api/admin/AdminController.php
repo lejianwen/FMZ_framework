@@ -18,7 +18,7 @@ class AdminController extends BaseController
     protected $filters = ['nickname' => 'like'];
     protected $with = ['role'];
 
-    public function role($admin)
+    public function info($admin)
     {
         $role = AdminRole::find($admin->role_id);
         return $this->jsonSuccess(['role' => $role, 'info' => $this->admin]);
