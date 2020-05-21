@@ -30,7 +30,7 @@ Route::middleware("Admin", function () {
     adminRouteResource('adminRole');
     adminRouteResource('config');
     Route::post('api/admin/upPass', 'admin\AdminController@upPass');
-    Route::get('api/admin/role', 'admin\AdminController@role');
+    Route::get('api/admin/info', 'admin\AdminController@info');
 });
 Route::post('api/admin/file/upload', 'admin\FileController@upload');
 
