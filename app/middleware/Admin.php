@@ -4,6 +4,7 @@
 namespace app\middleware;
 
 
+use app\models\AdminLog;
 use Ljw\Route\Middleware;
 
 class Admin implements Middleware
@@ -22,5 +23,19 @@ class Admin implements Middleware
         }
         $params[] = $admin;
         $next($params);
+        // 添加操作日志
+        try {
+            AdminLog::create([
+                'admin_id' => $admin->id,
+                'ip' => request()->getClientIp(),
+                'method' => request()->getMethod(),
+                'uri' => request()->getPathInfo(),
+                'query' => request()->getQueryString() ?: '',
+                'post' => request()->post(),
+                'remark' => '系统添加'
+            ]);
+        } catch (\Exception $e) {
+            //可能query数据过长等，抓取异常
+        }
     }
 }

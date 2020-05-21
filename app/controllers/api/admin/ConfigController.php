@@ -13,7 +13,7 @@ class ConfigController extends BaseController
 {
     protected $filters = ['name' => 'like'];
 
-    protected function afterUpdate($item)
+    protected function afterUpdate($item, $is_create = false)
     {
         /** @see \app\models\Config::CACHE_ALL_KEY */
         cache()->del($this->model::CACHE_ALL_KEY);

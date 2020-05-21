@@ -1,15 +1,43 @@
 /*
  Navicat Premium Data Transfer
 
+ Source Server         : 59.110.162.9
+ Source Server Type    : MariaDB
+ Source Server Version : 100316
+ Source Host           : localhost:3307
+ Source Schema         : shiyou
+
  Target Server Type    : MariaDB
  Target Server Version : 100316
  File Encoding         : 65001
 
- Date: 28/01/2020 20:58:48
+ Date: 21/05/2020 22:35:16
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for admin_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `admin_logs`;
+CREATE TABLE `admin_logs`  (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `admin_id` int(11) UNSIGNED NOT NULL,
+  `uri` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `method` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `query` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `post` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `created_at` timestamp(0) NULL DEFAULT current_timestamp,
+  `updated_at` timestamp(0) NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of admin_logs
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for admin_roles
@@ -18,16 +46,18 @@ DROP TABLE IF EXISTS `admin_roles`;
 CREATE TABLE `admin_roles`  (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-  `route_names` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '*',
+  `route_names` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `api_routes` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '\'[]\'',
   `created_at` timestamp(0) NULL DEFAULT current_timestamp,
   `updated_at` timestamp(0) NULL DEFAULT current_timestamp,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admin_roles
 -- ----------------------------
-INSERT INTO `admin_roles` VALUES (1, '超管', '*', '2020-01-26 09:44:55', '2020-01-26 09:44:55');
+INSERT INTO `admin_roles` VALUES (1, '超管', '*', '[\"/api/admin/user/lock\"]', '2020-01-26 09:44:55', '2020-05-07 21:59:45');
+INSERT INTO `admin_roles` VALUES (2, 'test', '*', '[\"/api/admin/user/unlock\",\"/api/admin/goods/create\"]', '2020-05-07 20:58:00', '2020-05-07 20:58:00');
 
 -- ----------------------------
 -- Table structure for admins
@@ -48,12 +78,12 @@ CREATE TABLE `admins`  (
   `created_at` timestamp(0) NULL DEFAULT current_timestamp,
   `updated_at` timestamp(0) NULL DEFAULT current_timestamp,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admins
 -- ----------------------------
-INSERT INTO `admins` VALUES (1, 'admin', '96e79218965eb72c92a549dd5a330112', 'OOOOO', '', '3333', '111111', 1, '9f3d342d38e036a9137ef3e270d9d79c', '2020-02-25 18:01:07', 1, '2017-03-22 17:14:31', '2020-01-26 18:01:07');
+INSERT INTO `admins` VALUES (1, 'admin', '96e79218965eb72c92a549dd5a330112', 'OOOOO', '', '3333', '111111', 1, '27bc180c3de1916f7b9834792801f003', '2020-06-20 21:53:17', 1, '2017-03-22 17:14:31', '2020-05-21 21:53:17');
 
 -- ----------------------------
 -- Table structure for configs
@@ -68,6 +98,10 @@ CREATE TABLE `configs`  (
   `created_at` timestamp(0) NULL DEFAULT current_timestamp,
   `updated_at` timestamp(0) NULL DEFAULT current_timestamp,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of configs
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;
