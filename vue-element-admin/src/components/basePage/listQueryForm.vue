@@ -1,6 +1,5 @@
 <template>
   <el-form
-    v-if="formOptions.length"
     ref="listQueryForm"
     :model="currentValue"
     label-position="right"
@@ -53,7 +52,7 @@
       <slot name="otherFormItem" />
     </el-row>
     <el-row>
-      <el-button type="danger" icon="el-icon-refresh" @click="resetForm">
+      <el-button v-if="formOptions.length" type="danger" icon="el-icon-refresh" @click="resetForm">
         重置
       </el-button>
       <el-button type="primary" icon="el-icon-search" @click="handleFilter">
@@ -125,9 +124,6 @@ export default {
         }
       }
       this.$emit('handleFilter')
-    },
-    handleCreate() {
-      this.$emit('handleCreate')
     },
     handleSelectChange({ formItem, $event }) {
       this.$emit('handleSelectChange', { formItem, $event })

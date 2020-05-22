@@ -4,6 +4,7 @@
     :key="tableKey"
     v-loading="listLoading"
     :data="afterList"
+    :default-expand-all="defaultExpandAll"
     border
     fit
     highlight-current-row
@@ -167,6 +168,10 @@ export default {
     actions: {
       type: Boolean,
       default: true
+    },
+    defaultExpandAll: {
+      type: Boolean,
+      default: false
     },
     tableKey: {
       type: String,

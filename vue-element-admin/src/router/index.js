@@ -236,6 +236,12 @@ export const asyncRoutes = [
         meta: { title: '编辑管理员角色' }
       },
       {
+        path: '/adminLog/list',
+        component: () => import('@/views/adminLog/list'),
+        name: 'adminLogList',
+        meta: { title: '系统日志', icon: 'setting', noCache: true }
+      },
+      {
         path: '/config/list',
         component: () => import('@/views/config/list'),
         name: 'configList',

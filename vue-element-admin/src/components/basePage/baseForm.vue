@@ -52,8 +52,8 @@
           </el-checkbox>
 
           <template v-if="formItem.type === 'checkboxGroup'">
-            <el-checkbox v-model="checkAll[formItem.prop]" :indeterminate="isIndeterminate[formItem.prop]" @change="handleCheckAllChange({formItem, $event})">全选</el-checkbox>
-            <el-checkbox-group v-model="currentValue[formItem.prop]" @change="handleCheckGroupCheckedChange({formItem, $event})">
+            <el-checkbox v-if="!formItem.max" v-model="checkAll[formItem.prop]" :indeterminate="isIndeterminate[formItem.prop]" @change="handleCheckAllChange({formItem, $event})">全选</el-checkbox>
+            <el-checkbox-group v-model="currentValue[formItem.prop]" :max="formItem.max" :min="formItem.min" @change="handleCheckGroupCheckedChange({formItem, $event})">
               <el-checkbox v-for="item in formItem.options" :key="item.value" :label="item.value" :disabled="item.disabled||false">{{ item.label }}</el-checkbox>
             </el-checkbox-group>
           </template>
@@ -123,6 +123,7 @@
             :file-list="formItem.fileList"
             :limit="formItem.limit?formItem.limit:0"
             :disabled="formItem.disabled||false"
+            :headers="{'admin-token':apiToken}"
           >
             <el-button size="small" type="primary">点击上传</el-button>
             <div v-if="formItem.tip" slot="tip" class="el-upload__tip">{{ formItem.tip }}</div>
@@ -139,6 +140,7 @@
             :limit="formItem.limit?formItem.limit:0"
             :disabled="formItem.disabled||false"
             :multiple="formItem.multiple||false"
+            :headers="{'admin-token':apiToken}"
             list-type="picture-card"
           >
             <i class="el-icon-plus" />
@@ -153,6 +155,7 @@
             :on-success="formItem.onSuccess ? formItem.onSuccess : null"
             :before-upload="formItem.beforeUpload ? formItem.beforeUpload : null"
             :disabled="formItem.disabled||false"
+            :headers="{'admin-token':apiToken}"
           >
             <img v-if="currentValue[formItem.prop]" :src="currentValue[formItem.prop]" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
@@ -180,6 +183,8 @@
 
 <script>
 import Tinymce from '@/components/Tinymce'
+import { getToken } from '@/utils/auth'
+
 export default {
   name: 'BaseForm',
   components: { Tinymce },
@@ -221,9 +226,10 @@ export default {
   },
   data() {
     return {
+      apiToken: getToken(),
       headimgs: [],
-      isIndeterminate: [],
-      checkAll: []
+      isIndeterminate: {},
+      checkAll: {}
     }
   },
   computed: {
@@ -237,6 +243,9 @@ export default {
     }
   },
   created() {
+    this.$nextTick(_ => {
+      this.init()
+    })
   },
   methods: {
     init() {
@@ -254,8 +263,8 @@ export default {
       this.$emit('handleCancel')
     },
     handleSubmit() {
-      this.$refs[this.refId].validate((valid) => {
-        this.$emit('handleSubmit', valid)
+      this.$refs[this.refId].validate((valid, prop, msg) => {
+        this.$emit('handleSubmit', valid, prop, msg)
       })
     },
     handleSelectChange({ formItem, $event }) {
@@ -279,7 +288,7 @@ export default {
           allLength++
         }
       })
-      this.checkAll[formItem.prop] = (this.currentValue[formItem.prop].length === allLength)
+      this.checkAll[formItem.prop] = (this.currentValue[formItem.prop].length === allLength && allLength > 0)
       this.isIndeterminate[formItem.prop] = ((this.currentValue[formItem.prop].length > 0) && (this.currentValue[formItem.prop].length < allLength))
       // this.checkAll = Object.assign({}, this.checkAll)
       // this.isIndeterminate = Object.assign({}, this.isIndeterminate)

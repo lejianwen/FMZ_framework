@@ -31,6 +31,8 @@ Route::middleware("Admin", function () {
     adminRouteResource('config');
     Route::post('api/admin/upPass', 'admin\AdminController@upPass');
     Route::get('api/admin/info', 'admin\AdminController@info');
+    adminRouteResource('adminLog');
+    Route::post('api/admin/adminLog/batchDelete', 'admin\AdminLogController@batchDelete');
 });
 Route::post('api/admin/file/upload', 'admin\FileController@upload');
 
