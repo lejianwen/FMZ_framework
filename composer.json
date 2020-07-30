@@ -10,7 +10,6 @@
     "firebase/php-jwt": "^5.0",
     "guzzlehttp/guzzle": "~6.0",
     "illuminate/database": "*",
-    "ljw/excel": "dev-master",
     "ljw/route": "^v3.0",
     "ljw/validator": "dev-master",
     "ljw/wxxcx": "^1.2",
