@@ -12,7 +12,9 @@
                 :on-error="fileUpErr"
                 :list-type="listType"
         >
-          <slot name="default" />
+          <slot name="default" >
+            <el-button type="danger" size="mini">上传</el-button>
+          </slot>
         </el-upload>
     </div>
 </template>
