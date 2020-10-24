@@ -5,6 +5,7 @@
     label-position="right"
     :label-width="labelWidth"
     :rules="rules"
+    :size="size"
     class="list-query-form"
   >
     <el-row :gutter="10">
@@ -12,7 +13,7 @@
         <el-form-item :label="formItem.label" :prop="formItem.prop">
           <el-input v-if="formItem.type === 'input'" v-model="currentValue[formItem.prop]" clearable />
           <el-input-number v-if="formItem.type === 'number'" v-model="currentValue[formItem.prop]" clearable />
-          <el-select v-if="formItem.type === 'select'" v-model="currentValue[formItem.prop]" :filterable="formItem.filterable" clearable @change="handleSelectChange({formItem, $event})">
+          <el-select v-if="formItem.type === 'select'" v-model="currentValue[formItem.prop]" clearable @change="handleSelectChange({formItem, $event})">
             <el-option
               v-for="item in formItem.options"
               :key="item.value"
@@ -36,30 +37,22 @@
             type="datetime"
             :placeholder="formItem.placeholder || '选择时间'"
           />
-          <el-date-picker
-            v-if="formItem.type === 'datetimerange'"
-            v-model="currentValue[formItem.prop]"
-            :format="formItem.format ? formItem.format : 'yyyy-MM-dd HH:mm:ss'"
-            :value-format="formItem.valueFormat ? formItem.valueFormat : 'yyyy-MM-dd HH:mm:ss'"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-          />
+
         </el-form-item>
       </el-col>
       <!--其他筛选项-->
       <slot name="otherFormItem" />
-    </el-row>
-    <el-row>
-      <el-button v-if="formOptions.length" type="danger" icon="el-icon-refresh" @click="resetForm">
-        重置
-      </el-button>
-      <el-button type="primary" icon="el-icon-search" @click="handleFilter">
-        搜索
-      </el-button>
-      <!--其他按钮-->
-      <slot name="otherButton" />
+      <el-col :span="24">
+        <el-form-item>
+          <el-button type="danger" icon="el-icon-refresh" @click="resetForm">
+            重置
+          </el-button>
+          <el-button type="primary" icon="el-icon-search" @click="handleFilter">
+            搜索
+          </el-button>
+          <slot name="otherButton" />
+        </el-form-item>
+      </el-col>
     </el-row>
   </el-form>
 </template>
@@ -94,6 +87,10 @@ export default {
       default() {
         return []
       }
+    },
+    size: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -124,6 +121,9 @@ export default {
         }
       }
       this.$emit('handleFilter')
+    },
+    handleCreate() {
+      this.$emit('handleCreate')
     },
     handleSelectChange({ formItem, $event }) {
       this.$emit('handleSelectChange', { formItem, $event })

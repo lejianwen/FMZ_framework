@@ -3,8 +3,7 @@
     :ref="refId"
     :key="tableKey"
     v-loading="listLoading"
-    :data="afterList"
-    :default-expand-all="defaultExpandAll"
+    :data="list"
     border
     fit
     highlight-current-row
@@ -40,7 +39,7 @@
     <template v-for="(columnItem,index) in tableColumns">
       <!--普通 情况 定义-->
       <el-table-column
-        v-if="!getType(columnItem.type, null) || getType(columnItem.type, null) ==='selection'"
+        v-if="!columnItem.type || columnItem.type==='selection'"
         :key="index"
         :label="columnItem.label"
         :prop="columnItem.prop"
@@ -48,10 +47,10 @@
         :width="columnItem.width"
         :align="columnItem.align ? columnItem.align : 'center' "
         :sortable="columnItem.sortable ? columnItem.sortable : false"
-        :type="getType(columnItem.type, null)||''"
+        :type="columnItem.type||''"
         :formatter="columnItem.formatter||null"
       />
-      <slot v-else-if="getType(columnItem.type, null) ==='slot'" :name="columnItem.prop" />
+      <slot v-else-if="columnItem.type==='slot'" :name="columnItem.prop" />
       <el-table-column
         v-else
         :key="index"
@@ -61,13 +60,12 @@
         :width="columnItem.width"
         :align="columnItem.align ? columnItem.align : 'center' "
         :sortable="columnItem.sortable ? columnItem.sortable : false"
-        :type="['index','expand'].indexOf(getType(columnItem.type, null)) > -1?getType(columnItem.type, null):''"
       >
         <template slot-scope="{ row, column, $index }">
-          <template v-if="getType(columnItem.type,row[columnItem.prop],row, column) ==='enum'">
+          <template v-if="columnItem.type==='enum'">
             <!--选项值 options:{1:'值1',2:'值2'}-->{{ columnItem.options[row[columnItem.prop]] }}
           </template>
-          <template v-if="getType(columnItem.type,row[columnItem.prop],row, column) ==='select'">
+          <template v-if="columnItem.type==='select'">
             <!--下拉框 options:[{label:'选择1',value:1},{label:'选择2',value:2}]-->
             <el-select
               v-model="row[columnItem.prop]"
@@ -84,7 +82,7 @@
               />
             </el-select>
           </template>
-          <template v-if="getType(columnItem.type,row[columnItem.prop],row, column) ==='tag'">
+          <template v-if="columnItem.type==='tag'">
             <!--标签   options: {[ {type:'info',label:'失败',value:1}, {type:'success',label:'成功',value:2} ]}-->
             <!--标签   options: {[ {label:'失败',value:1},{type:'success',label:'成功',value:2} ]}-->
             <template v-if="columnItem.options && columnItem.options.length">
@@ -95,20 +93,20 @@
             <!--标签   options如果不定义或找不到对应的值 则直接展示值并且默认type为info-->
             <el-tag v-else type="info">{{ row[columnItem.prop] }}</el-tag>
           </template>
-          <template v-if="getType(columnItem.type,row[columnItem.prop],row, column) ==='button'">
+          <template v-if="columnItem.type==='button'">
             <!--按钮 options:{type:'primary',label:'按钮1'}-->
             <el-button :type="columnItem.options ? columnItem.options.type||'primary' : 'primary'" @click="handleButtonClick({val:$event,prop:columnItem.prop,row})">
               {{ columnItem.options ? columnItem.options.label||'按钮' : '' }}
             </el-button>
           </template>
-          <template v-if="getType(columnItem.type,row[columnItem.prop],row, column) ==='html'">
+          <template v-if="columnItem.type==='html'">
             <div v-html="row[columnItem.prop]" />
           </template>
-          <template v-if="getType(columnItem.type,row[columnItem.prop],row, column) ==='img'">
+          <template v-if="columnItem.type==='img'">
             <img :src="row[columnItem.prop]" style="max-width: 100px;max-height: 100px;">
           </template>
-          <template v-if="getType(columnItem.type,row[columnItem.prop],row, column) ==='editInput'">
-            <el-input v-model="row[columnItem.prop]" :value="row[columnItem.prop]">
+          <template v-if="columnItem.type==='editInput'">
+            <el-input v-model="row[columnItem.prop]">
               <el-button slot="append" icon="el-icon-check" @click="saveEditInput({ prop:columnItem.prop, row, column })" />
             </el-input>
           </template>
@@ -169,10 +167,6 @@ export default {
       type: Boolean,
       default: true
     },
-    defaultExpandAll: {
-      type: Boolean,
-      default: false
-    },
     tableKey: {
       type: String,
       default: ''
@@ -199,22 +193,22 @@ export default {
     }
   },
   computed: {
-    afterList: {
-      get() {
-        const list = [...this.list]
-        const reList = []
-        list.forEach((item, index) => {
-          if (typeof item === 'object') {
-            for (const key in item) {
-              this.transferListObject(item[key], key, item)
-            }
-          }
-          reList.push(item)
-        })
-        // console.log(reList)
-        return reList
-      }
-    }
+    // afterList: {
+    //   get() {
+    //     const list = [...this.list]
+    //     const reList = []
+    //     list.forEach((item, index) => {
+    //       if (typeof item === 'object') {
+    //         for (const key in item) {
+    //           this.transferListObject(item[key], key, item)
+    //         }
+    //       }
+    //       reList.push(item)
+    //     })
+    //     // console.log(reList)
+    //     return reList
+    //   }
+    // }
   },
   methods: {
     // 将子对象的值转化到父对象中
@@ -252,22 +246,14 @@ export default {
     },
     saveEditInput({ prop, row, column }) {
       this.$emit('saveEditInput', { prop, row, column })
-    }, /* saveEditInput({ prop, row, column }) {
+    }
+    /* saveEditInput({ prop, row, column }) {
       const item = { id: row.id }
       item[prop] = row[prop]
       updateItem(item).then(res => {
         this.$message.success(res.msg)
       })
     },*/
-
-    getType(type, value, row = undefined, prop = undefined) {
-      if (typeof type === 'string') {
-        return type
-      }
-      if (typeof type === 'function') {
-        return type(value, row, prop)
-      }
-    }
   }
 }
 </script>
