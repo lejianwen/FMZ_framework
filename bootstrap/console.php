@@ -109,7 +109,7 @@ class console
         //是否是Ajax请求
         defined('IS_AJAX') or define('IS_AJAX', false);
 
-        $dotenv = new Dotenv\Dotenv(BASE_PATH);
+        $dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
         $dotenv->load();
     }
 }
