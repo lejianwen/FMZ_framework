@@ -24,7 +24,7 @@ class AdminController extends BaseController
         return $this->jsonSuccess(['role' => $role, 'info' => $admin]);
     }
 
-    protected function afterUpdate($item, $is_create = false)
+    protected function afterUpdate($item, $old = null)
     {
         if ($this->request->post('password')) {
             $item->password = md5($item->password);

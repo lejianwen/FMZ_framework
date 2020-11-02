@@ -138,13 +138,14 @@ class BaseController extends controller
         $post_data = $this->getPostData();
         /** @var \Illuminate\Database\Eloquent\Model $model */
         $model = $this->model::find($post_data['id']);
+        $old = $model->toArray();
         if (!$model) {
             return $this->jsonError();
         }
         try {
             Manager::beginTransaction();
             $model->update($post_data);
-            $this->afterUpdate($model);
+            $this->afterUpdate($model, $old);
             Manager::commit();
             return $this->jsonSuccess();
         } catch (MessageException $e) {
@@ -183,7 +184,7 @@ class BaseController extends controller
             if (!$model || !$model->id) {
                 return $this->jsonError();
             }
-            $this->afterUpdate($model, true);
+            $this->afterCreate($model);
             Manager::commit();
             return $this->jsonSuccess();
         } catch (MessageException $e) {
@@ -204,7 +205,12 @@ class BaseController extends controller
         return $post_data;
     }
 
-    protected function afterUpdate($item, $is_create = false)
+    protected function afterCreate($item)
+    {
+        $this->afterUpdate($item);
+    }
+
+    protected function afterUpdate($item, $old = null)
     {
     }
 }
