@@ -9,6 +9,7 @@
 
 namespace app\controllers\api;
 
+use app\controllers\jsonResponse;
 use app\models\User;
 use lib\controller;
 
@@ -44,36 +45,5 @@ use lib\controller;
  */
 class BaseController extends controller
 {
-    /** @var User||null */
-    protected $user;
-
-    protected function checkLogin()
-    {
-        $token = request()->header('api-token');
-        if (!$token) {
-            return false;
-        }
-        $user = User::where('token', $token)->first();
-        if (!$user || strtotime($user->token_expire) < time()) {
-            return false;
-        }
-        $this->user = $user;
-        return true;
-    }
-
-    protected function jsonError($msg = '操作失败', $code = 1001)
-    {
-        return $this->response->json(compact('msg', 'code'));
-    }
-
-    /**
-     * @param array $data
-     * @param string $msg
-     * @param int $code
-     * @return \lib\response|mixed
-     */
-    protected function jsonSuccess($data = [], $msg = '', $code = 200)
-    {
-        return $this->response->json(compact('data', 'msg', 'code'));
-    }
+    use jsonResponse;
 }

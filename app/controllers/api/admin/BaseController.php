@@ -9,6 +9,7 @@
 
 namespace app\controllers\api\admin;
 
+use app\controllers\jsonResponse;
 use app\helpers\MessageException;
 use app\models\Admin;
 use Illuminate\Database\Capsule\Manager;
@@ -16,6 +17,8 @@ use lib\controller;
 
 class BaseController extends controller
 {
+    use jsonResponse;
+
     protected $is_login;
     /** @var Admin */
     protected $admin;
@@ -39,16 +42,6 @@ class BaseController extends controller
         $class_name = str_replace('Controller', '', $class_name);
         $this->model_name = ucfirst($class_name);
         $this->model = 'app\\models\\' . $this->model_name;
-    }
-
-    public function jsonError($msg = '操作失败', $code = 1001)
-    {
-        return $this->response->json(['code' => $code, 'msg' => $msg]);
-    }
-
-    public function jsonSuccess($data = [], $msg = '操作成功', $code = 200)
-    {
-        return $this->response->json(['code' => $code, 'msg' => $msg, 'data' => $data]);
     }
 
     /**
@@ -144,6 +137,7 @@ class BaseController extends controller
         }
         try {
             Manager::beginTransaction();
+            $this->beforeUpdate($model);
             $model->update($post_data);
             $this->afterUpdate($model, $old);
             Manager::commit();
@@ -179,6 +173,7 @@ class BaseController extends controller
         $post_data = $this->getPostData();
         try {
             Manager::beginTransaction();
+            $this->beforeCreate();
             /** @var \Illuminate\Database\Eloquent\Model $model */
             $model = $this->model::create($post_data);
             if (!$model || !$model->id) {
@@ -210,7 +205,15 @@ class BaseController extends controller
         $this->afterUpdate($item);
     }
 
+    protected function beforeCreate()
+    {
+    }
+
     protected function afterUpdate($item, $old = null)
+    {
+    }
+
+    protected function beforeUpdate($item)
     {
     }
 }
