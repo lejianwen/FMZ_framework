@@ -106,7 +106,9 @@ class bootstrap
                 $record['extra'] = [
                     'ip' => $request->getClientIp(),
                     'method' => $request->getMethod(),
-                    'uri' => $request->getRequestUri()
+                    'uri' => $request->getRequestUri(),
+                    'params' => $request->get(),
+                    'body' => $request->post()
                 ];
                 return $record;
             });
