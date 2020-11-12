@@ -97,6 +97,18 @@ class bootstrap
 
         if (config('app.sys_error_log')) {
             $error_log = new Logger('SYS_ERROR');
+
+            $error_log->pushProcessor(function ($record) {
+                $request = request();
+                $record['extra'] = [
+                    'ip' => $request->getClientIp(),
+                    'method' => $request->getMethod(),
+                    'uri' => $request->getRequestUri(),
+                    'params' => $request->get(),
+                    'body' => $request->post()
+                ];
+                return $record;
+            });
             $error_log->pushHandler(new StreamHandler(SYSTEM_LOG_PATH . 'error.log', Logger::ERROR));
 
             $whoops_log_handler = new \Whoops\Handler\PlainTextHandler($error_log);
