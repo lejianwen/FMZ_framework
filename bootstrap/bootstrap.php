@@ -103,8 +103,7 @@ class bootstrap
                 $record['extra'] = [
                     'ip' => $request->getClientIp(),
                     'method' => $request->getMethod(),
-                    'uri' => $request->getRequestUri(),
-                    'params' => $request->get(),
+                    'uri' => mb_convert_encoding($request->getRequestUri(), 'utf-8'),
                     'body' => $request->post()
                 ];
                 return $record;
