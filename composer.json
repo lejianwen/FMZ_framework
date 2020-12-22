@@ -14,7 +14,7 @@
     "monolog/monolog": "1.21.0",
     "smarty/smarty": "*",
     "symfony/http-foundation": "^3.4",
-    "vlucas/phpdotenv": "~v5.0"
+    "vlucas/phpdotenv": "~v5.2"
   },
   "autoload": {
     "psr-4": {
