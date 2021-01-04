@@ -8,10 +8,13 @@
 namespace app\models;
 
 
+use app\models\traits\Date;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseMini extends Model
 {
+    use Date;
+
     protected $guarded = [];
     const CACHE_ALL_KEY = '';
 

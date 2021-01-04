@@ -9,15 +9,15 @@
     "filp/whoops": "2.1.4",
     "firebase/php-jwt": "^5.0",
     "guzzlehttp/guzzle": "~6.0",
-    "illuminate/database": "*",
+    "illuminate/database": "~v8.0",
     "ljw/route": "^v3.0",
     "ljw/validator": "dev-master",
     "ljw/wxxcx": "^1.2",
     "monolog/monolog": "1.21.0",
     "smarty/smarty": "*",
     "symfony/http-foundation": "^3.4",
-    "vlucas/phpdotenv": "*",
-    "zircote/swagger-php": "^2.0"
+    "vlucas/phpdotenv": "^5.2",
+    "zircote/swagger-php": "^3.1"
   },
   "autoload": {
     "psr-4": {

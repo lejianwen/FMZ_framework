@@ -19,9 +19,9 @@ class BaseController extends controller
         parent::__construct();
 
         $this->response->with([
-            'site_name' => Config::findByCode('SITE_NAME'),
-            'site_host' => Config::findByCode('SITE_HOST'),
-            'mobile_host' => Config::findByCode('MOBILE_HOST'),
+//            'site_name' => Config::findByCode('SITE_NAME'),
+//            'site_host' => Config::findByCode('SITE_HOST'),
+//            'mobile_host' => Config::findByCode('MOBILE_HOST'),
             'request_uri' => env('REQUEST_URI'),
         ]);
     }
@@ -37,6 +37,5 @@ class BaseController extends controller
                 $this->response->saveToHtml(WEB_ROOT . $uri);
             }
         }
-
     }
 }

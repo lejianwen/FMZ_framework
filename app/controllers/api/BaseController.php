@@ -10,37 +10,49 @@
 namespace app\controllers\api;
 
 use app\controllers\jsonResponse;
-use app\models\User;
 use lib\controller;
 
 /**
- * @SWG\Swagger(
- *    swagger="2.0",
- *     schemes={"http", "https"},
- *     host="www.taoke.com",
- *     basePath="/",
- *     @SWG\Info(
+ * @OA\OpenApi(
+ *    openapi="3.0.0",
+ *     @OA\Info(
  *         version="1.0.0",
  *         title="前端 Api 文档",
  *         description="前端 Api 文档"
  *     )
  * )
  *
- * @SWG\Definition(definition="commonResponse",type="object",required={"code","msg"},
- *     @SWG\Property(property="code", type="number", default=200),
- *     @SWG\Property(property="msg", type="string")
+ * @OA\Schema(schema="commonResponse",type="object",required={"code","msg"},
+ *     @OA\Property(property="code", type="number", default=200),
+ *     @OA\Property(property="msg", type="string")
  * )
- * @SWG\Definition(
- *     definition="Paging",
- *     @SWG\Property(property="total",type="number"),
- *     @SWG\Property(property="page_size", type="number")
+ * @OA\Schema(
+ *     schema="Paging",
+ *     @OA\Property(property="total",type="number"),
+ *     @OA\Property(property="page_size", type="number")
  * )
- * @SWG\SecurityScheme(
- *     securityDefinition="apiUserToken",
+ * @OA\SecurityScheme(
+ *     securityScheme="apiUserToken",
  *     description="前台用户token",
  *     type="apiKey",
  *     in="header",
  *     name="api-token"
+ * )
+ */
+
+/**
+ * @OA\Get(
+ *   tags={"OpenApi"},
+ *   path="/swagger-api",
+ *   summary="json",
+ *   @OA\Response(
+ *     response=200,
+ *     description="OpenApi json",
+ *     @OA\JsonContent(required={"data","code", "msg"},
+ *        @OA\Property(property="data", type="string", description="token"),
+ *        allOf={@OA\Schema(ref="#/components/schemas/commonResponse")},
+ *     ),
+ *   )
  * )
  */
 class BaseController extends controller

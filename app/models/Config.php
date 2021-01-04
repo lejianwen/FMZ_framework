@@ -3,8 +3,12 @@
 namespace app\models;
 
 
+use app\models\traits\Date;
+
 class Config extends BaseMini
 {
+    use Date;
+
     const CACHE_ALL_KEY = 'all:config';
 
     public static function findByCode($code)

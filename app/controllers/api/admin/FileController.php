@@ -9,16 +9,32 @@
 
 namespace app\controllers\api\admin;
 
-use lib\controller;
+use app\helpers\OSS;
+use app\models\File;
 
-class FileController extends controller
+class FileController extends BaseController
 {
     public function upload()
     {
-        $file = request()->file('file');
-        $path = '/uploads/' . date('Ymd') . '/';
+        $data = $this->request->post();
+        $file = $this->request->file('file');
+        $path = 'uploads/' . date('Ymd') . '/';
         $name = $file->getClientOriginalName();
         $filename = $file->move(WEB_ROOT . $path, $name);
-        return $this->response->json(['code' => 0, 'data' => $path . $name]);
+        $data['filename'] = $path . $name;
+        if (empty($data['host'])) {
+            $data['host'] = env('FILE_HOST');
+        }
+
+        File::create($data);
+        return $this->response->json(['code' => 0, 'data' => $path . $name, '$filename' => $filename]);
+    }
+
+    public function getOssToken()
+    {
+        $token = OSS::getToken('test', [
+            'origin_filename' => '${x:origin_filename}'
+        ]);
+        return $this->response->json(['code' => 200, 'data' => $token]);
     }
 }

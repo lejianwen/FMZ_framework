@@ -29,6 +29,7 @@ Route::middleware("Admin", function () {
     adminRouteResource('admin');
     adminRouteResource('adminRole');
     adminRouteResource('config');
+    adminRouteResource('file');
     Route::post('api/admin/upPass', 'admin\AdminController@upPass');
     Route::get('api/admin/info', 'admin\AdminController@info');
     adminRouteResource('adminLog');
