@@ -8,41 +8,58 @@ use OSS\Core\OssException;
 
 class OSS
 {
-    /**
-     * @return OssClient
-     * @throws OssException
-     */
-    public static function init()
+    public static function gmt_iso8601($time)
     {
-        $accessKeyId = env('ALI_OSS_KEY');
-        $accessKeySecret = env('ALI_OSS_SECRET');
-        // Endpoint以杭州为例，其它Region请按实际情况填写。
-        $endpoint = env('ALI_OSS_END_POINTY');
-        $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-        return $ossClient;
+        $dtStr = date("c", $time);
+        $mydatetime = new \DateTime($dtStr);
+        $expiration = $mydatetime->format(\DateTime::ISO8601);
+        $pos = strpos($expiration, '+');
+        $expiration = substr($expiration, 0, $pos);
+        return $expiration . "Z";
     }
 
     /**
      * @return array
      */
-    public static function getToken($callback_url, $callback_body = [])
+    public static function getToken($prefix = 'test', $callback_body = [])
     {
-        function gmt_iso8601($time)
-        {
-            $dtStr = date("c", $time);
-            $mydatetime = new \DateTime($dtStr);
-            $expiration = $mydatetime->format(\DateTime::ISO8601);
-            $pos = strpos($expiration, '+');
-            $expiration = substr($expiration, 0, $pos);
-            return $expiration . "Z";
-        }
-
         $id = env('ALI_OSS_KEY');          // 请填写您的AccessKeyId。
         $key = env('ALI_OSS_SECRET');     // 请填写您的AccessKeySecret。
         // $host的格式为 bucketname.endpoint，请替换为您的真实信息。
         $host = env('ALI_OSS_BUCKET_END_POINTY');
+        $call_back = env('ALI_OSS_CALLBACK_URL');
+        return self::_getToken($id, $key, $host, $prefix, $call_back, $callback_body);
+    }
+
+    public static function getDownUrl($object)
+    {
+        $timeout = 600;
+        $bucket = env('ALI_OSS_BUCKET');
+        try {
+            $accessKeyId = env('ALI_OSS_KEY');
+            $accessKeySecret = env('ALI_OSS_SECRET');
+            // Endpoint以杭州为例，其它Region请按实际情况填写。
+            $endpoint = env('ALI_OSS_END_POINTY');
+            $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
+            // 生成GetObject的签名URL。
+            $signedUrl = $ossClient->signUrl($bucket, $object, $timeout);
+        } catch (OssException $e) {
+//            printf(__FUNCTION__ . ": FAILED\n");
+//            printf($e->getMessage() . "\n");
+            return '';
+        }
+        return $signedUrl;
+//        print(__FUNCTION__ . ": signedUrl: " . $signedUrl . "\n");
+    }
+
+
+    public static function _getToken($accessid, $key, $host, $prefix, $callback_url, $callback_body = [])
+    {
         // $callbackUrl为上传回调服务器的URL，请将下面的IP和Port配置为您自己的真实URL信息。
         $dir = date('Ym') . '/';          // 用户上传文件时指定的前缀。
+        if ($prefix) {
+            $dir = $prefix . '/' . $dir;
+        }
         $callback_body_arr = [
             'bucket' => '${bucket}',
             'etag' => '${etag}',
@@ -50,14 +67,13 @@ class OSS
             'mimeType' => '${mimeType}',
             'height' => '${imageInfo.height}',
             'width' => '${imageInfo.width}',
-            'format' => '${imageInfo.format}'
+            'format' => '${imageInfo.format}',
+            'size' => '${size}',
+            'host' => $host
         ];
         // 添加额外参数
         if (!empty($callback_body)) {
             foreach ($callback_body as $k => $item) {
-                if (!strstr($key, ':')) {
-                    $k = 'x:' . $k;
-                }
                 $callback_body_arr[$k] = $item;
             }
         }
@@ -75,7 +91,7 @@ class OSS
         $now = time();
         $expire = 30;  //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问。
         $end = $now + $expire;
-        $expiration = gmt_iso8601($end);
+        $expiration = self::gmt_iso8601($end);
 
 
         //最大文件大小.用户可以自己设置
@@ -92,7 +108,7 @@ class OSS
         $signature = base64_encode(hash_hmac('sha1', $string_to_sign, $key, true));
 
         $response = array();
-        $response['accessid'] = $id;
+        $response['accessid'] = $accessid;
         $response['host'] = $host;
         $response['policy'] = $base64_policy;
         $response['signature'] = $signature;
@@ -100,22 +116,5 @@ class OSS
         $response['callback'] = $base64_callback_body;
         $response['dir'] = $dir;  // 这个参数是设置用户上传文件时指定的前缀。
         return $response;
-    }
-
-    public static function getDownUrl($object)
-    {
-        $timeout = 600;
-        $bucket = env('ALI_OSS_BUCKET');
-        try {
-            $ossClient = self::init();
-            // 生成GetObject的签名URL。
-            $signedUrl = $ossClient->signUrl($bucket, $object, $timeout);
-        } catch (OssException $e) {
-//            printf(__FUNCTION__ . ": FAILED\n");
-//            printf($e->getMessage() . "\n");
-            return '';
-        }
-        return $signedUrl;
-//        print(__FUNCTION__ . ": signedUrl: " . $signedUrl . "\n");
     }
 }
