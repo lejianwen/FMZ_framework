@@ -231,14 +231,14 @@ export default {
   },
   created() {
   },
+  mounted() {
+  },
   methods: {
     init() {
       this.formOptions.forEach(formItem => {
         if (formItem.type === 'checkboxGroup') {
-          this.isIndeterminate[formItem.prop] = false
-          this.checkAll[formItem.prop] = false
-          this.checkAll = Object.assign({}, this.checkAll)
-          this.isIndeterminate = Object.assign({}, this.isIndeterminate)
+          this.checkAll = Object.assign({}, this.checkAll, { [formItem.prop]: false })
+          this.isIndeterminate = Object.assign({}, this.isIndeterminate, { [formItem.prop]: false })
           this.handleCheckGroupCheckedChange({ formItem, $event: undefined })
         }
       })
@@ -266,16 +266,9 @@ export default {
     },
 
     handleCheckGroupCheckedChange({ formItem, $event }) {
-      let allLength = 0
-      formItem.options.map(op => {
-        if (!op.disabled) {
-          allLength++
-        }
-      })
-      this.checkAll[formItem.prop] = (this.currentValue[formItem.prop].length === allLength)
-      this.isIndeterminate[formItem.prop] = ((this.currentValue[formItem.prop].length > 0) && (this.currentValue[formItem.prop].length < allLength))
-      // this.checkAll = Object.assign({}, this.checkAll)
-      // this.isIndeterminate = Object.assign({}, this.isIndeterminate)
+      const allLength = formItem.options.filter(op => !op.disabled).length
+      this.checkAll = Object.assign({}, this.checkAll, { [formItem.prop]: !!(allLength && this.currentValue[formItem.prop].length === allLength) })
+      this.isIndeterminate = Object.assign({}, this.isIndeterminate, { [formItem.prop]: !!(this.currentValue[formItem.prop].length > 0 && this.currentValue[formItem.prop].length < allLength) })
       this.$emit('handleCheckGroupCheckedChange', { formItem, $event })
     }
   }
