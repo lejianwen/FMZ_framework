@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <el-card shadow="always">
     <el-form
       v-if="formOptions.length"
       :ref="refId"
       :model="currentValue"
-      label-position="right"
+      :label-position="labelPosition"
       :label-width="labelWidth"
-      :rules="rules"
-      :disabled="disabled"
+      :size="size"
+      v-bind="$attrs"
       class="base-form"
     >
       <template v-for="(formItem,index) in formOptions">
@@ -27,7 +27,7 @@
             v-if="formItem.type === 'select'"
             v-model="currentValue[formItem.prop]"
             :placeholder="formItem.placeholder"
-            :multiple="formItem.multiple?true:false"
+            :multiple="!!formItem.multiple"
             clearable
             :allow-create="formItem.allowCreate||false"
             :disabled="formItem.disabled||false"
@@ -81,8 +81,8 @@
           <el-date-picker
             v-if="formItem.type === 'date'"
             v-model="currentValue[formItem.prop]"
-            :format="formItem.format ? formItem.format : 'yyyy-MM-dd'"
-            :value-format="formItem.vauleFormat ? formItem.vauleFormat : 'yyyy-MM-dd'"
+            :format="formItem.format || 'yyyy-MM-dd'"
+            :value-format="formItem.vauleFormat || 'yyyy-MM-dd'"
             type="date"
             :placeholder="formItem.placeholder || '选择日期'"
             :disabled="formItem.disabled||false"
@@ -90,8 +90,8 @@
           <el-date-picker
             v-if="formItem.type === 'datetime'"
             v-model="currentValue[formItem.prop]"
-            :format="formItem.format ? formItem.format : 'yyyy-MM-dd HH:mm:ss'"
-            :value-format="formItem.valueFormat ? formItem.valueFormat : 'yyyy-MM-dd HH:mm:ss'"
+            :format="formItem.format || 'yyyy-MM-dd HH:mm:ss'"
+            :value-format="formItem.valueFormat || 'yyyy-MM-dd HH:mm:ss'"
             type="datetime"
             :placeholder="formItem.placeholder || '选择时间'"
             :disabled="formItem.disabled||false"
@@ -99,8 +99,8 @@
           <el-time-picker
             v-if="formItem.type === 'timepicker'"
             v-model="currentValue[formItem.prop]"
-            :format="formItem.format ? formItem.format : 'HH:mm:ss'"
-            :value-format="formItem.valueFormat ? formItem.valueFormat : 'HH:mm:ss'"
+            :format="formItem.format || 'HH:mm:ss'"
+            :value-format="formItem.valueFormat ||'HH:mm:ss'"
             :placeholder="formItem.placeholder || '选择时间'"
             :picker-options="formItem.options"
             :disabled="formItem.disabled||false"
@@ -115,13 +115,13 @@
 
           <el-upload
             v-if="formItem.type === 'file'"
-            :on-success="formItem.onSuccess ? formItem.onSuccess : null"
-            :on-remove="formItem.onRemove?formItem.onRemove:()=>{}"
-            :before-upload="formItem.beforeUpload?formItem.beforeUpload:()=>{}"
+            :on-success="formItem.onSuccess || null"
+            :on-remove="formItem.onRemove||null "
+            :before-upload="formItem.beforeUpload||null"
             :name="formItem.name"
             :action="formItem.action"
             :file-list="formItem.fileList"
-            :limit="formItem.limit?formItem.limit:0"
+            :limit="formItem.limit||0"
             :disabled="formItem.disabled||false"
           >
             <el-button size="small" type="primary">点击上传</el-button>
@@ -130,13 +130,13 @@
 
           <el-upload
             v-if="formItem.type === 'images'"
-            :on-success="formItem.onSuccess?formItem.onSuccess:()=>{}"
-            :on-remove="formItem.onRemove?formItem.onRemove:()=>{}"
-            :before-upload="formItem.beforeUpload?formItem.beforeUpload:()=>{}"
+            :on-success="formItem.onSuccess||null"
+            :on-remove="formItem.onRemove||null"
+            :before-upload="formItem.beforeUpload||null"
             :name="formItem.name"
             :action="formItem.action"
             :file-list="formItem.fileList"
-            :limit="formItem.limit?formItem.limit:0"
+            :limit="formItem.limit||0"
             :disabled="formItem.disabled||false"
             :multiple="formItem.multiple||false"
             list-type="picture-card"
@@ -150,8 +150,8 @@
             :name="formItem.name"
             :action="formItem.action"
             :show-file-list="false"
-            :on-success="formItem.onSuccess ? formItem.onSuccess : null"
-            :before-upload="formItem.beforeUpload ? formItem.beforeUpload : null"
+            :on-success="formItem.onSuccess||null"
+            :before-upload="formItem.beforeUpload||null"
             :disabled="formItem.disabled||false"
           >
             <img v-if="currentValue[formItem.prop]" :src="currentValue[formItem.prop]" class="avatar">
@@ -164,18 +164,18 @@
       </template>
       <!--其他筛选项-->
       <slot name="otherFormItem" />
+      <el-form-item :label-width="labelWidth">
+        <el-button @click="handleCancel">
+          取消
+        </el-button>
+        <el-button type="primary" @click="handleSubmit">
+          提交
+        </el-button>
+        <!--其他按钮-->
+        <slot name="otherButton" />
+      </el-form-item>
     </el-form>
-    <div class="footer-buttons">
-      <el-button @click="handleCancel">
-        取消
-      </el-button>
-      <el-button type="primary" @click="handleSubmit">
-        提交
-      </el-button>
-      <!--其他按钮-->
-      <slot name="otherButton" />
-    </div>
-  </div>
+  </el-card>
 </template>
 
 <script>
@@ -184,23 +184,9 @@ export default {
   name: 'BaseForm',
   components: { Tinymce },
   props: {
-    disabled: {
-      type: Boolean,
-      default: false
-    },
     refId: {
       type: String,
       default: 'baseForm'
-    },
-    rules: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    createBtn: {
-      type: Boolean,
-      default: true
     },
     labelWidth: {
       type: String,
@@ -217,13 +203,20 @@ export default {
       default() {
         return []
       }
+    },
+    size: {
+      type: String,
+      default: 'mini'
+    },
+    labelPosition: {
+      type: String,
+      default: 'right'
     }
   },
   data() {
     return {
-      headimgs: [],
-      isIndeterminate: [],
-      checkAll: []
+      isIndeterminate: {},
+      checkAll: {}
     }
   },
   computed: {
@@ -293,7 +286,4 @@ export default {
 <style>
 </style>
 <style lang="scss" scoped>
-  .footer-buttons {
-    margin-left: 120px;
-  }
 </style>

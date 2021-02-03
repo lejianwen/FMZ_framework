@@ -16,7 +16,7 @@
     </div>
     <listTable
       :list-loading="listLoading"
-      :list="list"
+      :data="list"
       :table-columns="tableColumns"
       @handleUpdate="handleUpdate"
       @handleDetail="handleDetail"

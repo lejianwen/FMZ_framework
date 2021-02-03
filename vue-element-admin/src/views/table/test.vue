@@ -10,7 +10,7 @@
     </div>
     <listTable
       :list-loading="listLoading"
-      :list="list"
+      :data="list"
       :table-columns="tableColumns"
       :merge-actions="mergeActions"
       @handleButtonClick="handleChangeTest"

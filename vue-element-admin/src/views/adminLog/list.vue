@@ -13,7 +13,7 @@
     </div>
     <listTable
       :list-loading="listLoading"
-      :list="list"
+      :data="list"
       :table-columns="tableColumns"
       :actions-update="false"
       :actions-detail="false"

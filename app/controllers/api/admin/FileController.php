@@ -27,7 +27,7 @@ class FileController extends BaseController
         }
 
         File::create($data);
-        return $this->response->json(['code' => 0, 'data' => $path . $name, '$filename' => $filename]);
+        return $this->response->json(['code' => 0, 'data' => $data['host'] . '/' . $path . $name, 'filename' => $filename->getFilename()]);
     }
 
     public function getOssToken()
