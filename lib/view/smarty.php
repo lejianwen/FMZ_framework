@@ -28,7 +28,7 @@ class smarty extends view
             $smarty->force_compile = config('app.smarty.force_compile');
             $smarty->debugging = config('app.smarty.debug');
             $smarty->caching = &config('app.smarty.cache');
-            $smarty->cache_lifetime = config('app.smarty.cache_lefttime');
+            $smarty->cache_lifetime = config('app.smarty.cache_lifetime');
             $this->smarty = $smarty;
         }
         return $this;
@@ -47,12 +47,12 @@ class smarty extends view
      * @throws \SmartyException
      * @author Lejianwen
      */
-    public function fetch($tpl = null)
+    public function fetch($tpl = null, $cache_id = null)
     {
         if (!empty($tpl)) {
             $this->setTpl($tpl);
         }
-        return $this->smarty->fetch($this->tpl);
+        return $this->smarty->fetch($this->tpl, $cache_id);
     }
 
 }
