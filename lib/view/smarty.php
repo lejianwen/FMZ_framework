@@ -25,6 +25,7 @@ class smarty extends view
             $smarty->setCacheDir(config('app.smarty.cache_dir'));
             $smarty->setLeftDelimiter(config('app.smarty.left_delimiter'));
             $smarty->setRightDelimiter(config('app.smarty.right_delimiter'));
+            $smarty->compile_check = config('app.smarty.compile_check');
             $smarty->force_compile = config('app.smarty.force_compile');
             $smarty->debugging = config('app.smarty.debug');
             $smarty->caching = &config('app.smarty.cache');
