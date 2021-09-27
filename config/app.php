@@ -17,6 +17,7 @@ return [
     'view'              => 'smarty',     //模板 smarty||native
     'smarty'            => [             //smarty配置
         'debug'           => env('SMARTY_DEBUG', false),            //是否弹出debug窗口
+        'compile_check'   => env('SMARTY_COMPILE_CHECK', false),
         'force_compile'   => env('SMARTY_FORCE_COMPILE', false),    //检查模板是否改动,开发时打开,正式 关闭
         'cache'           => env('SMARTY_CACHE', true),             //是否缓存
         'cache_lifetime'  => 1200,       //缓存时间
