@@ -35,10 +35,11 @@ class AdminController extends BaseController
 
     public function upPass($admin)
     {
-        if ($this->request->post('password')) {
-            $admin->password = md5($this->request->post('password'));
-            $admin->token = '';
-            $admin->save();
+        $up_admin = $this->model::find(request()->post('id'));
+        if ($up_admin && $this->request->post('password')) {
+            $up_admin->password = md5($this->request->post('password'));
+            $up_admin->token = '';
+            $up_admin->save();
             return $this->jsonSuccess();
         } else {
             return $this->jsonError();

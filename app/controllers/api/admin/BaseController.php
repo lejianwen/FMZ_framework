@@ -37,11 +37,16 @@ class BaseController extends controller
         $this->request = request();
         $this->response = response();
 
-        $path = explode('\\', static::class);
-        $class_name = array_pop($path);
-        $class_name = str_replace('Controller', '', $class_name);
-        $this->model_name = ucfirst($class_name);
-        $this->model = 'app\\models\\' . $this->model_name;
+        if (!$this->model_name) {
+            $path = explode('\\', static::class);
+            $class_name = array_pop($path);
+            $class_name = str_replace('Controller', '', $class_name);
+            $this->model_name = ucfirst($class_name);
+        }
+
+        if (!$this->model) {
+            $this->model = 'app\\models\\' . $this->model_name;
+        }
     }
 
     /**
