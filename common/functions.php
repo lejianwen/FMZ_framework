@@ -150,7 +150,7 @@ function getPinYinFirstChar($zh)
  * @param int $num
  * @param $callback
  * @example
- * doByFork($num, function ($i) use ($num) {
+ * doByFork(function ($i) use ($num) {
  *  for ($j = 0; $j < 10; $j++) {
  *      if ($j % $num == $i) {
  *          echo $i . '-' . $j . PHP_EOL;
@@ -160,9 +160,9 @@ function getPinYinFirstChar($zh)
  *      }
  *  }
  *  exit;
- * });
+ * },$num);
  */
-function doByFork($num = 10, $callback)
+function doByFork($callback, $num = 10)
 {
     $pid = [];
     for ($i = 0; $i < $num; $i++) {
@@ -245,7 +245,7 @@ if (!function_exists('config')) {
 }
 /**单例实例化
  * @param $name
- * @return mixed
+ * @return mixed|\lib\@param
  */
 if (!function_exists('app')) {
     function app($name, $conf = null)
@@ -369,7 +369,7 @@ function errorLog($message = '', $data = [])
 function appLog($level, $message = '', $data = [])
 {
     $info_log = new \Monolog\Logger('APP_LOG');
-    $info_log->pushHandler(new \Monolog\Handler\StreamHandler(RUNTIME_PATH . 'app/' . date('Y-m-d') . '.log', $level));
+    $info_log->pushHandler(new \Monolog\Handler\StreamHandler(RUNTIME_PATH . 'app/' . date('Y-m/d') . '.log', $level));
     $info_log->$level($message, $data);
 }
 
