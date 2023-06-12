@@ -22,8 +22,8 @@ class controller
 
     public function __construct()
     {
-        $this->request = request();
-        $this->response = response();
+        $this->request = app('request');
+        $this->response = app('response');
     }
 
 }

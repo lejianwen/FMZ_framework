@@ -8,8 +8,8 @@
  */
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class bootstrap
 {
@@ -138,6 +138,7 @@ class bootstrap
         setlocale(LC_ALL, "zh_CN.utf-8");
         //设置根路径
         defined('BASE_PATH') or define('BASE_PATH', __DIR__ . '/../');
+        defined('CONFIG_PATH') or define('CONFIG_PATH', __DIR__ . '/../config/');
         //设置web根路径
         defined('WEB_ROOT') or define('WEB_ROOT', BASE_PATH . 'public/');
         //设置runtime路径
