@@ -63,6 +63,9 @@ class request extends \Symfony\Component\HttpFoundation\Request
 
     public function header($name = '', $default = null)
     {
+        if ($name == '') {
+            return $this->headers->all();
+        }
         return $this->headers->get($name, $default);
     }
 
