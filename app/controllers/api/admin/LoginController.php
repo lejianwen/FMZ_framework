@@ -9,11 +9,14 @@
 
 namespace app\controllers\api\admin;
 
+use app\controllers\jsonResponse;
 use app\models\Admin;
 use lib\controller;
 
 class LoginController extends controller
 {
+    use jsonResponse;
+
     public function login()
     {
         $username = $this->request->post('username');
@@ -21,14 +24,13 @@ class LoginController extends controller
         $admin = Admin::where(['username' => $username, 'password' => md5($password)])->first();
 
         if (!$admin || !$admin->id) {
-            return $this->response->json(['code' => 401, 'msg' => '用户名或密码错误!']);
+            return $this->jsonError('用户名或密码错误', 401);
         } else {
-            $admin->token = md5($admin->id . mt_rand(1000,9999));
+            $admin->token = md5($admin->id . mt_rand(1000, 9999));
             $admin->token_expire_time = date('Y-m-d H:i:s', strtotime("+ 30 days"));
             $admin->save();
-            return $this->response->json(['code' => 200, 'msg' => '登录成功!', 'token' => $admin->token, 'info' => $admin]);
+            return $this->jsonSuccess($admin);
         }
-
     }
 
     public function logout()

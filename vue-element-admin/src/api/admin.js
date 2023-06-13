@@ -1,69 +1,47 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function list (params) {
   return request({
-    url: '/login',
-    method: 'post',
-    data
+    url: '/admin/index',
+    params,
   })
 }
 
-export function logout() {
+export function detail (id) {
   return request({
-    url: '/logout',
-    method: 'post'
-  })
-}
-export function info() {
-  return request({
-    url: '/info',
-    method: 'get'
-  })
-}
-export function upPass(data) {
-  return request({
-    url: '/upPass',
-    method: 'post',
-    data
-  })
-}
-const model = 'admin'
-export function fetchList(query = {}) {
-  return request({
-    url: `/${model}/index`,
-    method: 'get',
-    params: query
+    url: '/admin/detail',
+    params: {id},
   })
 }
 
-export function deleteItem(data) {
+export function create (data) {
   return request({
-    url: `/${model}/delete`,
+    url: '/admin/create',
     method: 'post',
-    data
+    data,
   })
 }
 
-export function createItem(data) {
+export function update (data) {
   return request({
-    url: `/${model}/create`,
+    url: '/admin/update',
     method: 'post',
-    data
+    data,
   })
 }
 
-export function updateItem(data) {
+export function remove (data) {
   return request({
-    url: `/${model}/update`,
+    url: '/admin/delete',
     method: 'post',
-    data
+    data,
   })
 }
 
-export function itemDetail(id) {
+export function changePwd (data) {
   return request({
-    url: `/${model}/detail`,
-    method: 'get',
-    params: { id }
+    url: '/admin/upPass',
+    method: 'post',
+    data,
   })
 }

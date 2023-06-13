@@ -1,11 +1,19 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <router-view/>
 </template>
-
 <script>
-export default {
-  name: 'App'
-}
+  import { defineComponent, ref, onMounted } from 'vue'
+
+  export default defineComponent({
+    props: {},
+    setup (props) {
+    },
+    created () {
+
+    },
+  })
+
+
 </script>
+<style>
+</style>

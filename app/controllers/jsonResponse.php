@@ -23,7 +23,7 @@ trait jsonResponse
      * @param int $code
      * @return \lib\response|mixed
      */
-    protected function jsonSuccess($data = [], $msg = '', $code = 200)
+    protected function jsonSuccess($data = [], $msg = '', $code = 0)
     {
         return response()->json(compact('data', 'msg', 'code'));
     }

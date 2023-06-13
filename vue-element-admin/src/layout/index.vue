@@ -1,93 +1,85 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" />
-    <div class="main-container">
-      <div :class="{'fixed-header':fixedHeader}">
-        <navbar />
-        <tags-view v-if="needTagsView" />
+  <el-container>
+    <el-aside :width="leftWidth" class="app-left">
+      <g-aside></g-aside>
+    </el-aside>
+    <el-container class="app-container ">
+      <el-header class="app-header">
+        <g-header></g-header>
+      </el-header>
+      <div class="header-tags">
+        <tags></tags>
       </div>
-      <app-main />
-    </div>
-  </div>
+
+      <el-main class="app-main">
+        <router-view v-slot="{ Component }">
+          <transition mode="out-in" name="el-fade-in-linear">
+            <keep-alive :include="[...cachedTags]">
+              <component :is="Component"/>
+            </keep-alive>
+          </transition>
+        </router-view>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain, TagsView } from './components'
-import ResizeMixin from './mixin/ResizeHandler'
-import { mapState } from 'vuex'
-export default {
-  name: 'Layout',
-  components: {
-    Navbar,
-    Sidebar,
-    AppMain,
-    TagsView
-  },
-  mixins: [ResizeMixin],
-  computed: {
-    ...mapState({
-      sidebar: state => state.app.sidebar,
-      device: state => state.app.device,
-      showSettings: state => state.settings.showSettings,
-      needTagsView: state => state.settings.tagsView,
-      fixedHeader: state => state.settings.fixedHeader
-    }),
-    classObj() {
+  import { useUserStore } from '@/store/user'
+  import { useRouteStore } from '@/store/router'
+  import { useAppStore } from '@/store/app'
+  import { useTagsStore } from '@/store/tags'
+  import LayerHeader from '@/layout/components/header.vue'
+  import { defineComponent, ref, onMounted, watch, reactive, computed, toRef } from 'vue'
+  import Tags from '@/layout/components/tags/index.vue'
+  import GAside from '@/layout/components/aside.vue'
+  import GHeader from '@/layout/components/header.vue'
+
+  export default defineComponent({
+    name: 'Layout',
+    components: { LayerHeader, Tags, GAside, GHeader },
+    setup (props) {
+      const userStore = useUserStore()
+      const appStore = useAppStore()
+      const tagStore = useTagsStore()
+
+      const leftWidth = computed(() => appStore.setting.sideIsCollapse ? '64px' : '210px')
+
+      const cachedTags = ref([])
+
+      cachedTags.value = tagStore.cached
+
       return {
-        hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
+        cachedTags,
+        leftWidth,
       }
-    }
-  },
-  methods: {
-    handleClickOutside() {
-      this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
-    }
-  }
-}
+    },
+  })
 </script>
 
 <style lang="scss" scoped>
-  @import "~@/styles/mixin.scss";
-  @import "~@/styles/variables.scss";
+  .app-header {
+    background-color: #3f454b;
+    color: var(--basicWhite);
+    display: flex;
+    height: 50px;
+  }
 
-  .app-wrapper {
-    @include clearfix;
-    position: relative;
+  .header-tags {
+    height: auto;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    padding: 0;
+  }
+
+  .app-left {
     height: 100%;
-    width: 100%;
-    &.mobile.openSidebar{
-      position: fixed;
-      top: 0;
-    }
-  }
-  .drawer-bg {
-    background: #000;
-    opacity: 0.3;
-    width: 100%;
-    top: 0;
-    height: 100%;
-    position: absolute;
-    z-index: 999;
+    transition: width 0.5s;
   }
 
-  .fixed-header {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
-    transition: width 0.28s;
-  }
-
-  .hideSidebar .fixed-header {
-    width: calc(100% - 54px)
-  }
-
-  .mobile .fixed-header {
-    width: 100%;
+  .app-container {
+    min-height: 100vh;
   }
 </style>
+
+

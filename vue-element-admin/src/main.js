@@ -1,37 +1,20 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
+import 'element-plus/dist/index.css'
+import App from './App.vue'
+import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import { router } from '@/router'
+import 'normalize.css/normalize.css'
+import { pinia } from '@/store'
+import '@/permission'
+import '@/styles/style.scss'
+import * as ElementIcons from '@element-plus/icons'
 
-import 'normalize.css/normalize.css' // A modern alternative to CSS resets
-
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
-
-import '@/styles/index.scss' // global css
-
-import App from './App'
-import store from './store'
-import router from './router'
-
-import '@/icons' // icon
-import '@/permission' // permission control
-/**
- * If you don't want to use mock-server
- * you want to use mockjs for request interception
- * you can execute:
- *
- * import { mockXHR } from '../mock'
- * mockXHR()
- */
-import { mockXHR } from '../mock'
-mockXHR()
-// set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
-
-Vue.config.productionTip = false
-
-new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
-})
+const app = createApp(App)
+app.use(ElementPlus, { locale: zhCn })
+app.use(pinia)
+app.use(router)
+for (let icon in ElementIcons){
+  app.component("ElIcon" +icon ,ElementIcons[icon])
+}
+app.mount('#app')

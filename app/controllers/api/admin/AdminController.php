@@ -10,18 +10,14 @@
 namespace app\controllers\api\admin;
 
 
-use app\models\Admin;
-use app\models\AdminRole;
-
 class AdminController extends BaseController
 {
     protected $filters = ['nickname' => 'like'];
-    protected $with = ['role'];
 
     public function info($admin)
     {
-        $role = AdminRole::find($admin->role_id);
-        return $this->jsonSuccess(['role' => $role, 'info' => $admin]);
+        $admin->load(['role']);
+        return $this->jsonSuccess($admin);
     }
 
     protected function afterUpdate($item, $old = null)
