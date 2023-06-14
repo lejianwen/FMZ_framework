@@ -37,54 +37,35 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, onMounted, watch } from 'vue'
-import { useRepositories, useToEditOrAdd, actions } from '@/views/admin/composables'
+<script setup>
+import { onMounted, watch } from 'vue'
+import { actions, useRepositories, useToEditOrAdd } from '@/views/admin/composables'
+//列表
+const {
+  listRes,
+  listQuery,
+  handlerQuery,
+  getList,
+} = useRepositories()
 
-export default defineComponent({
-  name: 'AdminList',
-  setup (props) {
+onMounted(getList)
 
-    //列表
-    const {
-      listRes,
-      listQuery,
-      handlerQuery,
-      getList,
-    } = useRepositories()
+watch(() => listQuery.page, getList)
 
-    onMounted(getList)
+watch(() => listQuery.page_size, () => listQuery.page > 1 ? (listQuery.page = 1) : getList())
 
-    watch(() => listQuery.page, getList)
+const { toEdit, toAdd } = useToEditOrAdd()
 
-    watch(() => listQuery.page_size, () => listQuery.page > 1 ? (listQuery.page = 1) : getList())
+const { changePass, del } = actions()
+//删除
+const remove = async (row) => {
+  const res = await del(row.id)
+  if (res) {
+    getList(listQuery)
+  }
+}
 
-    const { toEdit, toAdd } = useToEditOrAdd()
 
-    const { changePass, del } = actions()
-
-    //删除
-    const remove = async (row) => {
-      const res = await del(row.id)
-      if (res) {
-        getList(listQuery)
-      }
-    }
-
-    return {
-      listRes,
-      listQuery,
-      handlerQuery,
-      toEdit,
-      toAdd,
-
-      changePass,
-      remove,
-
-    }
-  },
-
-})
 </script>
 
 <style scoped>

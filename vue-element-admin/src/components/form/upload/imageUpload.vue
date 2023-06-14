@@ -33,13 +33,12 @@
   </div>
 </template>
 <script>
-  import { defineComponent, ref, computed, reactive, unref, readonly, toRefs } from 'vue'
-  import { Plus, ZoomIn, Delete, ArrowLeft, ArrowRight, Check } from '@element-plus/icons'
-  import { useOss } from '@/components/form/upload/oss'
-  import { ElMessage } from 'element-plus'
-  import { useLocal } from '@/components/form/upload/local'
+import { computed, defineComponent, reactive, ref, toRefs, unref } from 'vue'
+import { ArrowLeft, ArrowRight, Check, Delete, Plus, ZoomIn } from '@element-plus/icons'
+import { useOss } from '@/components/form/upload/oss'
+import { useLocal } from '@/components/form/upload/local'
 
-  export default defineComponent({
+export default defineComponent({
     name: 'imageUpload',
     props: {
       limit: {

@@ -11,13 +11,13 @@
 </template>
 
 <script>
-  import { defineComponent, computed } from 'vue'
-  import HeaderMenu from '@/layout/components/menu/index.vue'
-  import Setting from '@/layout/components/setting/index.vue'
-  import { useAppStore } from '@/store/app'
-  import GTags from '@/layout/components/tags/index.vue'
+import { computed, defineComponent } from 'vue'
+import HeaderMenu from '@/layout/components/menu/index.vue'
+import Setting from '@/layout/components/setting/index.vue'
+import { useAppStore } from '@/store/app'
+import GTags from '@/layout/components/tags/index.vue'
 
-  export default defineComponent({
+export default defineComponent({
     name: 'LayerHeader',
     created () {
     },

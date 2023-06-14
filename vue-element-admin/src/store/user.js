@@ -1,7 +1,6 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { info, login } from '@/api/user'
-import { setToken, removeToken } from '@/utils/auth'
-import { useRouteStore } from '@/store/router'
+import { removeToken, setToken } from '@/utils/auth'
 
 export const useUserStore = defineStore({
   id: 'user',

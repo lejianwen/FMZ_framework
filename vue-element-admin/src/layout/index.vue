@@ -25,17 +25,16 @@
 </template>
 
 <script>
-  import { useUserStore } from '@/store/user'
-  import { useRouteStore } from '@/store/router'
-  import { useAppStore } from '@/store/app'
-  import { useTagsStore } from '@/store/tags'
-  import LayerHeader from '@/layout/components/header.vue'
-  import { defineComponent, ref, onMounted, watch, reactive, computed, toRef } from 'vue'
-  import Tags from '@/layout/components/tags/index.vue'
-  import GAside from '@/layout/components/aside.vue'
-  import GHeader from '@/layout/components/header.vue'
+import { useUserStore } from '@/store/user'
+import { useAppStore } from '@/store/app'
+import { useTagsStore } from '@/store/tags'
+import LayerHeader from '@/layout/components/header.vue'
+import GHeader from '@/layout/components/header.vue'
+import { computed, defineComponent, ref } from 'vue'
+import Tags from '@/layout/components/tags/index.vue'
+import GAside from '@/layout/components/aside.vue'
 
-  export default defineComponent({
+export default defineComponent({
     name: 'Layout',
     components: { LayerHeader, Tags, GAside, GHeader },
     setup (props) {

@@ -1,7 +1,7 @@
-import { onMounted, reactive, watch, onActivated } from 'vue'
-import { list, remove, changePwd } from '@/api/admin'
+import { reactive } from 'vue'
+import { changePwd, list, remove } from '@/api/admin'
 import { useRouter } from 'vue-router'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 export function useRepositories () {
 

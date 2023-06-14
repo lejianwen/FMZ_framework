@@ -19,10 +19,10 @@
 </template>
 
 <script>
-  import { defineComponent, reactive } from 'vue'
-  import { useUserStore } from '@/store/user'
+import { defineComponent } from 'vue'
+import { useUserStore } from '@/store/user'
 
-  export default defineComponent({
+export default defineComponent({
     name: 'Setting',
     components: {},
     setup () {

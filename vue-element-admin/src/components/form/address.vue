@@ -13,10 +13,10 @@
 </template>
 
 <script>
-  import { defineComponent, ref, computed } from 'vue'
-  import pca from '@/utils/pca.json'
+import { computed, defineComponent } from 'vue'
+import pca from '@/utils/pca.json'
 
-  export default defineComponent({
+export default defineComponent({
     name: 'FormAddress',
     props: {
       prop: {

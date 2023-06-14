@@ -13,13 +13,13 @@
 </template>
 
 <script>
-  import { defineComponent, ref, onMounted, watch, computed } from 'vue'
-  import { useRouteStore } from '@/store/router'
-  import MenuItem from '@/layout/components/menu/item.vue'
-  import { useRoute } from 'vue-router'
-  import { useAppStore } from '@/store/app'
+import { computed, defineComponent, ref } from 'vue'
+import { useRouteStore } from '@/store/router'
+import MenuItem from '@/layout/components/menu/item.vue'
+import { useRoute } from 'vue-router'
+import { useAppStore } from '@/store/app'
 
-  export default defineComponent({
+export default defineComponent({
     name: 'Menu',
     created () {
     },

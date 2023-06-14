@@ -1,5 +1,5 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { lastRoutes, asyncRoutes, router } from '@/router'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+import { asyncRoutes, lastRoutes, router } from '@/router'
 
 function filterRoute (routes, enableNames) {
   return routes.filter(route => {

@@ -21,38 +21,18 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, onMounted } from 'vue'
+<script setup>
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useGetDetail, useSubmit } from '@/views/admin/composables/edit'
-import { ENABLE_STATUS, DISABLE_STATUS } from '@/utils/common_options'
 
-export default defineComponent({
-  name: 'AdminEdit',
-  props: {},
-  setup (props, context) {
-    const route = useRoute()
-    const { form, item, getDetail } = useGetDetail(route.params.id)
-    if (route.params.id > 0) {
-      onMounted(getDetail)
-    }
-    const { root, rules, validate, submit, cancel } = useSubmit(form, route.params.id)
+const route = useRoute()
+const { form, item, getDetail } = useGetDetail(route.params.id)
+if (route.params.id > 0) {
+  onMounted(getDetail)
+}
+const { root, rules, validate, submit, cancel } = useSubmit(form, route.params.id)
 
-    return {
-      form,
-      item,
-      getDetail,
-
-      rules,
-      validate,
-      root,
-      submit,
-      cancel,
-
-      ENABLE_STATUS, DISABLE_STATUS,
-    }
-  },
-})
 </script>
 
 <style lang="scss" scoped>

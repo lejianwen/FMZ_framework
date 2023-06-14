@@ -12,11 +12,11 @@
 </template>
 
 <script>
-  import { defineComponent, ref, onMounted, watch } from 'vue'
-  import { useTagsStore } from '@/store/tags'
-  import { useRoute, useRouter } from 'vue-router'
+import { defineComponent, onMounted, ref, watch } from 'vue'
+import { useTagsStore } from '@/store/tags'
+import { useRoute, useRouter } from 'vue-router'
 
-  export default defineComponent({
+export default defineComponent({
     name: 'Index',
     setup () {
       const tags = ref([])

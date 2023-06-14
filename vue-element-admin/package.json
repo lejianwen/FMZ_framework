@@ -1,14 +1,14 @@
 {
-  "name": "hello-vue3",
-  "version": "0.0.0",
+  "name": "vue-element-admin",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview --config vite.config.js"
+    "preview": "vite preview"
   },
   "dependencies": {
     "axios": "^0.24.0",
-    "element-plus": "^2.2.9",
+    "element-plus": "^2.3.6",
     "js-cookie": "^3.0.1",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
@@ -18,11 +18,11 @@
   },
   "devDependencies": {
     "@element-plus/icons": "0.0.11",
-    "@vitejs/plugin-vue": "^1.9.3",
+    "@vitejs/plugin-vue": "^1.10.2",
     "dotenv": "^10.0.0",
     "qs": "^6.11.2",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0",
-    "vite": "^2.6.4"
+    "vite": "^2.9.16"
   }
 }

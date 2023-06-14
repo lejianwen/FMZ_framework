@@ -1,7 +1,7 @@
 import { router } from '@/router'
 import { useRouteStore } from '@/store/router'
 import { useUserStore } from '@/store/user'
-import { getToken, removeToken } from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 import { pinia } from '@/store'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'

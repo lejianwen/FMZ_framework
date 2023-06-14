@@ -80,9 +80,9 @@
 </template>
 
 <script>
-  import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref } from 'vue'
 
-  export default defineComponent({
+export default defineComponent({
     name: 'Home',
     setup () {
       const todoList = ref([
