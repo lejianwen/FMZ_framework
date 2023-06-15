@@ -20,15 +20,6 @@ class AdminController extends BaseController
         return $this->jsonSuccess($admin);
     }
 
-    protected function afterUpdate($item, $old = null)
-    {
-        if ($this->request->post('password')) {
-            $item->password = md5($item->password);
-            $item->token = '';
-            $item->save();
-        }
-    }
-
     public function upPass($admin)
     {
         $up_admin = $this->model::find(request()->post('id'));

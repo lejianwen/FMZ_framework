@@ -22,7 +22,6 @@ class LoginController extends controller
         $username = $this->request->post('username');
         $password = $this->request->post('password');
         $admin = Admin::where(['username' => $username, 'password' => md5($password)])->first();
-
         if (!$admin || !$admin->id) {
             return $this->jsonError('用户名或密码错误', 401);
         } else {

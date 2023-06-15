@@ -39,7 +39,8 @@
 
 <script setup>
 import { onMounted, watch } from 'vue'
-import { actions, useRepositories, useToEditOrAdd } from '@/views/admin/composables'
+import { actions, useRepositories } from '@/views/admin/composables'
+import { useRouter } from 'vue-router'
 //列表
 const {
   listRes,
@@ -54,8 +55,6 @@ watch(() => listQuery.page, getList)
 
 watch(() => listQuery.page_size, () => listQuery.page > 1 ? (listQuery.page = 1) : getList())
 
-const { toEdit, toAdd } = useToEditOrAdd()
-
 const { changePass, del } = actions()
 //删除
 const remove = async (row) => {
@@ -65,6 +64,13 @@ const remove = async (row) => {
   }
 }
 
+const router = useRouter()
+const toEdit = (row) => {
+  router.push('/admin/edit/' + row.id)
+}
+const toAdd = () => {
+  router.push('/admin/add')
+}
 
 </script>
 

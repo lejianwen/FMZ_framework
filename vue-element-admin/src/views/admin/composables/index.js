@@ -41,23 +41,7 @@ export function useRepositories () {
   }
 }
 
-export function useToEditOrAdd () {
-  const router = useRouter()
-  const toEdit = (row) => {
-    router.push('/admin/edit/' + row.id)
-  }
-  const toAdd = () => {
-    router.push('/admin/add')
-  }
-
-  return {
-    toAdd,
-    toEdit,
-  }
-}
-
-export function actions(){
-
+export function actions () {
   const del = async (id) => {
     const cf = await ElMessageBox.confirm('确定删除么?', {
       confirmButtonText: '确定',
@@ -95,9 +79,8 @@ export function actions(){
   }
 
   return {
-    del,changePass
+    del, changePass,
   }
-
 
 }
 
