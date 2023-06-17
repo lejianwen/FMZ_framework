@@ -22,53 +22,24 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useGetDetail, useSubmit } from '@/views/admin/composables/edit'
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useLoadDetail, useActions } from '@/views/admin/composables/edit'
 import { ENABLE_STATUS, DISABLE_STATUS } from '@/utils/common_options'
-import { ElMessage } from 'element-plus'
 
 const route = useRoute()
 
-const { form, item, getDetail } = useGetDetail()
+const { form, item, getDetail } = useLoadDetail()
 if (route.params.id > 0) {
   onMounted(_ => getDetail(route.params.id))
 }
 
-const router = useRouter()
-const root = ref(null)
-const rules = reactive({
-  username: [{ required: true, message: '用户名是必须的' }],
-  nickname: [{ required: true, message: '昵称是必须的' }],
-  status: [{ required: true, message: '请选择状态' }],
-})
-const validate = async () => {
-  const res = await root.value.validate().catch(err => false)
-  return res
-}
-
 const {
-  submitCreate,
-  submitUpdate,
-} = useSubmit(form, route.params.id)
-
-const submitFunc = route.params.id > 0 ? submitUpdate : submitCreate
-
-const submit = async () => {
-  const v = await validate()
-  if (!v) {
-    return
-  }
-
-  const res = await submitFunc()
-  if (res) {
-    ElMessage.success('操作成功')
-    router.back()
-  }
-}
-const cancel = () => {
-  router.back()
-}
+  submit,
+  cancel,
+  root,
+  rules,
+} = useActions(form)
 </script>
 
 <style lang="scss" scoped>

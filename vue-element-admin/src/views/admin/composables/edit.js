@@ -3,7 +3,7 @@ import { create, detail, update } from '@/api/admin'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 
-export function useGetDetail () {
+export function useLoadDetail () {
   let item = ref({})  //保留原始值
   let form = ref({})
   const getDetail = async (id) => {
@@ -22,22 +22,43 @@ export function useGetDetail () {
   }
 }
 
-export function useSubmit (form) {
+export function useActions (form) {
+  const router = useRouter()
+  const root = ref(null)
+  const rules = reactive({
+    username: [{ required: true, message: '用户名是必须的' }],
+    nickname: [{ required: true, message: '昵称是必须的' }],
+    status: [{ required: true, message: '请选择状态' }],
+  })
 
-  const submitCreate = async () => {
-    const res = await create(form.value).catch(_ => false)
-    return res.code === 0
+  const submit = async () => {
+    const v = await root.value.validate().catch(err => false)
+    if (!v) {
+      return
+    }
+    if (form.value.id > 0) {
+      const res = await update(form.value).catch(_ => false)
+      if (res) {
+        ElMessage.success('操作成功')
+        router.back()
+      }
+    } else {
+      const res = await create(form.value).catch(_ => false)
+      if (res) {
+        ElMessage.success('操作成功')
+        router.back()
+      }
+    }
   }
 
-  const submitUpdate = async () => {
-    const res = await update(form.value).catch(_ => false)
-    return res.code === 0
+  const cancel = () => {
+    router.back()
   }
 
   return {
-    submitCreate,
-    submitUpdate,
+    submit,
+    cancel,
+    rules,
+    root,
   }
 }
-
-
