@@ -20,7 +20,7 @@
           <template #default="{row}">
             <el-button size="small" @click="toEdit(row)">编辑</el-button>
             <el-button size="small" @click="changePass(row)">重置密码</el-button>
-            <el-button size="small" type="danger" @click="remove(row)">删除</el-button>
+            <el-button size="small" type="danger" @click="del(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -39,38 +39,24 @@
 
 <script setup>
 import { onMounted, watch } from 'vue'
-import { actions, useRepositories } from '@/views/admin/composables'
-import { useRouter } from 'vue-router'
+import { useActions, useRepositories } from '@/views/admin/composables'
 //列表
 const {
   listRes,
   listQuery,
-  handlerQuery,
   getList,
+  handlerQuery,
 } = useRepositories()
 
 onMounted(getList)
 
 watch(() => listQuery.page, getList)
 
-watch(() => listQuery.page_size, () => listQuery.page > 1 ? (listQuery.page = 1) : getList())
+watch(() => listQuery.page_size, handlerQuery)
 
-const { changePass, del } = actions()
+const { changePass, del, toEdit, toAdd } = useActions(handlerQuery)
 //删除
-const remove = async (row) => {
-  const res = await del(row.id)
-  if (res) {
-    getList(listQuery)
-  }
-}
 
-const router = useRouter()
-const toEdit = (row) => {
-  router.push('/admin/edit/' + row.id)
-}
-const toAdd = () => {
-  router.push('/admin/add')
-}
 
 </script>
 

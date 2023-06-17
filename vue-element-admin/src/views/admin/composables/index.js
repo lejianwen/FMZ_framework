@@ -23,51 +23,39 @@ export function useRepositories () {
       listRes.total = res.data.total
     }
   }
-
   const handlerQuery = () => {
-    if (listQuery.page === 1) {
-      getList()
-    } else {
+    if (listQuery.page > 1) {
       listQuery.page = 1
-      //由watch 触发
     }
+    getList()
   }
-
   return {
     listRes,
     listQuery,
-    handlerQuery,
     getList,
+    handlerQuery,
   }
 }
 
-export function actions () {
-  const del = async (id) => {
-    const cf = await ElMessageBox.confirm('确定删除么?', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }).catch(_ => false)
+export function useActions (handlerQuery) {
+  const del = async (row) => {
+    const cf = await ElMessageBox.confirm('确定删除么?', { type: 'warning' }).catch(_ => false)
     if (!cf) {
       return false
     }
 
-    const res = remove({ id }).catch(_ => false)
-    return res
+    const res = await remove({ id: row.id }).catch(_ => false)
+    if (res && res.code === 0) {
+      handlerQuery()
+    }
   }
 
   const changePass = async (admin) => {
-    const input = await ElMessageBox.prompt('请输入新密码', '重置密码', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-    }).catch(_ => false)
+    const input = await ElMessageBox.prompt('请输入新密码', '重置密码').catch(_ => false)
     if (!input) {
       return
     }
-    const confirm = await ElMessageBox.confirm('确定重置密码么？', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-    }).catch(_ => false)
+    const confirm = await ElMessageBox.confirm('确定重置密码么？', { type: 'warning' }).catch(_ => false)
     if (!confirm) {
       return
     }
@@ -76,10 +64,19 @@ export function actions () {
       return
     }
     ElMessage.success('修改成功')
+    handlerQuery()
+  }
+
+  const router = useRouter()
+  const toEdit = (row) => {
+    router.push('/admin/edit/' + row.id)
+  }
+  const toAdd = () => {
+    router.push('/admin/add')
   }
 
   return {
-    del, changePass,
+    del, changePass, toEdit, toAdd,
   }
 
 }
