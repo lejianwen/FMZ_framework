@@ -23,7 +23,7 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useLoadDetail, useActions } from '@/views/admin/composables/edit'
 import { ENABLE_STATUS, DISABLE_STATUS } from '@/utils/common_options'
 
@@ -34,12 +34,16 @@ if (route.params.id > 0) {
   onMounted(_ => getDetail(route.params.id))
 }
 
+const router = useRouter()
 const {
   submit,
   cancel,
   root,
   rules,
-} = useActions(form)
+} = useActions(form, {
+  success: () => { router.back() },
+  cancel: () => { router.back() },
+})
 </script>
 
 <style lang="scss" scoped>

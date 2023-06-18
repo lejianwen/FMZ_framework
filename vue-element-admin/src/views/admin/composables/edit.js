@@ -22,8 +22,8 @@ export function useLoadDetail () {
   }
 }
 
-export function useActions (form) {
-  const router = useRouter()
+export function useActions (form, callback = { success: () => {}, cancel: () => {} }) {
+
   const root = ref(null)
   const rules = reactive({
     username: [{ required: true, message: '用户名是必须的' }],
@@ -40,19 +40,19 @@ export function useActions (form) {
       const res = await update(form.value).catch(_ => false)
       if (res) {
         ElMessage.success('操作成功')
-        router.back()
+        callback.success()
       }
     } else {
       const res = await create(form.value).catch(_ => false)
       if (res) {
         ElMessage.success('操作成功')
-        router.back()
+        callback.cancel()
       }
     }
   }
 
   const cancel = () => {
-    router.back()
+    callback.cancel()
   }
 
   return {
