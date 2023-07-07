@@ -20,7 +20,7 @@ class file extends cache
     {
         $this->file_dir = config('app.cache_file_dir');
         if (!is_dir($this->file_dir)) {
-            @mkdir($this->file_dir, 0777, true);
+            @mkdir($this->file_dir, 0766, true);
         }
         $this->expire = config('app.cache_expire');
 //        $this->gc();
@@ -38,7 +38,7 @@ class file extends cache
 //        }
         $file = $this->getCacheFile($key);
         if (@file_put_contents($file, $value, LOCK_EX) == strlen($value)) {
-            @chmod($file, 0777);
+            @chmod($file, 0666);
             return @touch($file, $expire);
         }
         return false;
