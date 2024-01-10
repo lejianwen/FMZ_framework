@@ -10,16 +10,23 @@
 namespace lib;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * 改成返回\Symfony\Component\HttpFoundation\Request
+ * 继承Symfony的request类
  * Class request
- * @package lib
  */
 class request extends \Symfony\Component\HttpFoundation\Request
 {
     public $file_objs;
     static $self;
+
+    /**
+     * The decoded JSON content for the request.
+     *
+     * @var \Symfony\Component\HttpFoundation\ParameterBag|null
+     */
+    protected $json;
 
     public static function _instance()
     {
@@ -82,5 +89,44 @@ class request extends \Symfony\Component\HttpFoundation\Request
         } else {
             return $this->files->get($name);
         }
+    }
+
+    /**
+     * @param $key
+     * @param $default
+     * @return mixed
+     */
+    public function json($key = null, $default = null)
+    {
+        if (!isset($this->json)) {
+            $this->json = new ParameterBag((array)json_decode($this->getContent(), true));
+        }
+
+        if (is_null($key)) {
+            return $this->json->all();
+        }
+
+        return $this->json->all()[$key] ?? $default;
+    }
+
+    /**
+     * 判断是否是json请求
+     * @return bool
+     */
+    public function isJson()
+    {
+        $content_type = $this->header('CONTENT_TYPE');
+        return $content_type && (mb_strpos($content_type, '/json') !== false || mb_strpos($content_type, '+json') !== false);
+    }
+
+    /**
+     * @return array|mixed|ParameterBag|null
+     */
+    public function all()
+    {
+        if ($this->isJson()) {
+            return $this->json();
+        }
+        return array_merge($this->get(), $this->post());
     }
 }
