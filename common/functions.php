@@ -41,12 +41,12 @@ function getDistance($lat1, $lng1, $lat2, $lng2)
  */
 function getFirstChar($s0)
 {
-    $fchar = ord($s0{0});
+    $fchar = ord($s0[0]);
     if ($fchar >= ord("A") and $fchar <= ord("z")) {
-        return strtoupper($s0{0});
+        return strtoupper($s0[0]);
     }
     $s = mb_convert_encoding($s0, "GBK");
-    $asc = ord($s{0}) * 256 + ord($s{1}) - 65536;
+    $asc = ord($s[0]) * 256 + ord($s[1]) - 65536;
     if ($asc >= -20319 and $asc <= -20284) {
         return "A";
     }

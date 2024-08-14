@@ -50,7 +50,7 @@ class request extends \Symfony\Component\HttpFoundation\Request
         return $this->getContent($asResource);
     }
 
-    public function get($key = null, $default = null)
+    public function get($key = null, $default = null): mixed
     {
         if ($key === null) {
             return $this->query->all();
@@ -99,7 +99,7 @@ class request extends \Symfony\Component\HttpFoundation\Request
     public function json($key = null, $default = null)
     {
         if (!isset($this->json)) {
-            $this->json = new ParameterBag((array)json_decode($this->getContent(), true));
+            $this->json = $this->getPayload();
         }
 
         if (is_null($key)) {

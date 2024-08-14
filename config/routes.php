@@ -14,7 +14,7 @@ Route::space('app\\controllers\\', 'app\\middleware\\');
 Route::get('', 'IndexController@index');
 Route::get('test', 'IndexController@test');
 Route::get('index/middle', 'Index', 'IndexController@middle');
-
+Route::post('index/post', 'Index', 'IndexController@post');
 Route::error(function () {
     response()->setStatusCode('404');
     echo '404 Not Found!';

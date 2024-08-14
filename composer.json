@@ -9,16 +9,17 @@
   "homepage": "http://github.com/lejianwen/FMZ_framework",
   "license": "MIT",
   "require": {
-    "filp/whoops": "2.1.4",
+    "php": ">=8.0",
+    "filp/whoops": "^2.1.4",
     "guzzlehttp/guzzle": "~6.0",
     "illuminate/database": "~v8.0",
     "ljw/route": "dev-master",
     "ljw/validator": "dev-master",
     "monolog/monolog": "~1.22",
-    "smarty/smarty": "*",
-    "symfony/http-foundation": "^3.4",
-    "symfony/var-dumper": "^5.4",
-    "vlucas/phpdotenv": "^5.2"
+    "smarty/smarty": "~v5.3",
+    "symfony/http-foundation": "~7.1",
+    "symfony/var-dumper": "~v6.4",
+    "vlucas/phpdotenv": "~v5.6"
   },
   "autoload": {
     "psr-4": {

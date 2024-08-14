@@ -18,7 +18,7 @@ class smarty extends view
     public function __construct()
     {
         if (!$this->smarty) {
-            $smarty = new \Smarty;
+            $smarty = new \Smarty\Smarty();
             $smarty->setTemplateDir(self::VIEW_PATH);
             $smarty->setCompileDir(config('app.smarty.compile_dir'));
 //            $smarty->setConfigDir(BASE_PATH . '/data/smarty/configs/');

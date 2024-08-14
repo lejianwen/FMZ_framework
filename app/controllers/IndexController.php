@@ -34,4 +34,10 @@ class IndexController extends BaseController
     {
         echo 'middle';
     }
+
+    public function post()
+    {
+        var_dump(request()->post());
+        var_dump(request()->json());
+    }
 }
